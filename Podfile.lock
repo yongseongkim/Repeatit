@@ -1,0 +1,21 @@
+PODS:
+  - Alamofire (4.3.0)
+  - AudioKit (3.5.2)
+  - SnapKit (3.1.2)
+  - Swinject (2.0.0)
+
+DEPENDENCIES:
+  - Alamofire (~> 4.3)
+  - AudioKit (~> 3.5)
+  - SnapKit (~> 3.1.2)
+  - Swinject (~> 2.0)
+
+SPEC CHECKSUMS:
+  Alamofire: 856a113053a7bc9cbe5d6367a555d773fc5cfef7
+  AudioKit: 77858cbdfc0d083c7ffba25e9bfad5de5921f944
+  SnapKit: 12b24f569cb7c143acc9c22b9d91b23e7b1c84a2
+  Swinject: 2e964a80d70ab09b3949c99032711f89147bfd60
+
+PODFILE CHECKSUM: 3434cff1e9a7b3b4eab0914387d9fd167ab21675
+
+COCOAPODS: 1.2.0
