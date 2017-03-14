@@ -25,8 +25,7 @@ class iTuensSongsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let closeButton = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(closeViewController))
-        self.navigationItem.rightBarButtonItem = closeButton
+        self.navigationController?.isNavigationBarHidden = true
         self.items = MPMediaQuery.songs().items
     }
     

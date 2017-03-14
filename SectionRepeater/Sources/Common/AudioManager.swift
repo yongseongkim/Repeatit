@@ -41,12 +41,21 @@ class AudioManager: NSObject {
     fileprivate var playlist: [AudioItem]
     fileprivate var timer: Timer?
     fileprivate var targets: [AudioManagerDelegate]
+    public var volume = Float(integerLiteral: 5) {
+        didSet {
+            if let player = self.player {
+                player.volume = volume
+            }
+        }
+    }
 
     override init() {
         self.playlist = [AudioItem]()
         self.targets = [AudioManagerDelegate]()
         super.init()
     }
+    
+    //MARK - Getter, Setter
     
     public func register(delegate: AudioManagerDelegate) {
         if let _ = self.targets.index(where: { (target) -> Bool in return target === delegate }) {
@@ -61,11 +70,32 @@ class AudioManager: NSObject {
         }
     }
     
+    public func isPlayingItemSame(asItem: AudioItem?) -> Bool {
+        if let playing = self.playing {
+            return playing == asItem
+        }
+        return false
+    }
+    
     public func isPlaying() -> Bool {
         if let player = self.player {
             return player.isPlaying
         }
         return false
+    }
+    
+    public func playingTime() -> Double? {
+        if let player = self.player {
+            return player.currentTime
+        }
+        return nil
+    }
+    
+    public func duration() -> Double? {
+        if let player = self.player {
+            return player.duration
+        }
+        return nil
     }
     
     public func play(playingItem: AudioItem) {
@@ -101,6 +131,8 @@ class AudioManager: NSObject {
             print(error)
         }
     }
+    
+    //MARK - Public
 
     public func pause() {
         self.internalPause()
@@ -132,22 +164,22 @@ class AudioManager: NSObject {
         player.currentTime = time
     }
     
-    public func moveTo(at: TimeInterval) {
+    public func move(at: TimeInterval) {
         if let duration = self.player?.duration {
             var time = at
             if (at < 0) {
                 time = 0
             }
-            if (at > duration) {
-                time = duration
+            if (at >= duration) {
+                time = duration - 0.1
             }
             self.player?.currentTime = time
         }
     }
     
-    public func moveTo(progress: Double) {
+    public func move(progress: Double) {
         guard let player = self.player else { return }
-        self.moveTo(at: progress * player.duration)
+        self.move(at: progress * player.duration)
     }
     
     public func playNextAudio() {
@@ -169,6 +201,7 @@ class AudioManager: NSObject {
     
     public func playPrevAudio() {
         guard let playing = self.playing else { return }
+        
         if let index = self.playlist.index(where: { (item) -> Bool in return item.fileURL.absoluteString == playing.fileURL.absoluteString }) {
             if (index == 0) {
                 // first
@@ -181,12 +214,6 @@ class AudioManager: NSObject {
         } else {
             // error
             return
-        }
-    }
-    
-    public func setVolume(volume: Float) {
-        if let player = self.player {
-            player.volume = volume
         }
     }
     
@@ -205,6 +232,7 @@ class AudioManager: NSObject {
             self.player = try AVAudioPlayer(contentsOf: item.fileURL)
             self.player?.delegate = self
             self.player?.prepareToPlay()
+            self.player?.volume = self.volume
             for target in self.targets {
                 target.didStartPlaying(item: item)
             }
@@ -216,14 +244,12 @@ class AudioManager: NSObject {
     }
     
     fileprivate func internalPause() {
+        self.player?.pause()
         if let playing = self.playing {
             for target in self.targets {
                 target.didPausePlaying(item: playing)
             }
         }
-        self.timer?.invalidate()
-        self.timer = nil
-        self.player?.pause()
     }
     
     fileprivate func internalResume() {
@@ -232,20 +258,19 @@ class AudioManager: NSObject {
                 target.didResumePlaying(item: playing)
             }
             player.play()
-            self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateTime), userInfo: nil, repeats: true);
         } else {
             self.reset()
         }
     }
     
     fileprivate func internalReset() {
+        self.player = nil
+        self.currentDirectoryURL = nil
+        self.playing = nil
+        self.playlist = [AudioItem]()
         for target in self.targets {
             target.didResetPlaying()
         }
-        self.player = nil
-        self.currentDirectoryURL = nil
-        self.player = nil
-        self.playlist = [AudioItem]()
     }
 }
 

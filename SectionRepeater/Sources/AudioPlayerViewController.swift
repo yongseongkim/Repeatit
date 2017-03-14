@@ -9,18 +9,7 @@
 import UIKit
 import AVFoundation
 import AudioKit
-
-/*
- 필요한 audio 정보
- - file information(name, album cover, lyrics)
- - current play time, total play time
- 필요한 기능
- - play(play current, play next, play prev), pause, stop
- - move play time
- - part iteration
- - play repeat, play once
- - change play rate
- */
+import MediaPlayer
 
 class AudioPlayerViewController: UIViewController {
     @IBOutlet weak var albumCoverImageView: UIImageView!
@@ -35,16 +24,21 @@ class AudioPlayerViewController: UIViewController {
     @IBOutlet weak var backwardButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var prevButton: UIButton!
-    @IBOutlet weak var volumeSlider: UISlider!
+    @IBOutlet weak var volumeView: AudioVolumeView!
     
     public var item: AudioItem?
     fileprivate var audioFile: EZAudioFile?
     fileprivate var timer: Timer?
+    fileprivate var playingWhenScrollStart = false
+    fileprivate var scrollViewDecelerate = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
         guard let item = self.item else { return }
-        AudioManager.sharedInstance().play(playingItem: item)
+        if (AudioManager.sharedInstance().isPlayingItemSame(asItem: self.item)) {
+        } else {
+            AudioManager.sharedInstance().play(playingItem: item)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -64,8 +58,13 @@ class AudioPlayerViewController: UIViewController {
         self.titleLabel.text = item.title
         self.artistNameLabel.text = item.artist
         self.albumCoverImageView.image = item.artwork
-        self.loadWaveform(url: item.fileURL, duration: 100)
+        self.loadWaveform(url: item.fileURL, duration: AudioManager.sharedInstance().duration())
         self.waveformContainer.delegate = self
+        if (AudioManager.sharedInstance().isPlaying()) {
+            self.setupPlaying()
+        } else {
+            self.setupPause()
+        }
     }
     
     func loadWaveform(url: URL, duration: TimeInterval?) {
@@ -85,6 +84,14 @@ class AudioPlayerViewController: UIViewController {
         self.audioFile?.getWaveformData(completionBlock: { (waveformData: UnsafeMutablePointer<UnsafeMutablePointer<Float>?>?, length: Int32) in
             weakSelf?.audioPlot.updateBuffer(waveformData?[0], withBufferSize: UInt32(length))
         })
+    }
+    
+    func setupPlaying() {
+        self.playButton.setTitle("Pause", for: .normal)
+    }
+    
+    func setupPause() {
+        self.playButton.setTitle("Play", for: .normal)
     }
     
     // MARK - IBBinding
@@ -113,66 +120,69 @@ class AudioPlayerViewController: UIViewController {
     }
     
     @IBAction func playPreviousButtonTapped(_ sender: Any) {
-        AudioManager.sharedInstance().playPrevAudio()
+        if let currentTime = AudioManager.sharedInstance().playingTime() {
+            if currentTime > 5 {
+                AudioManager.sharedInstance().move(at: 0)
+                return
+            }
+            AudioManager.sharedInstance().playPrevAudio()
+        }
     }
     
-    @IBAction func slidenrChanged(_ sender: Any) {
-        AudioManager.sharedInstance().setVolume(volume: self.volumeSlider.value)
+    @IBAction func sliderChanged(_ sender: Any) {
+        
     }
 }
 
 extension AudioPlayerViewController: UIScrollViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let screenWidth = UIScreen.main.bounds.width
-        if (scrollView.contentOffset.x < -screenWidth) {
-            AudioManager.sharedInstance().moveTo(at: 0)
-            return
-        }
-        if scrollView.contentOffset.x > scrollView.contentSize.width - (screenWidth / 2) {
-            AudioManager.sharedInstance().moveTo(progress: 1)
-            return
-        }
-        let progress = scrollView.contentOffset.x / scrollView.contentSize.width
-        AudioManager.sharedInstance().moveTo(progress: Double(progress))
-    }
-    
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if (self.scrollViewDecelerate) {
+            return
+        }
+        self.playingWhenScrollStart = AudioManager.sharedInstance().isPlaying()
         AudioManager.sharedInstance().pause()
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        self.scrollViewDecelerate = decelerate
         if (!decelerate) {
             self.scrollViewDidEndDecelerating(scrollView)
         }
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let progress = (scrollView.contentOffset.x + scrollView.contentInset.left) / scrollView.contentSize.width
-        if (progress >= 1.0) {
-            AudioManager.sharedInstance().playNextAudio()
-            return
+        self.scrollViewDecelerate = false
+        let progress = (scrollView.contentInset.left + scrollView.contentOffset.x) / scrollView.contentSize.width
+        if (progress <= 0) {
+            AudioManager.sharedInstance().move(at: 0)
+        } else if (progress >= 1.0) {
+            if let duration = AudioManager.sharedInstance().duration() {
+                AudioManager.sharedInstance().move(at: duration)
+            } else {
+                AudioManager.sharedInstance().move(at: 0)
+            }
+        } else {
+            AudioManager.sharedInstance().move(progress: Double(progress))
         }
-        AudioManager.sharedInstance().moveTo(progress: Double(progress))
-        AudioManager.sharedInstance().resume()
+        
+        if (self.playingWhenScrollStart) {
+            AudioManager.sharedInstance().resume()
+        }
     }
 }
 
 extension AudioPlayerViewController: AudioManagerDelegate {
     func didStartPlaying(item: AudioItem) {
-        if self.item?.fileURL.absoluteString == item.fileURL.absoluteString {
-            return
-        }
-        self.playButton.setTitle("Play", for: .normal)
         self.item = item
         self.setup()
     }
     
     func didPausePlaying(item: AudioItem) {
-        self.playButton.setTitle("Pause", for: .normal)
+        self.setupPause()
     }
     
     func didResumePlaying(item: AudioItem) {
-        self.playButton.setTitle("Play", for: .normal)
+        self.setupPlaying()
     }
     
     func didResetPlaying() {

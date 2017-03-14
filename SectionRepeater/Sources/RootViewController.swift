@@ -13,6 +13,7 @@ class RootViewController: UITabBarController {
     
     fileprivate var documentsViewController: DocumentAudioFilesViewController?
     fileprivate var iTunesViewController: iTuensSongsViewController?
+    fileprivate var playerView: UIView?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,7 +24,7 @@ class RootViewController: UITabBarController {
         
         self.documentsViewController = documentsViewController
         self.iTunesViewController = iTunesViewController
-        let viewControllers = [documentsViewController, iTunesViewController]
+        let viewControllers = [UINavigationController(rootViewController: documentsViewController), UINavigationController(rootViewController: iTunesViewController)]
         self.setViewControllers(viewControllers, animated: false)
     }
 }

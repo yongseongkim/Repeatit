@@ -28,8 +28,7 @@ class DocumentAudioFilesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let closeButton = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(closeViewController))
-        self.navigationItem.rightBarButtonItem = closeButton
+        self.navigationController?.isNavigationBarHidden = true
         
         let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
         self.displayManager = FileDisplayManager(rootPath: documentsPath)
@@ -44,10 +43,6 @@ class DocumentAudioFilesViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-    }
-    
-    func closeViewController() {
-        self.dismiss(animated: true, completion: nil)
     }
 }
 
@@ -92,6 +87,7 @@ extension DocumentAudioFilesViewController: UICollectionViewDataSource, UICollec
         case .File:
             let item = self.files[indexPath.row]
             let playerController = AudioPlayerViewController(nibName: AudioPlayerViewController.className(), bundle: nil)
+            playerController.modalPresentationStyle = .custom
             playerController.item = AudioItem(url: URL(fileURLWithPath: item.path))
             self.present(playerController, animated: true, completion: nil)
         }

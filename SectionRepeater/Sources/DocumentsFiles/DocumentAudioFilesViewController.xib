@@ -21,7 +21,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="rPe-KS-6Lm">
-                    <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="nPR-No-HsG">
                         <size key="itemSize" width="50" height="50"/>
@@ -39,7 +39,7 @@
             <constraints>
                 <constraint firstItem="rPe-KS-6Lm" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Gwv-f6-Riw"/>
                 <constraint firstAttribute="trailing" secondItem="rPe-KS-6Lm" secondAttribute="trailing" id="R2d-wx-8de"/>
-                <constraint firstItem="rPe-KS-6Lm" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="UL1-rN-iYY"/>
+                <constraint firstItem="rPe-KS-6Lm" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="UL1-rN-iYY"/>
                 <constraint firstAttribute="bottom" secondItem="rPe-KS-6Lm" secondAttribute="bottom" id="vQm-1F-Hiq"/>
             </constraints>
         </view>
