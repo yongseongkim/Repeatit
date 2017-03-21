@@ -29,9 +29,7 @@ class DocumentAudioFilesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.isNavigationBarHidden = true
-        
-        let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-        self.displayManager = FileDisplayManager(rootPath: documentsPath)
+        self.displayManager = Dependencies.sharedInstance().resolve(serviceType: FileDisplayManager.self)
         self.displayManager?.delegate = self
         self.displayManager?.loadCurrentPathContents()
     }
@@ -51,6 +49,7 @@ extension DocumentAudioFilesViewController: UICollectionViewDataSource, UICollec
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 2
     }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let section = DocumentAudioFilesSectionType(rawValue: section) else { return 0 }
         switch section {

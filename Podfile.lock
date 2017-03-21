@@ -1,21 +1,29 @@
 PODS:
   - Alamofire (4.3.0)
   - AudioKit (3.5.2)
+  - Realm (2.4.2):
+    - Realm/Headers (= 2.4.2)
+  - Realm/Headers (2.4.2)
+  - RealmSwift (2.4.2):
+    - Realm (= 2.4.2)
   - SnapKit (3.1.2)
   - Swinject (2.0.0)
 
 DEPENDENCIES:
   - Alamofire (~> 4.3)
   - AudioKit (~> 3.5)
+  - RealmSwift (~> 2.4)
   - SnapKit (~> 3.1.2)
   - Swinject (~> 2.0)
 
 SPEC CHECKSUMS:
   Alamofire: 856a113053a7bc9cbe5d6367a555d773fc5cfef7
   AudioKit: 77858cbdfc0d083c7ffba25e9bfad5de5921f944
+  Realm: d27b758e12d62a3371879a065d4c40aa212c5a54
+  RealmSwift: 9556c0fe0f0cfecacfb755ae9e68ff379fc6bead
   SnapKit: 12b24f569cb7c143acc9c22b9d91b23e7b1c84a2
   Swinject: 2e964a80d70ab09b3949c99032711f89147bfd60
 
-PODFILE CHECKSUM: dbb0b7aeb4e5731591ba078f99f8a2b2223b7b79
+PODFILE CHECKSUM: 12ea7ec3da059ff246227b3d8ae5d342ae92bbca
 
 COCOAPODS: 1.2.0

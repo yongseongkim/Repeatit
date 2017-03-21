@@ -17,9 +17,9 @@ class RootViewController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let documentsViewController = DocumentAudioFilesViewController(nibName: String(describing: DocumentAudioFilesViewController.self), bundle: nil)
+        let documentsViewController = DocumentAudioFilesViewController(nibName: DocumentAudioFilesViewController.className(), bundle: nil)
         documentsViewController.tabBarItem = UITabBarItem(title: "documents", image: UIImage(), tag: 0)
-        let iTunesViewController = iTuensSongsViewController(nibName: String(describing: iTuensSongsViewController.self), bundle: nil)
+        let iTunesViewController = iTuensSongsViewController(nibName: iTuensSongsViewController.className(), bundle: nil)
         iTunesViewController.tabBarItem = UITabBarItem(title: "iTunes", image: UIImage(), tag: 0)
         
         self.documentsViewController = documentsViewController

@@ -18,25 +18,20 @@ protocol AudioManagerDelegate: class {
     func didUpdateTime(progress: Double)
 }
 
+enum AudioRepeatMode {
+    case None               // 반복 X
+    case All                // 전체 반복
+    case OnlyOne            // 한곡 반복
+}
+
 class AudioManager: NSObject {
-    static fileprivate var instance: AudioManager?
-    class func sharedInstance() -> AudioManager {
-        if let instance = instance {
-            return instance
-        } else {
-            instance = AudioManager()
-            do {
-                try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
-                try AVAudioSession.sharedInstance().setActive(true)
-            } catch let error as NSError {
-                print(error)
-            }
-            return instance!
+    fileprivate var player: AVAudioPlayer?
+    fileprivate var currentDirectoryURL: URL? {
+        get {
+            guard let playing = playing else { return nil }
+            return playing.fileURL.deletingLastPathComponent()
         }
     }
-
-    fileprivate var player: AVAudioPlayer?
-    fileprivate var currentDirectoryURL: URL?
     fileprivate var playing: AudioItem?
     fileprivate var playlist: [AudioItem]
     fileprivate var timer: Timer?
@@ -48,14 +43,29 @@ class AudioManager: NSObject {
             }
         }
     }
+    public var mode = AudioRepeatMode.None
 
     override init() {
         self.playlist = [AudioItem]()
         self.targets = [AudioManagerDelegate]()
         super.init()
+        
+        do {
+            UIApplication.shared.beginReceivingRemoteControlEvents()
+            let commandCenter = MPRemoteCommandCenter.shared()
+            commandCenter.nextTrackCommand.isEnabled = true
+            commandCenter.nextTrackCommand.addTarget(handler: { (event) -> MPRemoteCommandHandlerStatus in
+                self.playNextAudio()
+                return .success
+            })
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch let error as NSError {
+            print(error)
+        }
     }
     
-    //MARK - Getter, Setter
+    //MARK - Public
     
     public func register(delegate: AudioManagerDelegate) {
         if let _ = self.targets.index(where: { (target) -> Bool in return target === delegate }) {
@@ -70,43 +80,14 @@ class AudioManager: NSObject {
         }
     }
     
-    public func isPlayingItemSame(asItem: AudioItem?) -> Bool {
-        if let playing = self.playing {
-            return playing == asItem
-        }
-        return false
-    }
-    
-    public func isPlaying() -> Bool {
-        if let player = self.player {
-            return player.isPlaying
-        }
-        return false
-    }
-    
-    public func playingTime() -> Double? {
-        if let player = self.player {
-            return player.currentTime
-        }
-        return nil
-    }
-    
-    public func duration() -> Double? {
-        if let player = self.player {
-            return player.duration
-        }
-        return nil
-    }
-    
     public func play(playingItem: AudioItem) {
         if (playingItem.isEqual(self.playing)) {
             return
         }
-        self.playing = nil
         self.playlist = [AudioItem]()
+        self.playing = playingItem
         do {
-            let currentDirectoryURL = playingItem.fileURL.deletingLastPathComponent()
-            let currentDirectoryPath = currentDirectoryURL.path
+            guard let currentDirectoryPath = self.currentDirectoryURL?.path else { return }
             let fileManager = FileManager.default
             let fileNames = try fileManager.contentsOfDirectory(atPath: currentDirectoryPath)
             for fileName in fileNames {
@@ -118,21 +99,15 @@ class AudioManager: NSObject {
                         if (AudioItem.isAudioFile(url: fileURL)) {
                             let item = AudioItem(url: fileURL)
                             self.playlist.append(item)
-                            if (playingItem.fileURL.absoluteString == fileURL.absoluteString) {
-                                self.playing = item
-                            }
                         }
                     }
                 }
             }
-            guard let playing = self.playing else { return }
-            self.internalPlay(item: playing)
+            self.internalPlay(item: playingItem)
         } catch let error as NSError {
             print(error)
         }
     }
-    
-    //MARK - Public
 
     public func pause() {
         self.internalPause()
@@ -184,15 +159,30 @@ class AudioManager: NSObject {
     
     public func playNextAudio() {
         guard let playing = self.playing else { return }
-        if let index = self.playlist.index(where: { (item) -> Bool in return item.fileURL.absoluteString == playing.fileURL.absoluteString }) {
-            if (index == self.playlist.count - 1) {
-                // last
-                self.reset()
+        if let index = self.playlist.index(where: { (item) -> Bool in return item == playing }) {
+            var item = self.playing
+            switch self.mode {
+            case .OnlyOne:
+                self.internalPlay(item: item!)
                 return
+            case .All:
+                if (index == self.playlist.count - 1) {
+                    item = self.playlist.first
+                } else {
+                    item = self.playlist[index + 1]
+                }
+                break
+            case .None:
+                if (index == self.playlist.count - 1) {
+                    self.reset()
+                    return
+                } else {
+                    item = self.playlist[index + 1]
+                }
+                break
             }
-            let item = self.playlist[index + 1]
-            self.playing = item
-            self.internalPlay(item: item)
+            guard let playingItem = item else { return }
+            self.internalPlay(item: playingItem)
         } else {
             // error
             return
@@ -201,16 +191,30 @@ class AudioManager: NSObject {
     
     public func playPrevAudio() {
         guard let playing = self.playing else { return }
-        
-        if let index = self.playlist.index(where: { (item) -> Bool in return item.fileURL.absoluteString == playing.fileURL.absoluteString }) {
-            if (index == 0) {
-                // first
-                self.reset()
+        if let index = self.playlist.index(where: { (item) -> Bool in return item == playing }) {
+            var item = self.playing
+            switch self.mode {
+            case .OnlyOne:
+                self.internalPlay(item: item!)
                 return
+            case .All:
+                if (index == 0) {
+                    item = self.playlist.last
+                } else {
+                    item = self.playlist[index - 1]
+                }
+                break
+            case .None:
+                if (index == 0) {
+                    self.reset()
+                    return
+                } else {
+                    item = self.playlist[index - 1]
+                }
+                break
             }
-            let item = self.playlist[index - 1]
-            self.playing = item
-            self.internalPlay(item: item)
+            guard let playingItem = item else { return }
+            self.internalPlay(item: playingItem)
         } else {
             // error
             return
@@ -226,6 +230,36 @@ class AudioManager: NSObject {
         }
     }
     
+    //MARK - Getter, Setter
+    
+    public func isPlayingItemSame(asItem: AudioItem?) -> Bool {
+        if let playing = self.playing {
+            return playing == asItem
+        }
+        return false
+    }
+    
+    public func isPlaying() -> Bool {
+        if let player = self.player {
+            return player.isPlaying
+        }
+        return false
+    }
+    
+    public func playingTime() -> Double? {
+        if let player = self.player {
+            return player.currentTime
+        }
+        return nil
+    }
+    
+    public func duration() -> Double? {
+        if let player = self.player {
+            return player.duration
+        }
+        return nil
+    }
+    
     // MARK: Private
     fileprivate func internalPlay(item: AudioItem) {
         do {
@@ -238,6 +272,7 @@ class AudioManager: NSObject {
             }
             self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateTime), userInfo: nil, repeats: true);
             self.player?.play()
+            self.playing = item
         } catch let error as NSError {
             print(error)
         }
@@ -257,6 +292,7 @@ class AudioManager: NSObject {
             for target in self.targets {
                 target.didResumePlaying(item: playing)
             }
+            player.prepareToPlay()
             player.play()
         } else {
             self.reset()
@@ -265,7 +301,6 @@ class AudioManager: NSObject {
     
     fileprivate func internalReset() {
         self.player = nil
-        self.currentDirectoryURL = nil
         self.playing = nil
         self.playlist = [AudioItem]()
         for target in self.targets {
@@ -275,21 +310,7 @@ class AudioManager: NSObject {
 }
 
 extension AudioManager: AVAudioPlayerDelegate {
-    
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         self.playNextAudio()
-    }
-    
-    func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
-    }
-    
-    /* audioPlayerBeginInterruption: is called when the audio session has been interrupted while the player was playing. The player will have been paused. */
-    func audioPlayerBeginInterruption(_ player: AVAudioPlayer) {
-        
-    }
-    
-    /* Currently the only flag is AVAudioSessionInterruptionFlags_ShouldResume. */
-    func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {
-        
     }
 }

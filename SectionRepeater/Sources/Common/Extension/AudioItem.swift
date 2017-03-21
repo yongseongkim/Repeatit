@@ -22,7 +22,7 @@ class AudioItem: NSObject {
         let playerItem = AVPlayerItem(url: url)
         let metadataList = playerItem.asset.metadata
         for item in metadataList {
-            if item.commonKey == nil || item.value == nil {
+            if item.value == nil {
                 continue
             }
             if item.commonKey == "title", let title = item.stringValue {
@@ -37,8 +37,10 @@ class AudioItem: NSObject {
             if item.commonKey == "artwork", let data = item.dataValue {
                 self.artwork = UIImage(data: data)
             }
-            if item.commonKey == "lyrics", let lyrics = item.stringValue {
-                self.lyrics = lyrics
+            if let key = item.key as? String, let data = item.stringValue {
+                if key == "USLT" {
+                    self.lyrics = data
+                }
             }
         }
         if (self.title == nil) {

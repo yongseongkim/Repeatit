@@ -12,12 +12,16 @@ import AudioKit
 import MediaPlayer
 
 class AudioPlayerViewController: UIViewController {
+    
+    @IBOutlet weak var playerSlider: UISlider!
     @IBOutlet weak var albumCoverImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var artistNameLabel: UILabel!
     @IBOutlet weak var waveformContainer: UIScrollView!
     @IBOutlet weak var audioPlot: EZAudioPlot!
     @IBOutlet weak var audioPlotWidthConstraint: NSLayoutConstraint!
+
+    @IBOutlet weak var repeatItemButton: UIButton!
     
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var forwardButton: UIButton!
@@ -27,29 +31,39 @@ class AudioPlayerViewController: UIViewController {
     @IBOutlet weak var volumeView: AudioVolumeView!
     
     public var item: AudioItem?
+    fileprivate var manager: AudioManager
     fileprivate var audioFile: EZAudioFile?
     fileprivate var timer: Timer?
     fileprivate var playingWhenScrollStart = false
     fileprivate var scrollViewDecelerate = false
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        self.manager = Dependencies.sharedInstance().resolve(serviceType: AudioManager.self)!
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         guard let item = self.item else { return }
-        if (AudioManager.sharedInstance().isPlayingItemSame(asItem: self.item)) {
+        if (self.manager.isPlayingItemSame(asItem: self.item)) {
         } else {
-            AudioManager.sharedInstance().play(playingItem: item)
+            self.manager.play(playingItem: item)
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        AudioManager.sharedInstance().register(delegate: self)
+        self.manager.register(delegate: self)
         self.setup()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        AudioManager.sharedInstance().delete(delegate: self)
+        self.manager.delete(delegate: self)
     }
     
     // MARK - Private
@@ -58,9 +72,10 @@ class AudioPlayerViewController: UIViewController {
         self.titleLabel.text = item.title
         self.artistNameLabel.text = item.artist
         self.albumCoverImageView.image = item.artwork
-        self.loadWaveform(url: item.fileURL, duration: AudioManager.sharedInstance().duration())
+        self.loadWaveform(url: item.fileURL, duration: self.manager.duration())
         self.waveformContainer.delegate = self
-        if (AudioManager.sharedInstance().isPlaying()) {
+        self.setupRepeatItemButton()
+        if (self.manager.isPlaying()) {
             self.setupPlaying()
         } else {
             self.setupPause()
@@ -69,9 +84,9 @@ class AudioPlayerViewController: UIViewController {
     
     func loadWaveform(url: URL, duration: TimeInterval?) {
         weak var weakSelf = self
-        let screenWidth = UIScreen.main.bounds.width
-        self.waveformContainer.contentInset = UIEdgeInsets(top: 0, left: screenWidth / 2, bottom: 0, right: screenWidth / 2)
-        var width = screenWidth
+        let inset = self.waveformContainer.bounds.width / 2
+        self.waveformContainer.contentInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
+        var width = UIScreen.main.bounds.width
         if let duration = duration {
             width = CGFloat(duration.value()) * 10
         }
@@ -94,43 +109,62 @@ class AudioPlayerViewController: UIViewController {
         self.playButton.setTitle("Play", for: .normal)
     }
     
+    func setupRepeatItemButton() {
+        switch self.manager.mode {
+        case .All:
+            self.repeatItemButton.setTitle("ALL", for: .normal)
+            break
+        case .OnlyOne:
+            self.repeatItemButton.setTitle("OnlyOne", for: .normal)
+            break
+        case .None:
+            self.repeatItemButton.setTitle("None", for: .normal)
+            break
+        }
+    }
+    
     // MARK - IBBinding
     @IBAction func closeButtonTapped(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
     
+    @IBAction func repeatItemButtonTapped(_ sender: Any) {
+        let repeatOrders = [AudioRepeatMode.All, AudioRepeatMode.OnlyOne, AudioRepeatMode.None]
+        if let index = repeatOrders.index(where: { (mode) -> Bool in return mode == self.manager.mode }) {
+            let nextMode = repeatOrders[((index + 1) % repeatOrders.count)]
+            self.manager.mode = nextMode
+            self.setupRepeatItemButton()
+        }
+    }
+    
     @IBAction func playButtonTapped(_ sender: Any) {
-        if (AudioManager.sharedInstance().isPlaying()) {
-            AudioManager.sharedInstance().pause()
+        if (self.manager.isPlaying()) {
+            self.manager.pause()
         } else {
-            AudioManager.sharedInstance().resume()
+            self.manager.resume()
         }
     }
     
     @IBAction func moveBeforeButtonTapped(_ sender: Any) {
-        AudioManager.sharedInstance().moveBackwardCurrentAudio()
+        self.manager.moveBackwardCurrentAudio()
     }
     
     @IBAction func moveAfterButtonTapped(_ sender: Any) {
-        AudioManager.sharedInstance().moveForwardCurrentAudio()
+        self.manager.moveForwardCurrentAudio()
     }
     
     @IBAction func playNextButtonTapped(_ sender: Any) {
-        AudioManager.sharedInstance().playNextAudio()
+        self.manager.playNextAudio()
     }
     
     @IBAction func playPreviousButtonTapped(_ sender: Any) {
-        if let currentTime = AudioManager.sharedInstance().playingTime() {
+        if let currentTime = self.manager.playingTime() {
             if currentTime > 5 {
-                AudioManager.sharedInstance().move(at: 0)
+                self.manager.move(at: 0)
                 return
             }
-            AudioManager.sharedInstance().playPrevAudio()
+            self.manager.playPrevAudio()
         }
-    }
-    
-    @IBAction func sliderChanged(_ sender: Any) {
-        
     }
 }
 
@@ -139,8 +173,8 @@ extension AudioPlayerViewController: UIScrollViewDelegate {
         if (self.scrollViewDecelerate) {
             return
         }
-        self.playingWhenScrollStart = AudioManager.sharedInstance().isPlaying()
-        AudioManager.sharedInstance().pause()
+        self.playingWhenScrollStart = self.manager.isPlaying()
+        self.manager.pause()
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -154,19 +188,19 @@ extension AudioPlayerViewController: UIScrollViewDelegate {
         self.scrollViewDecelerate = false
         let progress = (scrollView.contentInset.left + scrollView.contentOffset.x) / scrollView.contentSize.width
         if (progress <= 0) {
-            AudioManager.sharedInstance().move(at: 0)
+            self.manager.move(at: 0)
         } else if (progress >= 1.0) {
-            if let duration = AudioManager.sharedInstance().duration() {
-                AudioManager.sharedInstance().move(at: duration)
+            if let duration = self.manager.duration() {
+                self.manager.move(at: duration)
             } else {
-                AudioManager.sharedInstance().move(at: 0)
+                self.manager.move(at: 0)
             }
         } else {
-            AudioManager.sharedInstance().move(progress: Double(progress))
+            self.manager.move(progress: Double(progress))
         }
         
         if (self.playingWhenScrollStart) {
-            AudioManager.sharedInstance().resume()
+            self.manager.resume()
         }
     }
 }

@@ -7,6 +7,7 @@ target 'SectionRepeater' do
   pod 'Alamofire', '~> 4.3'
   pod 'SnapKit', '~> 3.1.2'
   pod 'AudioKit', '~> 3.5'
+  pod 'RealmSwift', '~> 2.4'
 end
 
 post_install do |installer|
