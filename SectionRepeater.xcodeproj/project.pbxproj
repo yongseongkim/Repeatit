@@ -22,6 +22,7 @@
 		2E7AC2221E47195700BA03B7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E7AC2201E47195700BA03B7 /* LaunchScreen.storyboard */; };
 		2ECBA23E1E7E530500F43AF7 /* Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECBA23D1E7E530500F43AF7 /* Dependencies.swift */; };
 		2ECBA2421E7E73B900F43AF7 /* BookmarkDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECBA2411E7E73B900F43AF7 /* BookmarkDB.swift */; };
+		2ECBA2441E84191100F43AF7 /* AVPlayer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECBA2431E84191100F43AF7 /* AVPlayer+Extension.swift */; };
 		2EEB178D1E6DA37600CE3918 /* AudioItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEB178C1E6DA37600CE3918 /* AudioItem.swift */; };
 		2EEEF61E1E598AD600D2C279 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEEF60F1E598AD600D2C279 /* AppDelegate.swift */; };
 		2EEEF61F1E598AD600D2C279 /* NSObject+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEEF6121E598AD600D2C279 /* NSObject+Extension.swift */; };
@@ -68,6 +69,7 @@
 		2E7AC2231E47195700BA03B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
 		2ECBA23D1E7E530500F43AF7 /* Dependencies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dependencies.swift; sourceTree = "<group>"; };
 		2ECBA2411E7E73B900F43AF7 /* BookmarkDB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarkDB.swift; sourceTree = "<group>"; };
+		2ECBA2431E84191100F43AF7 /* AVPlayer+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AVPlayer+Extension.swift"; sourceTree = "<group>"; };
 		2EEB178C1E6DA37600CE3918 /* AudioItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AudioItem.swift; path = Extension/AudioItem.swift; sourceTree = "<group>"; };
 		2EEEF60F1E598AD600D2C279 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2EEEF6121E598AD600D2C279 /* NSObject+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Extension.swift"; sourceTree = "<group>"; };
@@ -225,6 +227,7 @@
 			children = (
 				2EEEF6121E598AD600D2C279 /* NSObject+Extension.swift */,
 				2EEEF6131E598AD600D2C279 /* UICollectionView+Extension.swift */,
+				2ECBA2431E84191100F43AF7 /* AVPlayer+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -386,6 +389,7 @@
 				2E5B63F21E7829A400A89D72 /* AudioVolumeView.swift in Sources */,
 				2EEEF62D1E598C0800D2C279 /* AudioPlayerViewController.swift in Sources */,
 				2ECBA23E1E7E530500F43AF7 /* Dependencies.swift in Sources */,
+				2ECBA2441E84191100F43AF7 /* AVPlayer+Extension.swift in Sources */,
 				2E49C3E81E757C920079CFA3 /* DocumentAudioFilesViewController.swift in Sources */,
 				2EEEF6291E598AD600D2C279 /* RootViewController.swift in Sources */,
 				2E49C3EE1E757CB80079CFA3 /* iTuensSongsViewController.swift in Sources */,

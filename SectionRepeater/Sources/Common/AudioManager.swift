@@ -25,7 +25,8 @@ enum AudioRepeatMode {
 }
 
 class AudioManager: NSObject {
-    fileprivate var player: AVAudioPlayer?
+    fileprivate var player: AVPlayer?
+    fileprivate var playerItem: AVPlayerItem?
     fileprivate var currentDirectoryURL: URL? {
         get {
             guard let playing = playing else { return nil }
@@ -51,13 +52,13 @@ class AudioManager: NSObject {
         super.init()
         
         do {
-            UIApplication.shared.beginReceivingRemoteControlEvents()
-            let commandCenter = MPRemoteCommandCenter.shared()
-            commandCenter.nextTrackCommand.isEnabled = true
-            commandCenter.nextTrackCommand.addTarget(handler: { (event) -> MPRemoteCommandHandlerStatus in
-                self.playNextAudio()
-                return .success
-            })
+//            UIApplication.shared.beginReceivingRemoteControlEvents()
+//            let commandCenter = MPRemoteCommandCenter.shared()
+//            commandCenter.nextTrackCommand.isEnabled = true
+//            commandCenter.nextTrackCommand.addTarget(handler: { (event) -> MPRemoteCommandHandlerStatus in
+//                self.playNextAudio()
+//                return .success
+//            })
             try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
             try AVAudioSession.sharedInstance().setActive(true)
         } catch let error as NSError {
@@ -123,38 +124,43 @@ class AudioManager: NSObject {
     
     public func moveForwardCurrentAudio() {
         guard let player = self.player else { return }
-        var time = TimeInterval(player.duration)
-        if (player.currentTime + 5 < player.duration) {
-            time = player.currentTime.adding(5)
+        guard let duration = self.duration() else { return }
+        guard let currentTime = self.playingTime() else { return }
+        let afterSeconds = currentTime.adding(5)
+        var time = duration
+        if (afterSeconds < duration) {
+            time = afterSeconds
         }
-        player.currentTime = time
+        player.seek(to: CMTime(seconds: time, preferredTimescale: 1))
     }
 
     public func moveBackwardCurrentAudio() {
         guard let player = self.player else { return }
-        var time = TimeInterval(0)
-        if (player.currentTime - 5 > 0) {
-            time = player.currentTime.subtracting(5)
+        guard let currentTime = self.playingTime() else { return }
+        let beforeSeconds = currentTime.subtracting(5)
+        var time = 0.0
+        if (beforeSeconds > 0) {
+            time = beforeSeconds
         }
-        player.currentTime = time
+        player.seek(to: CMTime(seconds: time, preferredTimescale: 1))
     }
     
-    public func move(at: TimeInterval) {
-        if let duration = self.player?.duration {
+    public func move(at: Double) {
+        if let duration = self.duration() {
             var time = at
-            if (at < 0) {
+            if (time < 0) {
                 time = 0
             }
-            if (at >= duration) {
-                time = duration - 0.1
+            if (time > duration) {
+                time = duration
             }
-            self.player?.currentTime = time
+            self.player?.seek(to: CMTime(seconds: time, preferredTimescale: 1))
         }
     }
     
     public func move(progress: Double) {
-        guard let player = self.player else { return }
-        self.move(at: progress * player.duration)
+        guard let duration = self.duration() else { return }
+        self.move(at: progress * duration)
     }
     
     public func playNextAudio() {
@@ -222,12 +228,16 @@ class AudioManager: NSObject {
     }
     
     func updateTime() {
-        if let duration = self.player?.duration, let currentTime = self.player?.currentTime {
-            let progress = currentTime.value().divided(by: duration)
+        if let duration = self.duration(), let currentTime = self.playingTime() {
+            let progress = currentTime / duration
             for target in self.targets {
                 target.didUpdateTime(progress: progress)
             }
         }
+    }
+    
+    func finishedPlaying(notification: Notification) {
+        print("finishedPlaying")
     }
     
     //MARK - Getter, Setter
@@ -247,34 +257,27 @@ class AudioManager: NSObject {
     }
     
     public func playingTime() -> Double? {
-        if let player = self.player {
-            return player.currentTime
-        }
-        return nil
+        guard let currentTime = self.player?.currentTime().seconds else { return nil }
+        return currentTime
     }
     
     public func duration() -> Double? {
-        if let player = self.player {
-            return player.duration
-        }
-        return nil
+        guard let playing = self.playing else { return nil }
+        return AVPlayerItem(url: playing.fileURL).asset.duration.seconds
     }
     
     // MARK: Private
     fileprivate func internalPlay(item: AudioItem) {
-        do {
-            self.player = try AVAudioPlayer(contentsOf: item.fileURL)
-            self.player?.delegate = self
-            self.player?.prepareToPlay()
-            self.player?.volume = self.volume
-            for target in self.targets {
-                target.didStartPlaying(item: item)
-            }
-            self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateTime), userInfo: nil, repeats: true);
-            self.player?.play()
-            self.playing = item
-        } catch let error as NSError {
-            print(error)
+        self.playerItem = AVPlayerItem(url: item.fileURL)
+        NotificationCenter.default.removeObserver(self)
+        NotificationCenter.default.addObserver(self, selector: Selector(("finishedPlaying:")), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.playerItem)
+        self.player = AVPlayer(url: item.fileURL)
+        self.player?.volume = self.volume
+        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateTime), userInfo: nil, repeats: true);
+        self.player?.play()
+        self.playing = item
+        for target in self.targets {
+            target.didStartPlaying(item: item)
         }
     }
     
@@ -292,7 +295,6 @@ class AudioManager: NSObject {
             for target in self.targets {
                 target.didResumePlaying(item: playing)
             }
-            player.prepareToPlay()
             player.play()
         } else {
             self.reset()
@@ -306,11 +308,5 @@ class AudioManager: NSObject {
         for target in self.targets {
             target.didResetPlaying()
         }
-    }
-}
-
-extension AudioManager: AVAudioPlayerDelegate {
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        self.playNextAudio()
     }
 }
