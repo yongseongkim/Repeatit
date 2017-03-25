@@ -10,33 +10,36 @@ import Foundation
 import AVFoundation
 import MediaPlayer
 
-protocol AudioManagerDelegate: class {
-    func didStartPlaying(item: AudioItem)
-    func didPausePlaying(item: AudioItem)
-    func didResumePlaying(item: AudioItem)
-    func didResetPlaying()
-    func didUpdateTime(progress: Double)
+enum AudioRepeatMode {
+    case None               // doesn't repeat
+    case All                // repeat all item
+    case OnlyOne            // repeat only one item
 }
 
-enum AudioRepeatMode {
-    case None               // 반복 X
-    case All                // 전체 반복
-    case OnlyOne            // 한곡 반복
+extension Notification.Name {
+    static let onAudioManagerStart = Notification.Name("audiomanager.start")
+    static let onAudioManagerPause = Notification.Name("audiomanager.pause")
+    static let onAudioManagerResume = Notification.Name("audiomanager.resume")
+    static let onAudioManagerReset = Notification.Name("audiomanager.reset")
+    static let onAudioManagerTimeChanged = Notification.Name("audiomanager.timechanged")
 }
 
 class AudioManager: NSObject {
     fileprivate var player: AVPlayer?
-    fileprivate var playerItem: AVPlayerItem?
-    fileprivate var currentDirectoryURL: URL? {
-        get {
-            guard let playing = playing else { return nil }
-            return playing.fileURL.deletingLastPathComponent()
+    fileprivate var playerItem: AVPlayerItem? {
+        didSet {
+            guard let item = playerItem else {
+                self.player = nil
+                self.timer = nil
+                return
+            }
+            self.player = AVPlayer(playerItem: item)
+            self.player?.volume = self.volume
         }
     }
-    fileprivate var playing: AudioItem?
-    fileprivate var playlist: [AudioItem]
+    fileprivate var playlist: [AVPlayerItem]
     fileprivate var timer: Timer?
-    fileprivate var targets: [AudioManagerDelegate]
+    public var notificationCenter: NotificationCenter
     public var volume = Float(integerLiteral: 5) {
         didSet {
             if let player = self.player {
@@ -47,8 +50,8 @@ class AudioManager: NSObject {
     public var mode = AudioRepeatMode.None
 
     override init() {
-        self.playlist = [AudioItem]()
-        self.targets = [AudioManagerDelegate]()
+        self.playlist = [AVPlayerItem]()
+        self.notificationCenter = NotificationCenter()
         super.init()
         
         do {
@@ -64,52 +67,53 @@ class AudioManager: NSObject {
         } catch let error as NSError {
             print(error)
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(finishedPlaying(notification:)), name: .AVPlayerItemDidPlayToEndTime, object: self.playerItem)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     //MARK - Public
     
-    public func register(delegate: AudioManagerDelegate) {
-        if let _ = self.targets.index(where: { (target) -> Bool in return target === delegate }) {
-            return
-        }
-        self.targets.append(delegate)
-    }
-    
-    public func delete(delegate: AudioManagerDelegate) {
-        if let index = self.targets.index(where: { (target) -> Bool in return target === delegate }) {
-            self.targets.remove(at: index)
-        }
-    }
-    
-    public func play(playingItem: AudioItem) {
-        if (playingItem.isEqual(self.playing)) {
-            return
-        }
-        self.playlist = [AudioItem]()
-        self.playing = playingItem
+    public func play(targetURL: URL) {
+        // doesn't play if it is not supported file type.
+        if (!self.isSupportedAudioFile(fileURL: targetURL)) { return }
+        // doesn't play if it is same.
+        if let currentItem = self.playerItem, AVPlayerItem(url: targetURL) == currentItem { return }
+        // set playlist in current directory
         do {
-            guard let currentDirectoryPath = self.currentDirectoryURL?.path else { return }
+            let currentDirectoryPath = targetURL.deletingLastPathComponent().path
             let fileManager = FileManager.default
             let fileNames = try fileManager.contentsOfDirectory(atPath: currentDirectoryPath)
+            var targetItem:AVPlayerItem?
             for fileName in fileNames {
                 let filePath = currentDirectoryPath.appendingFormat("/%@", fileName)
                 var isDir:ObjCBool = true
                 if (fileManager.fileExists(atPath: filePath, isDirectory: &isDir)) {
                     if (!isDir.boolValue) {
-                        let fileURL = URL(fileURLWithPath: filePath)
-                        if (AudioItem.isAudioFile(url: fileURL)) {
-                            let item = AudioItem(url: fileURL)
-                            self.playlist.append(item)
+                        let url = URL(fileURLWithPath: filePath)
+                        if (self.isSupportedAudioFile(fileURL: url)) {
+                            self.playlist.append(AVPlayerItem(url: url))
+                            if (url.absoluteString == targetURL.absoluteString) {
+                                targetItem = AVPlayerItem(url: url)
+                            }
                         }
+                        
                     }
                 }
             }
-            self.internalPlay(item: playingItem)
+            
+            if let targetItem = targetItem {
+                self.playerItem = targetItem
+                self.internalPlay()
+            }
         } catch let error as NSError {
             print(error)
         }
-    }
 
+    }
+    
     public func pause() {
         self.internalPause()
     }
@@ -124,11 +128,9 @@ class AudioManager: NSObject {
     
     public func moveForwardCurrentAudio() {
         guard let player = self.player else { return }
-        guard let duration = self.duration() else { return }
-        guard let currentTime = self.playingTime() else { return }
-        let afterSeconds = currentTime.adding(5)
-        var time = duration
-        if (afterSeconds < duration) {
+        let afterSeconds = player.currentSeconds.adding(5)
+        var time = player.durationSeconds
+        if (afterSeconds < player.durationSeconds) {
             time = afterSeconds
         }
         player.seek(to: CMTime(seconds: time, preferredTimescale: 1))
@@ -136,41 +138,39 @@ class AudioManager: NSObject {
 
     public func moveBackwardCurrentAudio() {
         guard let player = self.player else { return }
-        guard let currentTime = self.playingTime() else { return }
-        let beforeSeconds = currentTime.subtracting(5)
+        let beforeSeconds = player.currentSeconds.subtracting(5)
         var time = 0.0
         if (beforeSeconds > 0) {
             time = beforeSeconds
         }
-        player.seek(to: CMTime(seconds: time, preferredTimescale: 1))
+        player.seek(to: time)
     }
     
     public func move(at: Double) {
-        if let duration = self.duration() {
-            var time = at
-            if (time < 0) {
-                time = 0
-            }
-            if (time > duration) {
-                time = duration
-            }
-            self.player?.seek(to: CMTime(seconds: time, preferredTimescale: 1))
+        guard let player = self.player else { return }
+        var time = at
+        if (time < 0) {
+            time = 0
         }
+        if (time > player.durationSeconds) {
+            time = player.durationSeconds
+        }
+        player.seek(to: time)
     }
     
     public func move(progress: Double) {
-        guard let duration = self.duration() else { return }
-        self.move(at: progress * duration)
+        guard let player = self.player else { return }
+        self.move(at: progress * player.durationSeconds)
     }
     
     public func playNextAudio() {
-        guard let playing = self.playing else { return }
-        if let index = self.playlist.index(where: { (item) -> Bool in return item == playing }) {
-            var item = self.playing
+        guard let currentPlayerItem = self.playerItem else { return }
+        if let index = self.playlist.index(where: { (item) -> Bool in return item == currentPlayerItem }) {
+            var item:AVPlayerItem? = nil
             switch self.mode {
             case .OnlyOne:
-                self.internalPlay(item: item!)
-                return
+                item = currentPlayerItem
+                break
             case .All:
                 if (index == self.playlist.count - 1) {
                     item = self.playlist.first
@@ -187,22 +187,19 @@ class AudioManager: NSObject {
                 }
                 break
             }
-            guard let playingItem = item else { return }
-            self.internalPlay(item: playingItem)
-        } else {
-            // error
-            return
+            self.playerItem = item
+            self.internalPlay()
         }
     }
     
     public func playPrevAudio() {
-        guard let playing = self.playing else { return }
-        if let index = self.playlist.index(where: { (item) -> Bool in return item == playing }) {
-            var item = self.playing
+        guard let currentPlayerItem = self.playerItem else { return }
+        if let index = self.playlist.index(where: { (item) -> Bool in return item == currentPlayerItem }) {
+            var item:AVPlayerItem? = nil
             switch self.mode {
             case .OnlyOne:
-                self.internalPlay(item: item!)
-                return
+                item = currentPlayerItem
+                break
             case .All:
                 if (index == 0) {
                     item = self.playlist.last
@@ -219,94 +216,66 @@ class AudioManager: NSObject {
                 }
                 break
             }
-            guard let playingItem = item else { return }
-            self.internalPlay(item: playingItem)
-        } else {
-            // error
-            return
+            self.playerItem = item
+            self.internalPlay()
         }
     }
     
-    func updateTime() {
-        if let duration = self.duration(), let currentTime = self.playingTime() {
-            let progress = currentTime / duration
-            for target in self.targets {
-                target.didUpdateTime(progress: progress)
-            }
-        }
+    // MARK: Getter, Setter
+    public func currentPlayingItemDuration() -> Double? {
+        guard let player = self.player else { return nil }
+        return player.durationSeconds
     }
     
-    func finishedPlaying(notification: Notification) {
-        print("finishedPlaying")
+    public func currentPlayingSeconds() -> Double? {
+        guard let player = self.player else { return nil }
+        return player.currentSeconds
     }
-    
-    //MARK - Getter, Setter
-    
-    public func isPlayingItemSame(asItem: AudioItem?) -> Bool {
-        if let playing = self.playing {
-            return playing == asItem
-        }
-        return false
+
+    public func isSupportedAudioFile(fileURL: URL) -> Bool {
+        let supportedFormats = ["aac","adts","ac3","aif","aiff","aifc","caf","mp3","mp4","m4a","snd","au","sd2","wav"]
+        return supportedFormats.contains(fileURL.pathExtension)
     }
     
     public func isPlaying() -> Bool {
-        if let player = self.player {
-            return player.isPlaying
-        }
-        return false
+        guard let player = self.player else { return false }
+        return player.isPlaying
     }
     
-    public func playingTime() -> Double? {
-        guard let currentTime = self.player?.currentTime().seconds else { return nil }
-        return currentTime
+    // MARK: Notification Handler
+    
+    func finishedPlaying(notification: Notification) {
+        self.playNextAudio()
     }
     
-    public func duration() -> Double? {
-        guard let playing = self.playing else { return nil }
-        return AVPlayerItem(url: playing.fileURL).asset.duration.seconds
+    func updateTime() {
+        self.notificationCenter.post(name: .onAudioManagerTimeChanged, object: nil)
     }
     
     // MARK: Private
-    fileprivate func internalPlay(item: AudioItem) {
-        self.playerItem = AVPlayerItem(url: item.fileURL)
-        NotificationCenter.default.removeObserver(self)
-        NotificationCenter.default.addObserver(self, selector: Selector(("finishedPlaying:")), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.playerItem)
-        self.player = AVPlayer(url: item.fileURL)
-        self.player?.volume = self.volume
-        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateTime), userInfo: nil, repeats: true);
+    fileprivate func internalPlay() {
+        guard let item = self.playerItem else { return }
+        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateTime), userInfo: nil, repeats: true)
         self.player?.play()
-        self.playing = item
-        for target in self.targets {
-            target.didStartPlaying(item: item)
-        }
+        self.notificationCenter.post(name: .onAudioManagerStart, object: item)
     }
     
     fileprivate func internalPause() {
+        guard let item = self.playerItem else { return }
         self.player?.pause()
-        if let playing = self.playing {
-            for target in self.targets {
-                target.didPausePlaying(item: playing)
-            }
-        }
+        self.notificationCenter.post(name: .onAudioManagerPause, object: item)
     }
     
     fileprivate func internalResume() {
-        if let player = self.player, let playing = self.playing {
-            for target in self.targets {
-                target.didResumePlaying(item: playing)
-            }
-            player.play()
-        } else {
-            self.reset()
-        }
+        guard let item = self.playerItem else { return }
+        self.player?.play()
+        self.notificationCenter.post(name: .onAudioManagerResume, object: item)
     }
     
     fileprivate func internalReset() {
-        self.player = nil
-        self.playing = nil
-        self.playlist = [AudioItem]()
-        for target in self.targets {
-            target.didResetPlaying()
-        }
+        self.playerItem = nil
+        self.playlist = [AVPlayerItem]()
+        self.notificationCenter.post(name: .onAudioManagerReset, object: nil)
     }
 }
+ 

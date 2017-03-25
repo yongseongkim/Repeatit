@@ -155,43 +155,8 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pg2-I6-xfi">
                             <rect key="frame" x="0.0" y="398" width="320" height="150"/>
                             <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0BZ-c4-56B" userLabel="SectionRepeatView">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="55"/>
-                                    <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ctr-XC-JSy">
-                                            <rect key="frame" x="0.0" y="0.0" width="106.5" height="55"/>
-                                            <state key="normal" title="onlyOne"/>
-                                            <connections>
-                                                <action selector="repeatItemButtonTapped:" destination="-1" eventType="touchUpInside" id="tvR-VZ-Hu5"/>
-                                            </connections>
-                                        </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aTg-Rc-FQU">
-                                            <rect key="frame" x="106.5" y="0.0" width="107" height="55"/>
-                                            <state key="normal" title="Button"/>
-                                        </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7RL-IB-4Xu">
-                                            <rect key="frame" x="213.5" y="0.0" width="106.5" height="55"/>
-                                            <state key="normal" title="Button"/>
-                                        </button>
-                                    </subviews>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                    <constraints>
-                                        <constraint firstItem="7RL-IB-4Xu" firstAttribute="top" secondItem="0BZ-c4-56B" secondAttribute="top" id="2qM-Sn-wbt"/>
-                                        <constraint firstAttribute="trailing" secondItem="7RL-IB-4Xu" secondAttribute="trailing" id="9qA-Xs-KaU"/>
-                                        <constraint firstItem="7RL-IB-4Xu" firstAttribute="leading" secondItem="aTg-Rc-FQU" secondAttribute="trailing" id="Dcp-Ha-1bc"/>
-                                        <constraint firstItem="Ctr-XC-JSy" firstAttribute="top" secondItem="0BZ-c4-56B" secondAttribute="top" id="GAG-co-bBL"/>
-                                        <constraint firstItem="Ctr-XC-JSy" firstAttribute="leading" secondItem="0BZ-c4-56B" secondAttribute="leading" id="QSX-G1-3pJ"/>
-                                        <constraint firstAttribute="bottom" secondItem="7RL-IB-4Xu" secondAttribute="bottom" id="Sea-8F-aS6"/>
-                                        <constraint firstItem="aTg-Rc-FQU" firstAttribute="leading" secondItem="Ctr-XC-JSy" secondAttribute="trailing" id="Vhd-aX-Ncq"/>
-                                        <constraint firstItem="aTg-Rc-FQU" firstAttribute="width" secondItem="Ctr-XC-JSy" secondAttribute="width" id="WXV-iC-CG9"/>
-                                        <constraint firstItem="aTg-Rc-FQU" firstAttribute="top" secondItem="0BZ-c4-56B" secondAttribute="top" id="fv6-gN-AFq"/>
-                                        <constraint firstAttribute="bottom" secondItem="aTg-Rc-FQU" secondAttribute="bottom" id="iNR-ni-vJw"/>
-                                        <constraint firstAttribute="bottom" secondItem="Ctr-XC-JSy" secondAttribute="bottom" id="ojM-p0-hcd"/>
-                                        <constraint firstItem="7RL-IB-4Xu" firstAttribute="width" secondItem="aTg-Rc-FQU" secondAttribute="width" id="s7V-tv-V2x"/>
-                                    </constraints>
-                                </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jZo-Hi-zAo" userLabel="PlayerButtonView">
-                                    <rect key="frame" x="0.0" y="55" width="320" height="55"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="55"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4N2-6w-WOz">
                                             <rect key="frame" x="0.0" y="0.0" width="64" height="55"/>
@@ -253,6 +218,41 @@
                                         <constraint firstAttribute="bottom" secondItem="kxe-0h-fEM" secondAttribute="bottom" id="siP-lf-Aui"/>
                                     </constraints>
                                 </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0BZ-c4-56B" userLabel="SectionRepeatView">
+                                    <rect key="frame" x="0.0" y="55" width="320" height="55"/>
+                                    <subviews>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ctr-XC-JSy">
+                                            <rect key="frame" x="0.0" y="0.0" width="106.5" height="55"/>
+                                            <state key="normal" title="onlyOne"/>
+                                            <connections>
+                                                <action selector="repeatItemButtonTapped:" destination="-1" eventType="touchUpInside" id="tvR-VZ-Hu5"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aTg-Rc-FQU">
+                                            <rect key="frame" x="106.5" y="0.0" width="107" height="55"/>
+                                            <state key="normal" title="Button"/>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7RL-IB-4Xu">
+                                            <rect key="frame" x="213.5" y="0.0" width="106.5" height="55"/>
+                                            <state key="normal" title="Button"/>
+                                        </button>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <constraints>
+                                        <constraint firstItem="7RL-IB-4Xu" firstAttribute="top" secondItem="0BZ-c4-56B" secondAttribute="top" id="2qM-Sn-wbt"/>
+                                        <constraint firstAttribute="trailing" secondItem="7RL-IB-4Xu" secondAttribute="trailing" id="9qA-Xs-KaU"/>
+                                        <constraint firstItem="7RL-IB-4Xu" firstAttribute="leading" secondItem="aTg-Rc-FQU" secondAttribute="trailing" id="Dcp-Ha-1bc"/>
+                                        <constraint firstItem="Ctr-XC-JSy" firstAttribute="top" secondItem="0BZ-c4-56B" secondAttribute="top" id="GAG-co-bBL"/>
+                                        <constraint firstItem="Ctr-XC-JSy" firstAttribute="leading" secondItem="0BZ-c4-56B" secondAttribute="leading" id="QSX-G1-3pJ"/>
+                                        <constraint firstAttribute="bottom" secondItem="7RL-IB-4Xu" secondAttribute="bottom" id="Sea-8F-aS6"/>
+                                        <constraint firstItem="aTg-Rc-FQU" firstAttribute="leading" secondItem="Ctr-XC-JSy" secondAttribute="trailing" id="Vhd-aX-Ncq"/>
+                                        <constraint firstItem="aTg-Rc-FQU" firstAttribute="width" secondItem="Ctr-XC-JSy" secondAttribute="width" id="WXV-iC-CG9"/>
+                                        <constraint firstItem="aTg-Rc-FQU" firstAttribute="top" secondItem="0BZ-c4-56B" secondAttribute="top" id="fv6-gN-AFq"/>
+                                        <constraint firstAttribute="bottom" secondItem="aTg-Rc-FQU" secondAttribute="bottom" id="iNR-ni-vJw"/>
+                                        <constraint firstAttribute="bottom" secondItem="Ctr-XC-JSy" secondAttribute="bottom" id="ojM-p0-hcd"/>
+                                        <constraint firstItem="7RL-IB-4Xu" firstAttribute="width" secondItem="aTg-Rc-FQU" secondAttribute="width" id="s7V-tv-V2x"/>
+                                    </constraints>
+                                </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Eja-XN-XM9" userLabel="PlayerVolumeView">
                                     <rect key="frame" x="0.0" y="110" width="320" height="40"/>
                                     <subviews>
@@ -278,14 +278,14 @@
                                 <constraint firstAttribute="trailing" secondItem="Eja-XN-XM9" secondAttribute="trailing" id="1Cd-No-S1y"/>
                                 <constraint firstItem="0BZ-c4-56B" firstAttribute="leading" secondItem="Pg2-I6-xfi" secondAttribute="leading" id="2Hq-mk-Y4v"/>
                                 <constraint firstItem="jZo-Hi-zAo" firstAttribute="leading" secondItem="Pg2-I6-xfi" secondAttribute="leading" id="8VY-C1-CLr"/>
-                                <constraint firstItem="Eja-XN-XM9" firstAttribute="top" secondItem="jZo-Hi-zAo" secondAttribute="bottom" id="It9-1e-3PH"/>
+                                <constraint firstItem="Eja-XN-XM9" firstAttribute="top" secondItem="0BZ-c4-56B" secondAttribute="bottom" id="9Ee-6V-twM"/>
+                                <constraint firstItem="0BZ-c4-56B" firstAttribute="top" secondItem="jZo-Hi-zAo" secondAttribute="bottom" id="H7Z-uh-xPB"/>
                                 <constraint firstAttribute="height" constant="150" id="JQt-qP-Gld"/>
-                                <constraint firstItem="0BZ-c4-56B" firstAttribute="top" secondItem="Pg2-I6-xfi" secondAttribute="top" id="LmC-Sy-eVK"/>
                                 <constraint firstItem="Eja-XN-XM9" firstAttribute="leading" secondItem="Pg2-I6-xfi" secondAttribute="leading" id="Mue-mH-dLZ"/>
                                 <constraint firstAttribute="trailing" secondItem="jZo-Hi-zAo" secondAttribute="trailing" id="Twb-6q-j5g"/>
                                 <constraint firstAttribute="trailing" secondItem="0BZ-c4-56B" secondAttribute="trailing" id="glD-Jb-kD2"/>
-                                <constraint firstItem="jZo-Hi-zAo" firstAttribute="top" secondItem="0BZ-c4-56B" secondAttribute="bottom" id="iVD-Ei-mN6"/>
                                 <constraint firstAttribute="bottom" secondItem="Eja-XN-XM9" secondAttribute="bottom" id="l59-2G-l5H"/>
+                                <constraint firstItem="jZo-Hi-zAo" firstAttribute="top" secondItem="Pg2-I6-xfi" secondAttribute="top" id="paU-pF-Qvb"/>
                                 <constraint firstItem="0BZ-c4-56B" firstAttribute="height" secondItem="jZo-Hi-zAo" secondAttribute="height" id="x44-QG-oLZ"/>
                             </constraints>
                         </view>

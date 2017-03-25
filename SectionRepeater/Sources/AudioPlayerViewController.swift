@@ -45,25 +45,26 @@ class AudioPlayerViewController: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    deinit {
+        self.manager.notificationCenter.removeObserver(self)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioStart(object:)), name: .onAudioManagerStart, object: nil)
+        self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioPause), name: .onAudioManagerPause, object: nil)
+        self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioResume), name: .onAudioManagerResume, object: nil)
+        self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioReset), name: .onAudioManagerReset, object: nil)
+        self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioTimeChanged), name: .onAudioManagerTimeChanged, object: nil)
         guard let item = self.item else { return }
-        if (self.manager.isPlayingItemSame(asItem: self.item)) {
-        } else {
-            self.manager.play(playingItem: item)
-        }
+        self.manager.play(targetURL: item.fileURL)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.manager.register(delegate: self)
         self.setup()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        self.manager.delete(delegate: self)
     }
     
     // MARK - Private
@@ -72,7 +73,7 @@ class AudioPlayerViewController: UIViewController {
         self.titleLabel.text = item.title
         self.artistNameLabel.text = item.artist
         self.albumCoverImageView.image = item.artwork
-        self.loadWaveform(url: item.fileURL, duration: self.manager.duration())
+        self.loadWaveform(url: item.fileURL, duration: self.manager.currentPlayingItemDuration())
         self.waveformContainer.delegate = self
         self.setupRepeatItemButton()
         if (self.manager.isPlaying()) {
@@ -158,13 +159,44 @@ class AudioPlayerViewController: UIViewController {
     }
     
     @IBAction func playPreviousButtonTapped(_ sender: Any) {
-        if let currentTime = self.manager.playingTime() {
-            if currentTime > 5 {
-                self.manager.move(at: 0)
-                return
-            }
+        guard let currentSeconds = self.manager.currentPlayingSeconds() else  { return }
+        if (currentSeconds > 5) {
+            self.manager.move(at: 0)
+        } else {
             self.manager.playPrevAudio()
         }
+    }
+    
+    // MARK - Notification Handling
+    func handleAudioStart(object: AnyObject?) {
+        guard let item = object as? AVPlayerItem else { return }
+        if let url = item.url {
+            self.item = AudioItem(url: url)
+        }
+        self.setup()
+    }
+    
+    func handleAudioPause() {
+        self.setupPause()
+    }
+    
+    func handleAudioResume() {
+        self.setupPlaying()
+    }
+    
+    func handleAudioReset() {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    func handleAudioTimeChanged() {
+        guard let currentSeconds = self.manager.currentPlayingSeconds(), let durationSeconds = self.manager.currentPlayingItemDuration() else { return }
+        if (durationSeconds.isEqual(to: 0.0)) {
+            return
+        }
+        let progress = currentSeconds / durationSeconds
+        self.waveformContainer.delegate = nil
+        self.waveformContainer.contentOffset = CGPoint(x: (CGFloat(progress) * self.waveformContainer.contentSize.width) - self.waveformContainer.contentInset.left, y: 0)
+        self.waveformContainer.delegate = self
     }
 }
 
@@ -187,45 +219,9 @@ extension AudioPlayerViewController: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         self.scrollViewDecelerate = false
         let progress = (scrollView.contentInset.left + scrollView.contentOffset.x) / scrollView.contentSize.width
-        if (progress <= 0) {
-            self.manager.move(at: 0)
-        } else if (progress >= 1.0) {
-            if let duration = self.manager.duration() {
-                self.manager.move(at: duration)
-            } else {
-                self.manager.move(at: 0)
-            }
-        } else {
-            self.manager.move(progress: Double(progress))
-        }
-        
+        self.manager.move(at: Double(progress))
         if (self.playingWhenScrollStart) {
             self.manager.resume()
         }
-    }
-}
-
-extension AudioPlayerViewController: AudioManagerDelegate {
-    func didStartPlaying(item: AudioItem) {
-        self.item = item
-        self.setup()
-    }
-    
-    func didPausePlaying(item: AudioItem) {
-        self.setupPause()
-    }
-    
-    func didResumePlaying(item: AudioItem) {
-        self.setupPlaying()
-    }
-    
-    func didResetPlaying() {
-        self.dismiss(animated: true, completion: nil)
-    }
-    
-    func didUpdateTime(progress: Double) {
-        self.waveformContainer.delegate = nil
-        self.waveformContainer.contentOffset = CGPoint(x: (CGFloat(progress) * self.waveformContainer.contentSize.width) - self.waveformContainer.contentInset.left, y: 0)
-        self.waveformContainer.delegate = self
     }
 }
