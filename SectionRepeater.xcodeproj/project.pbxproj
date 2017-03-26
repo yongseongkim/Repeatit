@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2E243DCC1E62992B00601200 /* AudioWaveformView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E243DCB1E62992B00601200 /* AudioWaveformView.m */; };
+		2E2E33F11E8770C500AF26DE /* DoubleObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2E33F01E8770C500AF26DE /* DoubleObject.swift */; };
 		2E49C3E31E7574FE0079CFA3 /* FileDisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E49C3E21E7574FE0079CFA3 /* FileDisplayManager.swift */; };
 		2E49C3E81E757C920079CFA3 /* DocumentAudioFilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E49C3E61E757C920079CFA3 /* DocumentAudioFilesViewController.swift */; };
 		2E49C3E91E757C920079CFA3 /* DocumentAudioFilesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E49C3E71E757C920079CFA3 /* DocumentAudioFilesViewController.xib */; };
@@ -21,7 +22,7 @@
 		2E7AC21F1E47195700BA03B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E7AC21E1E47195700BA03B7 /* Assets.xcassets */; };
 		2E7AC2221E47195700BA03B7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E7AC2201E47195700BA03B7 /* LaunchScreen.storyboard */; };
 		2ECBA23E1E7E530500F43AF7 /* Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECBA23D1E7E530500F43AF7 /* Dependencies.swift */; };
-		2ECBA2421E7E73B900F43AF7 /* BookmarkDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECBA2411E7E73B900F43AF7 /* BookmarkDB.swift */; };
+		2ECBA2421E7E73B900F43AF7 /* BookmarkObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECBA2411E7E73B900F43AF7 /* BookmarkObject.swift */; };
 		2ECBA2441E84191100F43AF7 /* AVPlayer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECBA2431E84191100F43AF7 /* AVPlayer+Extension.swift */; };
 		2EEB178D1E6DA37600CE3918 /* AudioItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEB178C1E6DA37600CE3918 /* AudioItem.swift */; };
 		2EEEF61E1E598AD600D2C279 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEEF60F1E598AD600D2C279 /* AppDelegate.swift */; };
@@ -53,6 +54,7 @@
 		2E243DC61E62967D00601200 /* SectionRepeater-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SectionRepeater-Bridging-Header.h"; sourceTree = "<group>"; };
 		2E243DCA1E62992B00601200 /* AudioWaveformView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioWaveformView.h; sourceTree = "<group>"; };
 		2E243DCB1E62992B00601200 /* AudioWaveformView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioWaveformView.m; sourceTree = "<group>"; };
+		2E2E33F01E8770C500AF26DE /* DoubleObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoubleObject.swift; sourceTree = "<group>"; };
 		2E49C3E21E7574FE0079CFA3 /* FileDisplayManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDisplayManager.swift; sourceTree = "<group>"; };
 		2E49C3E61E757C920079CFA3 /* DocumentAudioFilesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentAudioFilesViewController.swift; sourceTree = "<group>"; };
 		2E49C3E71E757C920079CFA3 /* DocumentAudioFilesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DocumentAudioFilesViewController.xib; sourceTree = "<group>"; };
@@ -68,7 +70,7 @@
 		2E7AC2211E47195700BA03B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2E7AC2231E47195700BA03B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
 		2ECBA23D1E7E530500F43AF7 /* Dependencies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dependencies.swift; sourceTree = "<group>"; };
-		2ECBA2411E7E73B900F43AF7 /* BookmarkDB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarkDB.swift; sourceTree = "<group>"; };
+		2ECBA2411E7E73B900F43AF7 /* BookmarkObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarkObject.swift; sourceTree = "<group>"; };
 		2ECBA2431E84191100F43AF7 /* AVPlayer+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AVPlayer+Extension.swift"; sourceTree = "<group>"; };
 		2EEB178C1E6DA37600CE3918 /* AudioItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AudioItem.swift; path = Extension/AudioItem.swift; sourceTree = "<group>"; };
 		2EEEF60F1E598AD600D2C279 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -158,7 +160,8 @@
 		2E77D1591E798C4A0047F436 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				2ECBA2411E7E73B900F43AF7 /* BookmarkDB.swift */,
+				2ECBA2411E7E73B900F43AF7 /* BookmarkObject.swift */,
+				2E2E33F01E8770C500AF26DE /* DoubleObject.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -390,10 +393,11 @@
 				2EEEF62D1E598C0800D2C279 /* AudioPlayerViewController.swift in Sources */,
 				2ECBA23E1E7E530500F43AF7 /* Dependencies.swift in Sources */,
 				2ECBA2441E84191100F43AF7 /* AVPlayer+Extension.swift in Sources */,
+				2E2E33F11E8770C500AF26DE /* DoubleObject.swift in Sources */,
 				2E49C3E81E757C920079CFA3 /* DocumentAudioFilesViewController.swift in Sources */,
 				2EEEF6291E598AD600D2C279 /* RootViewController.swift in Sources */,
 				2E49C3EE1E757CB80079CFA3 /* iTuensSongsViewController.swift in Sources */,
-				2ECBA2421E7E73B900F43AF7 /* BookmarkDB.swift in Sources */,
+				2ECBA2421E7E73B900F43AF7 /* BookmarkObject.swift in Sources */,
 				2EEEF61E1E598AD600D2C279 /* AppDelegate.swift in Sources */,
 				2E49C3FC1E757FCD0079CFA3 /* DocumentAudioFilesCollectionViewCell.swift in Sources */,
 				2E243DCC1E62992B00601200 /* AudioWaveformView.m in Sources */,

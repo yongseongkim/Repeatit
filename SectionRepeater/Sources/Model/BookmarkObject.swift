@@ -8,6 +8,12 @@
 
 import RealmSwift
 
-class BookmarkDB: Object {
+class BookmarkObject: Object {
+    dynamic var path = ""
+    let times = List<DoubleObject>()
     
+    convenience init(path: String) {
+        self.init()
+        self.path = path
+    }
 }

@@ -9,6 +9,7 @@
 import Foundation
 import AVFoundation
 import MediaPlayer
+import RealmSwift
 
 enum AudioRepeatMode {
     case None               // doesn't repeat
@@ -22,6 +23,7 @@ extension Notification.Name {
     static let onAudioManagerResume = Notification.Name("audiomanager.resume")
     static let onAudioManagerReset = Notification.Name("audiomanager.reset")
     static let onAudioManagerTimeChanged = Notification.Name("audiomanager.timechanged")
+    static let onAudioManagerBookmarkUpdated = Notification.Name("audiomanager.bookmarkupdated")
 }
 
 class AudioManager: NSObject {
@@ -35,10 +37,19 @@ class AudioManager: NSObject {
             }
             self.player = AVPlayer(playerItem: item)
             self.player?.volume = self.volume
+            self.switchRepeat = false
+            self.bookmarks = [Double]()
+            
+            if let times = self.getBookmarks() {
+                self.bookmarks = times.sorted()
+                self.addBoundaryTimeHandler()
+            }
         }
     }
     fileprivate var playlist: [AVPlayerItem]
     fileprivate var timer: Timer?
+    fileprivate var bookmarks: [Double]
+    fileprivate var boundaryObserver: Any?
     public var notificationCenter: NotificationCenter
     public var volume = Float(integerLiteral: 5) {
         didSet {
@@ -48,10 +59,12 @@ class AudioManager: NSObject {
         }
     }
     public var mode = AudioRepeatMode.None
+    public var switchRepeat = false
 
     override init() {
         self.playlist = [AVPlayerItem]()
         self.notificationCenter = NotificationCenter()
+        self.bookmarks = [Double]()
         super.init()
         
         do {
@@ -76,7 +89,45 @@ class AudioManager: NSObject {
     
     //MARK - Public
     
+    public func addBookmark() {
+        guard let currentSeconds = self.player?.currentSeconds else { return }
+        guard let targetPath = self.playerItem?.url?.path else { return }
+        self.bookmarks.append(currentSeconds)
+        self.bookmarks.sort()
+        let realm = try! Realm()
+        if let bookmarkObj = realm.objects(BookmarkObject.self).filter(String.init(format: "path = '%@'", targetPath)).first {
+            try! realm.write {
+                bookmarkObj.times.append(DoubleObject(doubleValue: currentSeconds))
+            }
+        } else {
+            let bookmarkObj = BookmarkObject(path: targetPath)
+            bookmarkObj.times.append(DoubleObject(doubleValue: currentSeconds))
+            try! realm.write {
+                realm.add(bookmarkObj)
+            }
+        }
+        self.addBoundaryTimeHandler()
+        self.bookmarkUpdated()
+    }
+    
+    public func getBookmarks() -> [Double]? {
+        guard let targetPath = self.playerItem?.url?.path else { return nil }
+        let realm = try! Realm()
+        let bookmarkObj = realm.objects(BookmarkObject.self).filter(String.init(format: "path = '%@'", targetPath)).first
+        return bookmarkObj?.times.map({ (obj) -> Double in return obj.value })
+    }
+    
     public func play(targetURL: URL) {
+        // TODO: remove the code that delete bookmarks
+        if let targetPath = self.playerItem?.url?.path {
+            let realm = try! Realm()
+            if let bookmarkObj = realm.objects(BookmarkObject.self).filter(String.init(format: "path = '%@'", targetPath)).first {
+                try! realm.write {
+                    realm.delete(bookmarkObj)
+                }
+            }
+        }
+        
         // doesn't play if it is not supported file type.
         if (!self.isSupportedAudioFile(fileURL: targetURL)) { return }
         // doesn't play if it is same.
@@ -99,7 +150,6 @@ class AudioManager: NSObject {
                                 targetItem = AVPlayerItem(url: url)
                             }
                         }
-                        
                     }
                 }
             }
@@ -158,9 +208,9 @@ class AudioManager: NSObject {
         player.seek(to: time)
     }
     
-    public func move(progress: Double) {
+    public func move(ratio: Double) {
         guard let player = self.player else { return }
-        self.move(at: progress * player.durationSeconds)
+        self.move(at: ratio * player.durationSeconds)
     }
     
     public func playNextAudio() {
@@ -252,6 +302,15 @@ class AudioManager: NSObject {
         self.notificationCenter.post(name: .onAudioManagerTimeChanged, object: nil)
     }
     
+    func handleReachBoundaryTime() {
+        if (!self.switchRepeat) { return }
+        guard let currentSeconds = self.currentPlayingSeconds() else { return }
+        let previousBookmarks = self.bookmarks.filter { (bookmark) -> Bool in return bookmark < (currentSeconds - 0.1) }
+        if let previousBookmark = previousBookmarks.last {
+            self.move(at: previousBookmark)
+        }
+    }
+    
     // MARK: Private
     fileprivate func internalPlay() {
         guard let item = self.playerItem else { return }
@@ -276,6 +335,20 @@ class AudioManager: NSObject {
         self.playerItem = nil
         self.playlist = [AVPlayerItem]()
         self.notificationCenter.post(name: .onAudioManagerReset, object: nil)
+    }
+    
+    fileprivate func bookmarkUpdated() {
+        self.notificationCenter.post(name: .onAudioManagerBookmarkUpdated, object: nil)
+    }
+    
+    fileprivate func addBoundaryTimeHandler() {
+        weak var weakSelf = self
+        if let observer = self.boundaryObserver {
+            self.player?.removeTimeObserver(observer)
+        }
+        self.boundaryObserver = self.player?.addBoundaryTimeObserver(forTimes: self.bookmarks as [NSValue], queue: nil, using: {
+            weakSelf?.handleReachBoundaryTime()
+        })
     }
 }
  

@@ -23,6 +23,7 @@
                 <outlet property="playerSlider" destination="xcn-Ig-L3P" id="DgD-Mu-anO"/>
                 <outlet property="prevButton" destination="4N2-6w-WOz" id="xi7-It-NhW"/>
                 <outlet property="repeatItemButton" destination="Ctr-XC-JSy" id="hJM-AY-gCX"/>
+                <outlet property="repeatSwitchButton" destination="aTg-Rc-FQU" id="EHz-MA-sdl"/>
                 <outlet property="titleLabel" destination="83P-NH-LtE" id="EIu-jn-u5h"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="volumeView" destination="7uq-yQ-F2W" id="9H0-ga-NQp"/>
@@ -231,10 +232,16 @@
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aTg-Rc-FQU">
                                             <rect key="frame" x="106.5" y="0.0" width="107" height="55"/>
                                             <state key="normal" title="Button"/>
+                                            <connections>
+                                                <action selector="repeatSwitchTapped:" destination="-1" eventType="touchUpInside" id="YsZ-FE-BpS"/>
+                                            </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7RL-IB-4Xu">
                                             <rect key="frame" x="213.5" y="0.0" width="106.5" height="55"/>
-                                            <state key="normal" title="Button"/>
+                                            <state key="normal" title="Bookmark"/>
+                                            <connections>
+                                                <action selector="addBookmarkButtonTapped:" destination="-1" eventType="touchUpInside" id="bqx-7s-anX"/>
+                                            </connections>
                                         </button>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>

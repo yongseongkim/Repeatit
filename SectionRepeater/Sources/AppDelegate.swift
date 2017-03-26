@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,6 +19,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = UIWindow(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
         self.window?.rootViewController = RootViewController()
         self.window?.makeKeyAndVisible()
+        
+        let defaultRealmURL = NSURL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
+        var config = Realm.Configuration()
+        config.fileURL = defaultRealmURL.appendingPathComponent("sectionRepeater.realm")
+        Realm.Configuration.defaultConfiguration = config
         return true
     }
 

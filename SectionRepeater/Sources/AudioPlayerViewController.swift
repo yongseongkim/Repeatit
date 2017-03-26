@@ -20,14 +20,14 @@ class AudioPlayerViewController: UIViewController {
     @IBOutlet weak var waveformContainer: UIScrollView!
     @IBOutlet weak var audioPlot: EZAudioPlot!
     @IBOutlet weak var audioPlotWidthConstraint: NSLayoutConstraint!
-
-    @IBOutlet weak var repeatItemButton: UIButton!
     
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var forwardButton: UIButton!
     @IBOutlet weak var backwardButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var prevButton: UIButton!
+    @IBOutlet weak var repeatItemButton: UIButton!
+    @IBOutlet weak var repeatSwitchButton: UIButton!
     @IBOutlet weak var volumeView: AudioVolumeView!
     
     public var item: AudioItem?
@@ -58,6 +58,7 @@ class AudioPlayerViewController: UIViewController {
         self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioResume), name: .onAudioManagerResume, object: nil)
         self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioReset), name: .onAudioManagerReset, object: nil)
         self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioTimeChanged), name: .onAudioManagerTimeChanged, object: nil)
+        self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioBookmarkUpdated), name: .onAudioManagerBookmarkUpdated, object: nil)
         guard let item = self.item else { return }
         self.manager.play(targetURL: item.fileURL)
     }
@@ -74,13 +75,9 @@ class AudioPlayerViewController: UIViewController {
         self.artistNameLabel.text = item.artist
         self.albumCoverImageView.image = item.artwork
         self.loadWaveform(url: item.fileURL, duration: self.manager.currentPlayingItemDuration())
+        self.loadBookmarks()
         self.waveformContainer.delegate = self
-        self.setupRepeatItemButton()
-        if (self.manager.isPlaying()) {
-            self.setupPlaying()
-        } else {
-            self.setupPause()
-        }
+        self.setupButtons()
     }
     
     func loadWaveform(url: URL, duration: TimeInterval?) {
@@ -102,15 +99,25 @@ class AudioPlayerViewController: UIViewController {
         })
     }
     
-    func setupPlaying() {
-        self.playButton.setTitle("Pause", for: .normal)
+    func loadBookmarks() {
+        guard let times = self.manager.getBookmarks() else { return }
+        guard let duration = self.manager.currentPlayingItemDuration() else { return }
+        for time in times {
+            let ratio = time / duration
+            let waveformContainerSize = self.waveformContainer.contentSize
+            let view = UIView(frame: CGRect(x: waveformContainerSize.width * CGFloat(ratio), y: 0, width: 1, height: waveformContainerSize.height))
+            view.backgroundColor = UIColor.red
+            self.waveformContainer.addSubview(view)
+        }
     }
     
-    func setupPause() {
-        self.playButton.setTitle("Play", for: .normal)
-    }
-    
-    func setupRepeatItemButton() {
+    func setupButtons() {
+        if self.manager.isPlaying() {
+            self.playButton.setTitle("Pause", for: .normal)
+        } else {
+            self.playButton.setTitle("Play", for: .normal)
+        }
+        
         switch self.manager.mode {
         case .All:
             self.repeatItemButton.setTitle("ALL", for: .normal)
@@ -122,20 +129,17 @@ class AudioPlayerViewController: UIViewController {
             self.repeatItemButton.setTitle("None", for: .normal)
             break
         }
+        
+        if (self.manager.switchRepeat) {
+            self.repeatSwitchButton.setTitle("Now On", for: .normal)
+        } else {
+            self.repeatSwitchButton.setTitle("Now Off", for: .normal)
+        }
     }
     
     // MARK - IBBinding
     @IBAction func closeButtonTapped(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
-    }
-    
-    @IBAction func repeatItemButtonTapped(_ sender: Any) {
-        let repeatOrders = [AudioRepeatMode.All, AudioRepeatMode.OnlyOne, AudioRepeatMode.None]
-        if let index = repeatOrders.index(where: { (mode) -> Bool in return mode == self.manager.mode }) {
-            let nextMode = repeatOrders[((index + 1) % repeatOrders.count)]
-            self.manager.mode = nextMode
-            self.setupRepeatItemButton()
-        }
     }
     
     @IBAction func playButtonTapped(_ sender: Any) {
@@ -167,9 +171,27 @@ class AudioPlayerViewController: UIViewController {
         }
     }
     
+    @IBAction func repeatItemButtonTapped(_ sender: Any) {
+        let repeatOrders = [AudioRepeatMode.All, AudioRepeatMode.OnlyOne, AudioRepeatMode.None]
+        if let index = repeatOrders.index(where: { (mode) -> Bool in return mode == self.manager.mode }) {
+            let nextMode = repeatOrders[((index + 1) % repeatOrders.count)]
+            self.manager.mode = nextMode
+            self.setupButtons()
+        }
+    }
+    
+    @IBAction func repeatSwitchTapped(_ sender: Any) {
+        self.manager.switchRepeat = !self.manager.switchRepeat
+        self.setupButtons()
+    }
+    
+    @IBAction func addBookmarkButtonTapped(_ sender: Any) {
+        self.manager.addBookmark()
+    }
+    
     // MARK - Notification Handling
-    func handleAudioStart(object: AnyObject?) {
-        guard let item = object as? AVPlayerItem else { return }
+    func handleAudioStart(object: NSNotification) {
+        guard let item = object.object as? AVPlayerItem else { return }
         if let url = item.url {
             self.item = AudioItem(url: url)
         }
@@ -177,11 +199,11 @@ class AudioPlayerViewController: UIViewController {
     }
     
     func handleAudioPause() {
-        self.setupPause()
+        self.setupButtons()
     }
     
     func handleAudioResume() {
-        self.setupPlaying()
+        self.setupButtons()
     }
     
     func handleAudioReset() {
@@ -197,6 +219,10 @@ class AudioPlayerViewController: UIViewController {
         self.waveformContainer.delegate = nil
         self.waveformContainer.contentOffset = CGPoint(x: (CGFloat(progress) * self.waveformContainer.contentSize.width) - self.waveformContainer.contentInset.left, y: 0)
         self.waveformContainer.delegate = self
+    }
+    
+    func handleAudioBookmarkUpdated() {
+        self.loadBookmarks()
     }
 }
 
@@ -219,7 +245,7 @@ extension AudioPlayerViewController: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         self.scrollViewDecelerate = false
         let progress = (scrollView.contentInset.left + scrollView.contentOffset.x) / scrollView.contentSize.width
-        self.manager.move(at: Double(progress))
+        self.manager.move(ratio: Double(progress))
         if (self.playingWhenScrollStart) {
             self.manager.resume()
         }

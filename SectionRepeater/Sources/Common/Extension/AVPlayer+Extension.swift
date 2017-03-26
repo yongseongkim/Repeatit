@@ -34,7 +34,7 @@ extension AVPlayerItem {
         guard let asset = self.asset as? AVURLAsset else { return nil }
         return asset.url
     }
-    
+
     open override func isEqual(_ object: Any?) -> Bool {
         guard let another = object as? AVPlayerItem else { return false }
         if let selfURL = self.url, let anotherURL = another.url {
