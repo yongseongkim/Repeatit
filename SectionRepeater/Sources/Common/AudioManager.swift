@@ -32,10 +32,12 @@ class AudioManager: NSObject {
         didSet {
             guard let item = playerItem else {
                 self.player = nil
-                self.timer = nil
                 return
             }
-            self.player = AVPlayer(playerItem: item)
+            self.player = AVPlayer(playerItem: AVPlayerItem(asset: item.asset))
+            self.player?.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(0.05, Int32(NSEC_PER_SEC)), queue: nil, using: { (time) in
+                self.updateTime()
+            })
             self.player?.volume = self.volume
             self.switchRepeat = false
             self.bookmarks = [Double]()
@@ -47,7 +49,6 @@ class AudioManager: NSObject {
         }
     }
     fileprivate var playlist: [AVPlayerItem]
-    fileprivate var timer: Timer?
     fileprivate var bookmarks: [Double]
     fileprivate var boundaryObserver: Any?
     public var notificationCenter: NotificationCenter
@@ -80,7 +81,7 @@ class AudioManager: NSObject {
         } catch let error as NSError {
             print(error)
         }
-        NotificationCenter.default.addObserver(self, selector: #selector(finishedPlaying(notification:)), name: .AVPlayerItemDidPlayToEndTime, object: self.playerItem)
+        NotificationCenter.default.addObserver(self, selector: #selector(finishedPlaying(notification:)), name: .AVPlayerItemDidPlayToEndTime, object: nil)
     }
     
     deinit {
@@ -307,14 +308,13 @@ class AudioManager: NSObject {
         guard let currentSeconds = self.currentPlayingSeconds() else { return }
         let previousBookmarks = self.bookmarks.filter { (bookmark) -> Bool in return bookmark < (currentSeconds - 0.1) }
         if let previousBookmark = previousBookmarks.last {
-            self.move(at: previousBookmark)
+            self.move(at: previousBookmark + 0.1)
         }
     }
     
     // MARK: Private
     fileprivate func internalPlay() {
         guard let item = self.playerItem else { return }
-        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateTime), userInfo: nil, repeats: true)
         self.player?.play()
         self.notificationCenter.post(name: .onAudioManagerStart, object: item)
     }
