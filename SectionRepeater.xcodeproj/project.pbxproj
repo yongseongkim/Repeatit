@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2E1A3B781E8F83F900F785D0 /* AudioBookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1A3B761E8F83F900F785D0 /* AudioBookmarksViewController.swift */; };
+		2E1A3B791E8F83F900F785D0 /* AudioBookmarksViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E1A3B771E8F83F900F785D0 /* AudioBookmarksViewController.xib */; };
+		2E1A3B7C1E8F889B00F785D0 /* AudioBookmarkCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1A3B7A1E8F889A00F785D0 /* AudioBookmarkCollectionViewCell.swift */; };
+		2E1A3B7D1E8F889B00F785D0 /* AudioBookmarkCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E1A3B7B1E8F889B00F785D0 /* AudioBookmarkCollectionViewCell.xib */; };
+		2E1A3B7F1E8F932300F785D0 /* UIScreen+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1A3B7E1E8F932300F785D0 /* UIScreen+Extension.swift */; };
+		2E1A3B811E8FB38200F785D0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E1A3B801E8FB38200F785D0 /* Images.xcassets */; };
 		2E243DCC1E62992B00601200 /* AudioWaveformView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E243DCB1E62992B00601200 /* AudioWaveformView.m */; };
 		2E2E33F11E8770C500AF26DE /* DoubleObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2E33F01E8770C500AF26DE /* DoubleObject.swift */; };
 		2E49C3E31E7574FE0079CFA3 /* FileDisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E49C3E21E7574FE0079CFA3 /* FileDisplayManager.swift */; };
@@ -50,6 +56,12 @@
 
 /* Begin PBXFileReference section */
 		1AD631199E9D44D763A2EDC1 /* Pods-SectionRepeater.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SectionRepeater.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SectionRepeater/Pods-SectionRepeater.debug.xcconfig"; sourceTree = "<group>"; };
+		2E1A3B761E8F83F900F785D0 /* AudioBookmarksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioBookmarksViewController.swift; sourceTree = "<group>"; };
+		2E1A3B771E8F83F900F785D0 /* AudioBookmarksViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioBookmarksViewController.xib; sourceTree = "<group>"; };
+		2E1A3B7A1E8F889A00F785D0 /* AudioBookmarkCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioBookmarkCollectionViewCell.swift; sourceTree = "<group>"; };
+		2E1A3B7B1E8F889B00F785D0 /* AudioBookmarkCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioBookmarkCollectionViewCell.xib; sourceTree = "<group>"; };
+		2E1A3B7E1E8F932300F785D0 /* UIScreen+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIScreen+Extension.swift"; sourceTree = "<group>"; };
+		2E1A3B801E8FB38200F785D0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		2E243DB71E62896300601200 /* CoreAudioKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudioKit.framework; path = System/Library/Frameworks/CoreAudioKit.framework; sourceTree = SDKROOT; };
 		2E243DC61E62967D00601200 /* SectionRepeater-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SectionRepeater-Bridging-Header.h"; sourceTree = "<group>"; };
 		2E243DCA1E62992B00601200 /* AudioWaveformView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioWaveformView.h; sourceTree = "<group>"; };
@@ -117,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				2E7AC21E1E47195700BA03B7 /* Assets.xcassets */,
+				2E1A3B801E8FB38200F785D0 /* Images.xcassets */,
 				2E7AC2201E47195700BA03B7 /* LaunchScreen.storyboard */,
 				2E7AC2231E47195700BA03B7 /* Info.plist */,
 			);
@@ -205,6 +218,10 @@
 				2EEEF61C1E598AD600D2C279 /* RootViewController.swift */,
 				2EEEF62B1E598C0800D2C279 /* AudioPlayerViewController.swift */,
 				2EEEF62C1E598C0800D2C279 /* AudioPlayerViewController.xib */,
+				2E1A3B761E8F83F900F785D0 /* AudioBookmarksViewController.swift */,
+				2E1A3B771E8F83F900F785D0 /* AudioBookmarksViewController.xib */,
+				2E1A3B7A1E8F889A00F785D0 /* AudioBookmarkCollectionViewCell.swift */,
+				2E1A3B7B1E8F889B00F785D0 /* AudioBookmarkCollectionViewCell.xib */,
 				2E243DC61E62967D00601200 /* SectionRepeater-Bridging-Header.h */,
 				2E243DCA1E62992B00601200 /* AudioWaveformView.h */,
 				2E243DCB1E62992B00601200 /* AudioWaveformView.m */,
@@ -231,6 +248,7 @@
 				2EEEF6121E598AD600D2C279 /* NSObject+Extension.swift */,
 				2EEEF6131E598AD600D2C279 /* UICollectionView+Extension.swift */,
 				2ECBA2431E84191100F43AF7 /* AVPlayer+Extension.swift */,
+				2E1A3B7E1E8F932300F785D0 /* UIScreen+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -324,11 +342,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E7AC2221E47195700BA03B7 /* LaunchScreen.storyboard in Resources */,
+				2E1A3B811E8FB38200F785D0 /* Images.xcassets in Resources */,
 				2EEEF62E1E598C0800D2C279 /* AudioPlayerViewController.xib in Resources */,
 				2E49C3FD1E757FCD0079CFA3 /* DocumentAudioFilesCollectionViewCell.xib in Resources */,
 				2E7AC21F1E47195700BA03B7 /* Assets.xcassets in Resources */,
 				2E49C3EF1E757CB80079CFA3 /* iTuensSongsViewController.xib in Resources */,
 				2E49C3F11E757CB80079CFA3 /* iTunesSongCollectionViewCell.xib in Resources */,
+				2E1A3B791E8F83F900F785D0 /* AudioBookmarksViewController.xib in Resources */,
+				2E1A3B7D1E8F889B00F785D0 /* AudioBookmarkCollectionViewCell.xib in Resources */,
 				2E49C3E91E757C920079CFA3 /* DocumentAudioFilesViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -398,7 +419,9 @@
 				2EEEF6291E598AD600D2C279 /* RootViewController.swift in Sources */,
 				2E49C3EE1E757CB80079CFA3 /* iTuensSongsViewController.swift in Sources */,
 				2ECBA2421E7E73B900F43AF7 /* BookmarkObject.swift in Sources */,
+				2E1A3B7C1E8F889B00F785D0 /* AudioBookmarkCollectionViewCell.swift in Sources */,
 				2EEEF61E1E598AD600D2C279 /* AppDelegate.swift in Sources */,
+				2E1A3B781E8F83F900F785D0 /* AudioBookmarksViewController.swift in Sources */,
 				2E49C3FC1E757FCD0079CFA3 /* DocumentAudioFilesCollectionViewCell.swift in Sources */,
 				2E243DCC1E62992B00601200 /* AudioWaveformView.m in Sources */,
 				2E49C3E31E7574FE0079CFA3 /* FileDisplayManager.swift in Sources */,
@@ -406,6 +429,7 @@
 				2EEB178D1E6DA37600CE3918 /* AudioItem.swift in Sources */,
 				2EEEF6301E5991C200D2C279 /* AudioManager.swift in Sources */,
 				2E49C3F01E757CB80079CFA3 /* iTunesSongCollectionViewCell.swift in Sources */,
+				2E1A3B7F1E8F932300F785D0 /* UIScreen+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

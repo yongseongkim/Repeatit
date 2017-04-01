@@ -17,6 +17,8 @@ class AudioPlayerViewController: UIViewController {
     @IBOutlet weak var albumCoverImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var artistNameLabel: UILabel!
+    @IBOutlet weak var lyricsView: UIView!
+    @IBOutlet weak var lyricsTextView: UITextView!
     @IBOutlet weak var waveformContainer: UIScrollView!
     @IBOutlet weak var audioPlot: EZAudioPlot!
     @IBOutlet weak var audioPlotWidthConstraint: NSLayoutConstraint!
@@ -29,6 +31,7 @@ class AudioPlayerViewController: UIViewController {
     @IBOutlet weak var repeatItemButton: UIButton!
     @IBOutlet weak var repeatSwitchButton: UIButton!
     @IBOutlet weak var volumeView: AudioVolumeView!
+    @IBOutlet weak var rateButton: UIButton!
     
     public var item: AudioItem?
     fileprivate var manager: AudioManager
@@ -59,6 +62,7 @@ class AudioPlayerViewController: UIViewController {
         self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioReset), name: .onAudioManagerReset, object: nil)
         self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioTimeChanged), name: .onAudioManagerTimeChanged, object: nil)
         self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioBookmarkUpdated), name: .onAudioManagerBookmarkUpdated, object: nil)
+        self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioRateChanged), name: .onAudioManagerRateChanged, object: nil)
         guard let item = self.item else { return }
         self.manager.play(targetURL: item.fileURL)
     }
@@ -76,6 +80,7 @@ class AudioPlayerViewController: UIViewController {
         self.albumCoverImageView.image = item.artwork
         self.loadWaveform(url: item.fileURL, duration: self.manager.currentPlayingItemDuration())
         self.loadBookmarks()
+        self.lyricsTextView.text = item.lyrics
         self.waveformContainer.delegate = self
         self.setupButtons()
     }
@@ -100,7 +105,7 @@ class AudioPlayerViewController: UIViewController {
     }
     
     func loadBookmarks() {
-        guard let times = self.manager.getBookmarks() else { return }
+        guard let times = self.manager.getBookmarkTimes() else { return }
         guard let duration = self.manager.currentPlayingItemDuration() else { return }
         for time in times {
             let ratio = time / duration
@@ -140,6 +145,25 @@ class AudioPlayerViewController: UIViewController {
     // MARK - IBBinding
     @IBAction func closeButtonTapped(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func showBookmarksButtonTapped(_ sender: Any) {
+        let bookmarksViewController = AudioBookmarksViewController(nibName: AudioBookmarksViewController.className(), bundle: nil)
+        bookmarksViewController.targetPath = self.item?.fileURL.path
+        bookmarksViewController.modalPresentationStyle = .custom
+        self.present(bookmarksViewController, animated: true, completion: nil)
+    }
+    
+    @IBAction func movePreviousBookmark(_ sender: Any) {
+        self.manager.movePreviousBookmark()
+    }
+    
+    @IBAction func moveStartCurrentBookmark(_ sender: Any) {
+        self.manager.moveCurrentBookmark()
+    }
+    
+    @IBAction func moveNextBookmark(_ sender: Any) {
+        self.manager.moveNextBookmark()
     }
     
     @IBAction func playButtonTapped(_ sender: Any) {
@@ -189,6 +213,17 @@ class AudioPlayerViewController: UIViewController {
         self.manager.addBookmark()
     }
     
+    @IBAction func rateButtonTapped(_ sender: Any) {
+        self.manager.nextRate()
+    }
+    
+    @IBAction func lyricsButtonTapped(_ sender: Any) {
+        self.lyricsView.isHidden = false
+    }
+    
+    @IBAction func lyricsViewTapped(_ sender: Any) {
+        self.lyricsView.isHidden = true
+    }
     // MARK - Notification Handling
     func handleAudioStart(object: NSNotification) {
         guard let item = object.object as? AVPlayerItem else { return }
@@ -223,6 +258,10 @@ class AudioPlayerViewController: UIViewController {
     
     func handleAudioBookmarkUpdated() {
         self.loadBookmarks()
+    }
+    
+    func handleAudioRateChanged() {
+        self.rateButton.setTitle(String(format: "x%.1f", self.manager.rate), for: .normal)
     }
 }
 

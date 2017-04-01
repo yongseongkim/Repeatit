@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SnapKit
 
 enum DocumentAudioFilesSectionType: Int {
     case Directory
@@ -37,10 +36,6 @@ class DocumentAudioFilesViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.displayManager?.loadCurrentPathContents()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
     }
 }
 
@@ -95,8 +90,7 @@ extension DocumentAudioFilesViewController: UICollectionViewDataSource, UICollec
 
 extension DocumentAudioFilesViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let screenWidth = UIScreen.main.bounds.width
-        return CGSize(width: screenWidth, height: DocumentAudioFilesCollectionViewCell.height())
+        return CGSize(width: UIScreen.mainScreenWidth(), height: DocumentAudioFilesCollectionViewCell.height())
     }
 }
 
