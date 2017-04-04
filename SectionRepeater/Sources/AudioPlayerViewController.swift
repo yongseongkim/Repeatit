@@ -39,6 +39,7 @@ class AudioPlayerViewController: UIViewController {
     fileprivate var timer: Timer?
     fileprivate var playingWhenScrollStart = false
     fileprivate var scrollViewDecelerate = false
+    fileprivate var bookmarkViews: [UIView]?
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         self.manager = Dependencies.sharedInstance().resolve(serviceType: AudioManager.self)!
@@ -56,9 +57,9 @@ class AudioPlayerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioStart(object:)), name: .onAudioManagerStart, object: nil)
+        self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioItemChanged(object:)), name: .onAudioManagerItemChanged, object: nil)
+        self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioPlay), name: .onAudioManagerPlay, object: nil)
         self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioPause), name: .onAudioManagerPause, object: nil)
-        self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioResume), name: .onAudioManagerResume, object: nil)
         self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioReset), name: .onAudioManagerReset, object: nil)
         self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioTimeChanged), name: .onAudioManagerTimeChanged, object: nil)
         self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioBookmarkUpdated), name: .onAudioManagerBookmarkUpdated, object: nil)
@@ -79,9 +80,9 @@ class AudioPlayerViewController: UIViewController {
         self.artistNameLabel.text = item.artist
         self.albumCoverImageView.image = item.artwork
         self.loadWaveform(url: item.fileURL, duration: self.manager.currentPlayingItemDuration())
-        self.loadBookmarks()
         self.lyricsTextView.text = item.lyrics
         self.waveformContainer.delegate = self
+        self.loadBookmarks()
         self.setupButtons()
     }
     
@@ -92,6 +93,7 @@ class AudioPlayerViewController: UIViewController {
         var width = UIScreen.main.bounds.width
         if let duration = duration {
             width = CGFloat(duration.value()) * 10
+            self.waveformContainer.contentSize = CGSize(width:width, height:self.waveformContainer.bounds.height)
         }
         self.audioPlotWidthConstraint.constant = width
         self.audioFile = EZAudioFile(url: url)
@@ -105,14 +107,18 @@ class AudioPlayerViewController: UIViewController {
     }
     
     func loadBookmarks() {
-        guard let times = self.manager.getBookmarkTimes() else { return }
         guard let duration = self.manager.currentPlayingItemDuration() else { return }
-        for time in times {
+        self.bookmarkViews?.forEach({ (view) in
+            return view.removeFromSuperview()
+        })
+        self.bookmarkViews = [UIView]()
+        for time in self.manager.getBookmarkTimes() {
             let ratio = time / duration
             let waveformContainerSize = self.waveformContainer.contentSize
             let view = UIView(frame: CGRect(x: waveformContainerSize.width * CGFloat(ratio), y: 0, width: 1, height: waveformContainerSize.height))
             view.backgroundColor = UIColor.red
             self.waveformContainer.addSubview(view)
+            self.bookmarkViews?.append(view)
         }
     }
     
@@ -210,7 +216,7 @@ class AudioPlayerViewController: UIViewController {
     }
     
     @IBAction func addBookmarkButtonTapped(_ sender: Any) {
-        self.manager.addBookmark()
+        self.manager.addBookmarkTimeObject()
     }
     
     @IBAction func rateButtonTapped(_ sender: Any) {
@@ -225,7 +231,7 @@ class AudioPlayerViewController: UIViewController {
         self.lyricsView.isHidden = true
     }
     // MARK - Notification Handling
-    func handleAudioStart(object: NSNotification) {
+    func handleAudioItemChanged(object: NSNotification) {
         guard let item = object.object as? AVPlayerItem else { return }
         if let url = item.url {
             self.item = AudioItem(url: url)
@@ -233,11 +239,11 @@ class AudioPlayerViewController: UIViewController {
         self.setup()
     }
     
-    func handleAudioPause() {
+    func handleAudioPlay(object: NSNotification) {
         self.setupButtons()
     }
     
-    func handleAudioResume() {
+    func handleAudioPause() {
         self.setupButtons()
     }
     

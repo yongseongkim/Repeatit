@@ -16,4 +16,8 @@ class BookmarkObject: Object {
         self.init()
         self.path = path
     }
+    
+    override static func primaryKey() -> String? {
+        return "path"
+    }
 }

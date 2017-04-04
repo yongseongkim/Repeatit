@@ -17,11 +17,13 @@ class AudioBookmarksViewController: UIViewController {
         }
     }
 
-    fileprivate var bookmarkObject: BookmarkObject?
+    fileprivate var manager: AudioManager?
+    fileprivate var bookmarkTimes: [Double]?
     public var targetPath: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.manager = Dependencies.sharedInstance().resolve(serviceType: AudioManager.self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -30,9 +32,7 @@ class AudioBookmarksViewController: UIViewController {
     }
     
     func loadBookmark() {
-        let realm = try! Realm()
-        guard let targetPath = self.targetPath else { return }
-        self.bookmarkObject = realm.objects(BookmarkObject.self).filter(String.init(format: "path = '%@'", targetPath)).first
+        self.bookmarkTimes = self.manager?.getBookmarkTimes()
         self.collectionView.reloadData()
     }
     
@@ -44,7 +44,7 @@ class AudioBookmarksViewController: UIViewController {
 
 extension AudioBookmarksViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let numberOfBookmarkTimes = self.bookmarkObject?.times.count {
+        if let numberOfBookmarkTimes = self.bookmarkTimes?.count {
             return numberOfBookmarkTimes
         }
         return 0
@@ -54,7 +54,7 @@ extension AudioBookmarksViewController: UICollectionViewDataSource, UICollection
         let cell = collectionView.deqeueResuableCell(forIndexPath: indexPath) as AudioBookmarkCollectionViewCell
         cell.delegate = self
         cell.index = indexPath.row
-        cell.time = self.bookmarkObject?.times[indexPath.row].value
+        cell.time = self.bookmarkTimes?[indexPath.row]
         cell.load()
         return cell
     }
@@ -70,15 +70,8 @@ extension AudioBookmarksViewController: UICollectionViewDataSource, UICollection
 
 extension AudioBookmarksViewController: AudioBookmarkCollectionViewCellDelegate {
     func didTapDeleteButton(cell: AudioBookmarkCollectionViewCell) {
-        guard let deleteTime = cell.time else { return }
-        if let time = self.bookmarkObject?.times.filter({ (dObj) -> Bool in return dObj.value == deleteTime }).first {
-            if let index = self.bookmarkObject?.times.index(of: time) {
-                let realm = try! Realm()
-                try! realm.write {
-                    self.bookmarkObject?.times.remove(objectAtIndex: index)
-                }
-            }
-        }
-        self.collectionView.reloadData()
+        guard let removedTime = cell.time else { return }
+        self.manager?.removeBookmarkTimeObject(removedTime: removedTime)
+        self.loadBookmark()
     }
 }
