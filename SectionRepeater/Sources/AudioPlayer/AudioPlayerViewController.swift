@@ -22,6 +22,7 @@ class AudioPlayerViewController: UIViewController {
     @IBOutlet weak var waveformContainer: UIScrollView!
     @IBOutlet weak var audioPlot: EZAudioPlot!
     @IBOutlet weak var audioPlotWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var timeLabel: UILabel!
     
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var forwardButton: UIButton!
@@ -51,12 +52,12 @@ class AudioPlayerViewController: UIViewController {
     }
     
     deinit {
+        AppDelegate.currentAppDelegate()?.notificationCenter.removeObserver(self)
         self.manager.notificationCenter.removeObserver(self)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioItemChanged(object:)), name: .onAudioManagerItemChanged, object: nil)
         self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioPlay), name: .onAudioManagerPlay, object: nil)
         self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioPause), name: .onAudioManagerPause, object: nil)
@@ -66,14 +67,20 @@ class AudioPlayerViewController: UIViewController {
         self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioRateChanged), name: .onAudioManagerRateChanged, object: nil)
         guard let item = self.item else { return }
         self.manager.play(targetURL: item.fileURL)
+        
+        AppDelegate.currentAppDelegate()?.notificationCenter.addObserver(self, selector: #selector(enterForeground), name: .onEnterForeground, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.setup()
     }
-    
+
     // MARK - Private
+    func enterForeground() {
+        self.setup()
+    }
+    
     func setup() {
         guard let item = self.item else { return }
         self.titleLabel.text = item.title
@@ -260,6 +267,7 @@ class AudioPlayerViewController: UIViewController {
         self.waveformContainer.delegate = nil
         self.waveformContainer.contentOffset = CGPoint(x: (CGFloat(progress) * self.waveformContainer.contentSize.width) - self.waveformContainer.contentInset.left, y: 0)
         self.waveformContainer.delegate = self
+        self.timeLabel.text = String(format: "%ld:%.1lf", Int(currentSeconds/60), currentSeconds.truncatingRemainder(dividingBy: 60))
     }
     
     func handleAudioBookmarkUpdated() {

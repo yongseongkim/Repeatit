@@ -29,7 +29,7 @@ class FileDisplayManager {
     public var delegate: FileDisplayManagerDelegate?
     fileprivate var manager: FileManager
     fileprivate var rootPath: String
-    fileprivate var currentPath: String {
+    public var currentPath: String {
         if (self.paths.count > 0) {
             return self.rootPath.appendingFormat("/%@", self.paths.joined(separator: "/"))
         }

@@ -26,6 +26,7 @@
                 <outlet property="rateButton" destination="KGG-11-IqT" id="9B2-t3-FOC"/>
                 <outlet property="repeatItemButton" destination="Ctr-XC-JSy" id="hJM-AY-gCX"/>
                 <outlet property="repeatSwitchButton" destination="aTg-Rc-FQU" id="EHz-MA-sdl"/>
+                <outlet property="timeLabel" destination="R3P-5d-cBj" id="nPC-j5-hLE"/>
                 <outlet property="titleLabel" destination="83P-NH-LtE" id="EIu-jn-u5h"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="volumeView" destination="7uq-yQ-F2W" id="9H0-ga-NQp"/>
@@ -79,7 +80,7 @@
                                     <rect key="frame" x="160" y="50" width="160" height="60"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="넘어와 (Feat. 백예린)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="83P-NH-LtE">
-                                            <rect key="frame" x="10.5" y="8" width="138.5" height="21"/>
+                                            <rect key="frame" x="10" y="8" width="139" height="21"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="21" id="hK0-lj-F3X"/>
                                             </constraints>
@@ -211,6 +212,12 @@
                                         <constraint firstAttribute="width" constant="1" id="kh4-NF-Hk9"/>
                                     </constraints>
                                 </view>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R3P-5d-cBj">
+                                    <rect key="frame" x="147" y="80" width="28" height="17"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
@@ -220,6 +227,8 @@
                                 <constraint firstAttribute="bottom" secondItem="fu7-mV-dyj" secondAttribute="bottom" id="NDf-lF-aQ1"/>
                                 <constraint firstAttribute="height" constant="100" id="ROE-Q1-8UR"/>
                                 <constraint firstItem="KHr-WJ-hyI" firstAttribute="top" secondItem="5iX-JF-gLp" secondAttribute="top" id="Uh0-kt-m0y"/>
+                                <constraint firstItem="R3P-5d-cBj" firstAttribute="centerX" secondItem="5iX-JF-gLp" secondAttribute="centerX" id="f9O-EU-rIO"/>
+                                <constraint firstAttribute="bottom" secondItem="R3P-5d-cBj" secondAttribute="bottom" constant="3" id="fvi-Ci-W18"/>
                                 <constraint firstAttribute="bottom" secondItem="KHr-WJ-hyI" secondAttribute="bottom" id="wOQ-LQ-BZ4"/>
                                 <constraint firstItem="fu7-mV-dyj" firstAttribute="top" secondItem="5iX-JF-gLp" secondAttribute="top" id="wcL-hU-0g7"/>
                             </constraints>
@@ -228,24 +237,24 @@
                             <rect key="frame" x="0.0" y="336" width="320" height="212"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rAM-O6-lxn">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="58.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="59"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dXK-dp-BMa">
-                                            <rect key="frame" x="0.0" y="0.0" width="106.5" height="58.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="107" height="59"/>
                                             <state key="normal" title="PrevBM"/>
                                             <connections>
                                                 <action selector="movePreviousBookmark:" destination="-1" eventType="touchUpInside" id="x5K-m3-63b"/>
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qfF-2B-Uca">
-                                            <rect key="frame" x="106.5" y="0.0" width="107" height="58"/>
+                                            <rect key="frame" x="107" y="0.0" width="107" height="58"/>
                                             <state key="normal" title="StartBM"/>
                                             <connections>
                                                 <action selector="moveStartCurrentBookmark:" destination="-1" eventType="touchUpInside" id="xhj-4x-G2P"/>
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jFM-f9-IUG">
-                                            <rect key="frame" x="213.5" y="0.0" width="106.5" height="58.5"/>
+                                            <rect key="frame" x="214" y="0.0" width="106" height="59"/>
                                             <state key="normal" title="NextBM"/>
                                             <connections>
                                                 <action selector="moveNextBookmark:" destination="-1" eventType="touchUpInside" id="CE5-xb-Kst"/>
@@ -269,7 +278,7 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jZo-Hi-zAo" userLabel="PlayerButtonView">
-                                    <rect key="frame" x="0.0" y="58.5" width="320" height="59"/>
+                                    <rect key="frame" x="0.0" y="59" width="320" height="59"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4N2-6w-WOz">
                                             <rect key="frame" x="0.0" y="0.0" width="64" height="59"/>
@@ -332,24 +341,24 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0BZ-c4-56B" userLabel="SectionRepeatView">
-                                    <rect key="frame" x="0.0" y="117.5" width="320" height="58.5"/>
+                                    <rect key="frame" x="0.0" y="118" width="320" height="58"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ctr-XC-JSy">
-                                            <rect key="frame" x="0.0" y="0.0" width="106.5" height="58.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="107" height="58"/>
                                             <state key="normal" title="onlyOne"/>
                                             <connections>
                                                 <action selector="repeatItemButtonTapped:" destination="-1" eventType="touchUpInside" id="tvR-VZ-Hu5"/>
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aTg-Rc-FQU">
-                                            <rect key="frame" x="106.5" y="0.0" width="107" height="58.5"/>
+                                            <rect key="frame" x="107" y="0.0" width="107" height="58"/>
                                             <state key="normal" title="Repeat"/>
                                             <connections>
                                                 <action selector="repeatSwitchTapped:" destination="-1" eventType="touchUpInside" id="YsZ-FE-BpS"/>
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7RL-IB-4Xu">
-                                            <rect key="frame" x="213.5" y="0.0" width="106.5" height="58.5"/>
+                                            <rect key="frame" x="214" y="0.0" width="106" height="58"/>
                                             <state key="normal" title="Bookmark"/>
                                             <connections>
                                                 <action selector="addBookmarkButtonTapped:" destination="-1" eventType="touchUpInside" id="bqx-7s-anX"/>

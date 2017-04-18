@@ -7,36 +7,40 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2E1A3B781E8F83F900F785D0 /* AudioBookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1A3B761E8F83F900F785D0 /* AudioBookmarksViewController.swift */; };
-		2E1A3B791E8F83F900F785D0 /* AudioBookmarksViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E1A3B771E8F83F900F785D0 /* AudioBookmarksViewController.xib */; };
-		2E1A3B7C1E8F889B00F785D0 /* AudioBookmarkCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1A3B7A1E8F889A00F785D0 /* AudioBookmarkCollectionViewCell.swift */; };
-		2E1A3B7D1E8F889B00F785D0 /* AudioBookmarkCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E1A3B7B1E8F889B00F785D0 /* AudioBookmarkCollectionViewCell.xib */; };
 		2E1A3B7F1E8F932300F785D0 /* UIScreen+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1A3B7E1E8F932300F785D0 /* UIScreen+Extension.swift */; };
 		2E1A3B811E8FB38200F785D0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E1A3B801E8FB38200F785D0 /* Images.xcassets */; };
 		2E243DCC1E62992B00601200 /* AudioWaveformView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E243DCB1E62992B00601200 /* AudioWaveformView.m */; };
 		2E2E33F11E8770C500AF26DE /* DoubleObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2E33F01E8770C500AF26DE /* DoubleObject.swift */; };
 		2E49C3E31E7574FE0079CFA3 /* FileDisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E49C3E21E7574FE0079CFA3 /* FileDisplayManager.swift */; };
 		2E49C3E81E757C920079CFA3 /* DocumentAudioFilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E49C3E61E757C920079CFA3 /* DocumentAudioFilesViewController.swift */; };
-		2E49C3E91E757C920079CFA3 /* DocumentAudioFilesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E49C3E71E757C920079CFA3 /* DocumentAudioFilesViewController.xib */; };
 		2E49C3EE1E757CB80079CFA3 /* iTuensSongsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E49C3EA1E757CB80079CFA3 /* iTuensSongsViewController.swift */; };
 		2E49C3EF1E757CB80079CFA3 /* iTuensSongsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E49C3EB1E757CB80079CFA3 /* iTuensSongsViewController.xib */; };
 		2E49C3F01E757CB80079CFA3 /* iTunesSongCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E49C3EC1E757CB80079CFA3 /* iTunesSongCollectionViewCell.swift */; };
 		2E49C3F11E757CB80079CFA3 /* iTunesSongCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E49C3ED1E757CB80079CFA3 /* iTunesSongCollectionViewCell.xib */; };
-		2E49C3FC1E757FCD0079CFA3 /* DocumentAudioFilesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E49C3FA1E757FCD0079CFA3 /* DocumentAudioFilesCollectionViewCell.swift */; };
-		2E49C3FD1E757FCD0079CFA3 /* DocumentAudioFilesCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E49C3FB1E757FCD0079CFA3 /* DocumentAudioFilesCollectionViewCell.xib */; };
 		2E5B63F21E7829A400A89D72 /* AudioVolumeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5B63F11E7829A400A89D72 /* AudioVolumeView.swift */; };
 		2E7AC21F1E47195700BA03B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E7AC21E1E47195700BA03B7 /* Assets.xcassets */; };
 		2E7AC2221E47195700BA03B7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E7AC2201E47195700BA03B7 /* LaunchScreen.storyboard */; };
+		2E83A5031EA327000073C258 /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E83A5021EA327000073C258 /* Double+Extension.swift */; };
+		2E83A5061EA3396F0073C258 /* DocumentFilesMoveDestinationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E83A5041EA3396F0073C258 /* DocumentFilesMoveDestinationViewController.swift */; };
+		2E83A50A1EA3426A0073C258 /* DocumentFileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E83A5081EA3426A0073C258 /* DocumentFileCell.swift */; };
+		2E83A50B1EA3426A0073C258 /* DocumentFileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E83A5091EA3426A0073C258 /* DocumentFileCell.xib */; };
+		2ECAA9C51EA6397D0034DEEC /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECAA9C41EA6397D0034DEEC /* UIColor+Extension.swift */; };
 		2ECBA23E1E7E530500F43AF7 /* Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECBA23D1E7E530500F43AF7 /* Dependencies.swift */; };
 		2ECBA2421E7E73B900F43AF7 /* BookmarkObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECBA2411E7E73B900F43AF7 /* BookmarkObject.swift */; };
 		2ECBA2441E84191100F43AF7 /* AVPlayer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECBA2431E84191100F43AF7 /* AVPlayer+Extension.swift */; };
+		2ED87D8B1E9D0DAC00982FAB /* AudioBookmarkCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED87D851E9D0DAC00982FAB /* AudioBookmarkCollectionViewCell.swift */; };
+		2ED87D8C1E9D0DAC00982FAB /* AudioBookmarkCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2ED87D861E9D0DAC00982FAB /* AudioBookmarkCollectionViewCell.xib */; };
+		2ED87D8D1E9D0DAC00982FAB /* AudioBookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED87D871E9D0DAC00982FAB /* AudioBookmarksViewController.swift */; };
+		2ED87D8E1E9D0DAC00982FAB /* AudioBookmarksViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2ED87D881E9D0DAC00982FAB /* AudioBookmarksViewController.xib */; };
+		2ED87D8F1E9D0DAC00982FAB /* AudioPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED87D891E9D0DAC00982FAB /* AudioPlayerViewController.swift */; };
+		2ED87D901E9D0DAC00982FAB /* AudioPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2ED87D8A1E9D0DAC00982FAB /* AudioPlayerViewController.xib */; };
+		2ED87D921E9D196600982FAB /* AudioPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED87D911E9D196600982FAB /* AudioPlayerView.swift */; };
+		2ED87D941E9D19D900982FAB /* AudioPlayerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2ED87D931E9D19D900982FAB /* AudioPlayerView.xib */; };
 		2EEB178D1E6DA37600CE3918 /* AudioItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEB178C1E6DA37600CE3918 /* AudioItem.swift */; };
 		2EEEF61E1E598AD600D2C279 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEEF60F1E598AD600D2C279 /* AppDelegate.swift */; };
 		2EEEF61F1E598AD600D2C279 /* NSObject+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEEF6121E598AD600D2C279 /* NSObject+Extension.swift */; };
 		2EEEF6201E598AD600D2C279 /* UICollectionView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEEF6131E598AD600D2C279 /* UICollectionView+Extension.swift */; };
 		2EEEF6291E598AD600D2C279 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEEF61C1E598AD600D2C279 /* RootViewController.swift */; };
-		2EEEF62D1E598C0800D2C279 /* AudioPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEEF62B1E598C0800D2C279 /* AudioPlayerViewController.swift */; };
-		2EEEF62E1E598C0800D2C279 /* AudioPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2EEEF62C1E598C0800D2C279 /* AudioPlayerViewController.xib */; };
 		2EEEF6301E5991C200D2C279 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEEF62F1E5991C200D2C279 /* AudioManager.swift */; };
 		55D0A8C077940D543DE4CA98 /* Pods_SectionRepeater.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82B5A6D43CFD231275898EC5 /* Pods_SectionRepeater.framework */; };
 /* End PBXBuildFile section */
@@ -56,10 +60,6 @@
 
 /* Begin PBXFileReference section */
 		1AD631199E9D44D763A2EDC1 /* Pods-SectionRepeater.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SectionRepeater.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SectionRepeater/Pods-SectionRepeater.debug.xcconfig"; sourceTree = "<group>"; };
-		2E1A3B761E8F83F900F785D0 /* AudioBookmarksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioBookmarksViewController.swift; sourceTree = "<group>"; };
-		2E1A3B771E8F83F900F785D0 /* AudioBookmarksViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioBookmarksViewController.xib; sourceTree = "<group>"; };
-		2E1A3B7A1E8F889A00F785D0 /* AudioBookmarkCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioBookmarkCollectionViewCell.swift; sourceTree = "<group>"; };
-		2E1A3B7B1E8F889B00F785D0 /* AudioBookmarkCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioBookmarkCollectionViewCell.xib; sourceTree = "<group>"; };
 		2E1A3B7E1E8F932300F785D0 /* UIScreen+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIScreen+Extension.swift"; sourceTree = "<group>"; };
 		2E1A3B801E8FB38200F785D0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		2E243DB71E62896300601200 /* CoreAudioKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudioKit.framework; path = System/Library/Frameworks/CoreAudioKit.framework; sourceTree = SDKROOT; };
@@ -69,28 +69,36 @@
 		2E2E33F01E8770C500AF26DE /* DoubleObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoubleObject.swift; sourceTree = "<group>"; };
 		2E49C3E21E7574FE0079CFA3 /* FileDisplayManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDisplayManager.swift; sourceTree = "<group>"; };
 		2E49C3E61E757C920079CFA3 /* DocumentAudioFilesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentAudioFilesViewController.swift; sourceTree = "<group>"; };
-		2E49C3E71E757C920079CFA3 /* DocumentAudioFilesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DocumentAudioFilesViewController.xib; sourceTree = "<group>"; };
 		2E49C3EA1E757CB80079CFA3 /* iTuensSongsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTuensSongsViewController.swift; sourceTree = "<group>"; };
 		2E49C3EB1E757CB80079CFA3 /* iTuensSongsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iTuensSongsViewController.xib; sourceTree = "<group>"; };
 		2E49C3EC1E757CB80079CFA3 /* iTunesSongCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesSongCollectionViewCell.swift; sourceTree = "<group>"; };
 		2E49C3ED1E757CB80079CFA3 /* iTunesSongCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iTunesSongCollectionViewCell.xib; sourceTree = "<group>"; };
-		2E49C3FA1E757FCD0079CFA3 /* DocumentAudioFilesCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentAudioFilesCollectionViewCell.swift; sourceTree = "<group>"; };
-		2E49C3FB1E757FCD0079CFA3 /* DocumentAudioFilesCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DocumentAudioFilesCollectionViewCell.xib; sourceTree = "<group>"; };
 		2E5B63F11E7829A400A89D72 /* AudioVolumeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioVolumeView.swift; sourceTree = "<group>"; };
 		2E7AC2141E47195700BA03B7 /* SectionRepeater.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SectionRepeater.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E7AC21E1E47195700BA03B7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../Assets.xcassets; sourceTree = "<group>"; };
 		2E7AC2211E47195700BA03B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2E7AC2231E47195700BA03B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
+		2E83A5021EA327000073C258 /* Double+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
+		2E83A5041EA3396F0073C258 /* DocumentFilesMoveDestinationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentFilesMoveDestinationViewController.swift; sourceTree = "<group>"; };
+		2E83A5081EA3426A0073C258 /* DocumentFileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentFileCell.swift; sourceTree = "<group>"; };
+		2E83A5091EA3426A0073C258 /* DocumentFileCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DocumentFileCell.xib; sourceTree = "<group>"; };
+		2ECAA9C41EA6397D0034DEEC /* UIColor+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		2ECBA23D1E7E530500F43AF7 /* Dependencies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dependencies.swift; sourceTree = "<group>"; };
 		2ECBA2411E7E73B900F43AF7 /* BookmarkObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarkObject.swift; sourceTree = "<group>"; };
 		2ECBA2431E84191100F43AF7 /* AVPlayer+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AVPlayer+Extension.swift"; sourceTree = "<group>"; };
+		2ED87D851E9D0DAC00982FAB /* AudioBookmarkCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioBookmarkCollectionViewCell.swift; sourceTree = "<group>"; };
+		2ED87D861E9D0DAC00982FAB /* AudioBookmarkCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioBookmarkCollectionViewCell.xib; sourceTree = "<group>"; };
+		2ED87D871E9D0DAC00982FAB /* AudioBookmarksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioBookmarksViewController.swift; sourceTree = "<group>"; };
+		2ED87D881E9D0DAC00982FAB /* AudioBookmarksViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioBookmarksViewController.xib; sourceTree = "<group>"; };
+		2ED87D891E9D0DAC00982FAB /* AudioPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerViewController.swift; sourceTree = "<group>"; };
+		2ED87D8A1E9D0DAC00982FAB /* AudioPlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioPlayerViewController.xib; sourceTree = "<group>"; };
+		2ED87D911E9D196600982FAB /* AudioPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerView.swift; sourceTree = "<group>"; };
+		2ED87D931E9D19D900982FAB /* AudioPlayerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioPlayerView.xib; sourceTree = "<group>"; };
 		2EEB178C1E6DA37600CE3918 /* AudioItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AudioItem.swift; path = Extension/AudioItem.swift; sourceTree = "<group>"; };
 		2EEEF60F1E598AD600D2C279 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2EEEF6121E598AD600D2C279 /* NSObject+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Extension.swift"; sourceTree = "<group>"; };
 		2EEEF6131E598AD600D2C279 /* UICollectionView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Extension.swift"; sourceTree = "<group>"; };
 		2EEEF61C1E598AD600D2C279 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
-		2EEEF62B1E598C0800D2C279 /* AudioPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerViewController.swift; sourceTree = "<group>"; };
-		2EEEF62C1E598C0800D2C279 /* AudioPlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioPlayerViewController.xib; sourceTree = "<group>"; };
 		2EEEF62F1E5991C200D2C279 /* AudioManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		2EF8A79A1E48C087006D5D9F /* Pods_SectionRepeater.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_SectionRepeater.framework; path = "../../../Library/Developer/Xcode/DerivedData/SectionRepeater-egcbmdahmnqdkncjlfgsxctevtlh/Build/Products/Debug-iphonesimulator/Pods_SectionRepeater.framework"; sourceTree = "<group>"; };
 		2EF8A79D1E48C148006D5D9F /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = "../../../Library/Developer/Xcode/DerivedData/SectionRepeater-egcbmdahmnqdkncjlfgsxctevtlh/Build/Products/Debug-iphonesimulator/Alamofire/Alamofire.framework"; sourceTree = "<group>"; };
@@ -141,9 +149,9 @@
 			isa = PBXGroup;
 			children = (
 				2E49C3E61E757C920079CFA3 /* DocumentAudioFilesViewController.swift */,
-				2E49C3E71E757C920079CFA3 /* DocumentAudioFilesViewController.xib */,
-				2E49C3FA1E757FCD0079CFA3 /* DocumentAudioFilesCollectionViewCell.swift */,
-				2E49C3FB1E757FCD0079CFA3 /* DocumentAudioFilesCollectionViewCell.xib */,
+				2E83A5041EA3396F0073C258 /* DocumentFilesMoveDestinationViewController.swift */,
+				2E83A5081EA3426A0073C258 /* DocumentFileCell.swift */,
+				2E83A5091EA3426A0073C258 /* DocumentFileCell.xib */,
 			);
 			name = DocumentsFiles;
 			path = SectionRepeater/Sources/DocumentsFiles;
@@ -207,6 +215,21 @@
 			path = SectionRepeater;
 			sourceTree = "<group>";
 		};
+		2ED87D841E9D0DAC00982FAB /* AudioPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				2ED87D851E9D0DAC00982FAB /* AudioBookmarkCollectionViewCell.swift */,
+				2ED87D861E9D0DAC00982FAB /* AudioBookmarkCollectionViewCell.xib */,
+				2ED87D871E9D0DAC00982FAB /* AudioBookmarksViewController.swift */,
+				2ED87D881E9D0DAC00982FAB /* AudioBookmarksViewController.xib */,
+				2ED87D891E9D0DAC00982FAB /* AudioPlayerViewController.swift */,
+				2ED87D8A1E9D0DAC00982FAB /* AudioPlayerViewController.xib */,
+				2ED87D911E9D196600982FAB /* AudioPlayerView.swift */,
+				2ED87D931E9D19D900982FAB /* AudioPlayerView.xib */,
+			);
+			path = AudioPlayer;
+			sourceTree = "<group>";
+		};
 		2EEEF60E1E598AD600D2C279 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
@@ -214,14 +237,9 @@
 				2E77D1591E798C4A0047F436 /* Model */,
 				2E49C3E41E757C7C0079CFA3 /* DocumentsFiles */,
 				2E49C3E51E757C7C0079CFA3 /* iTunesFiles */,
+				2ED87D841E9D0DAC00982FAB /* AudioPlayer */,
 				2EEEF60F1E598AD600D2C279 /* AppDelegate.swift */,
 				2EEEF61C1E598AD600D2C279 /* RootViewController.swift */,
-				2EEEF62B1E598C0800D2C279 /* AudioPlayerViewController.swift */,
-				2EEEF62C1E598C0800D2C279 /* AudioPlayerViewController.xib */,
-				2E1A3B761E8F83F900F785D0 /* AudioBookmarksViewController.swift */,
-				2E1A3B771E8F83F900F785D0 /* AudioBookmarksViewController.xib */,
-				2E1A3B7A1E8F889A00F785D0 /* AudioBookmarkCollectionViewCell.swift */,
-				2E1A3B7B1E8F889B00F785D0 /* AudioBookmarkCollectionViewCell.xib */,
 				2E243DC61E62967D00601200 /* SectionRepeater-Bridging-Header.h */,
 				2E243DCA1E62992B00601200 /* AudioWaveformView.h */,
 				2E243DCB1E62992B00601200 /* AudioWaveformView.m */,
@@ -249,6 +267,8 @@
 				2EEEF6131E598AD600D2C279 /* UICollectionView+Extension.swift */,
 				2ECBA2431E84191100F43AF7 /* AVPlayer+Extension.swift */,
 				2E1A3B7E1E8F932300F785D0 /* UIScreen+Extension.swift */,
+				2E83A5021EA327000073C258 /* Double+Extension.swift */,
+				2ECAA9C41EA6397D0034DEEC /* UIColor+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -343,14 +363,14 @@
 			files = (
 				2E7AC2221E47195700BA03B7 /* LaunchScreen.storyboard in Resources */,
 				2E1A3B811E8FB38200F785D0 /* Images.xcassets in Resources */,
-				2EEEF62E1E598C0800D2C279 /* AudioPlayerViewController.xib in Resources */,
-				2E49C3FD1E757FCD0079CFA3 /* DocumentAudioFilesCollectionViewCell.xib in Resources */,
+				2ED87D941E9D19D900982FAB /* AudioPlayerView.xib in Resources */,
+				2ED87D8C1E9D0DAC00982FAB /* AudioBookmarkCollectionViewCell.xib in Resources */,
 				2E7AC21F1E47195700BA03B7 /* Assets.xcassets in Resources */,
+				2ED87D8E1E9D0DAC00982FAB /* AudioBookmarksViewController.xib in Resources */,
+				2E83A50B1EA3426A0073C258 /* DocumentFileCell.xib in Resources */,
 				2E49C3EF1E757CB80079CFA3 /* iTuensSongsViewController.xib in Resources */,
 				2E49C3F11E757CB80079CFA3 /* iTunesSongCollectionViewCell.xib in Resources */,
-				2E1A3B791E8F83F900F785D0 /* AudioBookmarksViewController.xib in Resources */,
-				2E1A3B7D1E8F889B00F785D0 /* AudioBookmarkCollectionViewCell.xib in Resources */,
-				2E49C3E91E757C920079CFA3 /* DocumentAudioFilesViewController.xib in Resources */,
+				2ED87D901E9D0DAC00982FAB /* AudioPlayerViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -411,25 +431,29 @@
 			files = (
 				2EEEF6201E598AD600D2C279 /* UICollectionView+Extension.swift in Sources */,
 				2E5B63F21E7829A400A89D72 /* AudioVolumeView.swift in Sources */,
-				2EEEF62D1E598C0800D2C279 /* AudioPlayerViewController.swift in Sources */,
 				2ECBA23E1E7E530500F43AF7 /* Dependencies.swift in Sources */,
 				2ECBA2441E84191100F43AF7 /* AVPlayer+Extension.swift in Sources */,
 				2E2E33F11E8770C500AF26DE /* DoubleObject.swift in Sources */,
 				2E49C3E81E757C920079CFA3 /* DocumentAudioFilesViewController.swift in Sources */,
 				2EEEF6291E598AD600D2C279 /* RootViewController.swift in Sources */,
+				2E83A50A1EA3426A0073C258 /* DocumentFileCell.swift in Sources */,
 				2E49C3EE1E757CB80079CFA3 /* iTuensSongsViewController.swift in Sources */,
+				2ECAA9C51EA6397D0034DEEC /* UIColor+Extension.swift in Sources */,
 				2ECBA2421E7E73B900F43AF7 /* BookmarkObject.swift in Sources */,
-				2E1A3B7C1E8F889B00F785D0 /* AudioBookmarkCollectionViewCell.swift in Sources */,
 				2EEEF61E1E598AD600D2C279 /* AppDelegate.swift in Sources */,
-				2E1A3B781E8F83F900F785D0 /* AudioBookmarksViewController.swift in Sources */,
-				2E49C3FC1E757FCD0079CFA3 /* DocumentAudioFilesCollectionViewCell.swift in Sources */,
+				2ED87D921E9D196600982FAB /* AudioPlayerView.swift in Sources */,
 				2E243DCC1E62992B00601200 /* AudioWaveformView.m in Sources */,
+				2E83A5061EA3396F0073C258 /* DocumentFilesMoveDestinationViewController.swift in Sources */,
 				2E49C3E31E7574FE0079CFA3 /* FileDisplayManager.swift in Sources */,
 				2EEEF61F1E598AD600D2C279 /* NSObject+Extension.swift in Sources */,
+				2E83A5031EA327000073C258 /* Double+Extension.swift in Sources */,
+				2ED87D8F1E9D0DAC00982FAB /* AudioPlayerViewController.swift in Sources */,
 				2EEB178D1E6DA37600CE3918 /* AudioItem.swift in Sources */,
 				2EEEF6301E5991C200D2C279 /* AudioManager.swift in Sources */,
 				2E49C3F01E757CB80079CFA3 /* iTunesSongCollectionViewCell.swift in Sources */,
+				2ED87D8B1E9D0DAC00982FAB /* AudioBookmarkCollectionViewCell.swift in Sources */,
 				2E1A3B7F1E8F932300F785D0 /* UIScreen+Extension.swift in Sources */,
+				2ED87D8D1E9D0DAC00982FAB /* AudioBookmarksViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -14,33 +14,81 @@ enum DocumentAudioFilesSectionType: Int {
 }
 
 class DocumentAudioFilesViewController: UIViewController {
-    
-    @IBOutlet weak var collectionView: UICollectionView! {
+    fileprivate var collectionView: UICollectionView? {
         didSet {
-            collectionView.register(DocumentAudioFilesCollectionViewCell.self)
+            self.collectionView?.dataSource = self
+            self.collectionView?.delegate = self
+            self.collectionView?.register(DocumentFileCell.self)
         }
     }
-    
     fileprivate var displayManager: FileDisplayManager?
     fileprivate var files = [FileDisplayItem]()
     fileprivate var directories = [FileDisplayItem]()
+    fileprivate var isEditingFiles = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.isNavigationBarHidden = true
+        
+        let collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: UICollectionViewFlowLayout())
+        self.view.addSubview(collectionView)
+        collectionView.snp.makeConstraints { (make) in
+            make.top.equalTo(self.view)
+            make.right.equalTo(self.view)
+            make.bottom.equalTo(self.view)
+            make.left.equalTo(self.view)
+        }
+        self.collectionView = collectionView
+        
         self.displayManager = Dependencies.sharedInstance().resolve(serviceType: FileDisplayManager.self)
         self.displayManager?.delegate = self
         self.displayManager?.loadCurrentPathContents()
+        
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(editButtonTapped))
+        
+        AppDelegate.currentAppDelegate()?.notificationCenter.addObserver(self, selector: #selector(enterForeground), name: .onEnterForeground, object: nil)
+    }
+    
+    deinit {
+        AppDelegate.currentAppDelegate()?.notificationCenter.addObserver(self, selector: #selector(enterForeground), name: .onEnterForeground, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.displayManager?.loadCurrentPathContents()
     }
+    
+    func enterForeground() {
+        self.collectionView?.reloadData()
+    }
+    
+    func editButtonTapped() {
+        self.isEditingFiles = true
+        self.collectionView?.reloadData()
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Move", style: .plain, target: self, action: #selector(moveButtonTapped))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneButtonTapped))
+    }
+    
+    func doneButtonTapped() {
+        self.isEditingFiles = false
+        self.collectionView?.reloadData()
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(editButtonTapped))
+        self.navigationItem.rightBarButtonItem = nil
+    }
+    
+    func moveButtonTapped() {
+        var paths = [String]()
+//        if let rows = self.tableView?.indexPathsForSelectedRows {
+//            for indexPath in rows {
+//                let cell = self.tableView?.cellForRow(at: indexPath) as! DocumentFileCell
+//                paths.append(cell.item.path)
+//            }
+//            let viewController = UINavigationController(rootViewController: DocumentFilesMoveDestinationViewController())
+//            self.present(viewController, animated: true, completion: nil)
+//        }
+    }
 }
 
-extension DocumentAudioFilesViewController: UICollectionViewDataSource, UICollectionViewDelegate {
-    
+extension DocumentAudioFilesViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 2
     }
@@ -57,8 +105,7 @@ extension DocumentAudioFilesViewController: UICollectionViewDataSource, UICollec
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let section = DocumentAudioFilesSectionType(rawValue: indexPath.section) else { return UICollectionViewCell() }
-        let cell = collectionView.deqeueResuableCell(forIndexPath: indexPath) as DocumentAudioFilesCollectionViewCell
-        cell.delegate = self
+        let cell = collectionView.deqeueResuableCell(forIndexPath: indexPath) as DocumentFileCell
         switch section {
         case .Directory:
             cell.item = self.directories[indexPath.row]
@@ -69,6 +116,9 @@ extension DocumentAudioFilesViewController: UICollectionViewDataSource, UICollec
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if (self.isEditingFiles) {
+            return
+        }
         guard let section = DocumentAudioFilesSectionType(rawValue: indexPath.section) else { return }
         switch section {
         case .Directory:
@@ -86,11 +136,13 @@ extension DocumentAudioFilesViewController: UICollectionViewDataSource, UICollec
             self.present(playerController, animated: true, completion: nil)
         }
     }
-}
-
-extension DocumentAudioFilesViewController: UICollectionViewDelegateFlowLayout {
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: UIScreen.mainScreenWidth(), height: DocumentAudioFilesCollectionViewCell.height())
+        return CGSize(width: UIScreen.mainScreenWidth(), height: DocumentFileCell.height())
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
     }
 }
 
@@ -98,15 +150,6 @@ extension DocumentAudioFilesViewController: FileDisplayManagerDelegate {
     func didChangeCurrentPath(directories: [FileDisplayItem], files: [FileDisplayItem]) {
         self.directories = directories
         self.files = files
-        self.collectionView.reloadData()
-    }
-}
-
-extension DocumentAudioFilesViewController: DocumentAudioFilesCollectionViewCellDelegate {
-    func didTappedDelete(item: FileDisplayItem?) {
-        if let item = item {
-            self.displayManager?.removeFile(item: item)
-        }
-        self.displayManager?.loadCurrentPathContents()
+        self.collectionView?.reloadData()
     }
 }

@@ -28,7 +28,6 @@ extension Notification.Name {
 }
 
 class AudioManager: NSObject {
-    fileprivate var queuePlayer: AVQueuePlayer?
     fileprivate var player: AVPlayer?
     fileprivate var playerItem: AVPlayerItem? {
         didSet {
@@ -221,7 +220,7 @@ class AudioManager: NSObject {
         if previousBookmarkTimes.count > 0 {
             previousBookmarkTimes.removeLast()
             if let previousBookmark = previousBookmarkTimes.last {
-                self.move(at: previousBookmark)
+                self.move(at: previousBookmark.rightSide())
                 return
             }
         }
@@ -232,7 +231,7 @@ class AudioManager: NSObject {
         guard let currentSeconds = self.currentPlayingSeconds() else { return }
         let previousBookmarkTimes = self.bookmarkTimes.filter { (bookmark) -> Bool in return bookmark < currentSeconds }
         if let currentBookmark = previousBookmarkTimes.last {
-            self.move(at: currentBookmark)
+            self.move(at: currentBookmark.rightSide())
             return
         }
         self.move(at: 0)
@@ -242,7 +241,7 @@ class AudioManager: NSObject {
         guard let currentSeconds = self.currentPlayingSeconds() else { return }
         let nextBookmarkTimes = self.bookmarkTimes.filter { (bookmark) -> Bool in return bookmark > currentSeconds }
         if let nextBookmark = nextBookmarkTimes.first {
-            self.move(at: nextBookmark)
+            self.move(at: nextBookmark.rightSide())
             return
         }
         self.moveCurrentBookmark()
@@ -367,9 +366,9 @@ class AudioManager: NSObject {
     func handleReachBoundaryTime() {
         if (!self.switchRepeat) { return }
         guard let currentSeconds = self.currentPlayingSeconds() else { return }
-        let previousBookmarks = self.bookmarkTimes.filter { (bookmark) -> Bool in return bookmark < (currentSeconds - 0.1) }
+        let previousBookmarks = self.bookmarkTimes.filter { (bookmark) -> Bool in return bookmark < currentSeconds - 0.1 }
         if let previousBookmark = previousBookmarks.last {
-            self.move(at: previousBookmark + 0.1)
+            self.move(at: previousBookmark.rightSide())
         }
     }
     
