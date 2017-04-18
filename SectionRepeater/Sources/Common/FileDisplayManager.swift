@@ -29,7 +29,7 @@ class FileDisplayManager {
     public var delegate: FileDisplayManagerDelegate?
     fileprivate var manager: FileManager
     fileprivate var rootPath: String
-    public var currentPath: String {
+    fileprivate var currentPath: String {
         if (self.paths.count > 0) {
             return self.rootPath.appendingFormat("/%@", self.paths.joined(separator: "/"))
         }
@@ -68,8 +68,31 @@ class FileDisplayManager {
                 }
             }
             self.delegate?.didChangeCurrentPath(directories: directories, files: files)
-        } catch let error as NSError {
+        } catch let error {
             print(error)
+        }
+    }
+    
+    public func createDirectory(name: String) -> Bool {
+        do {
+            try self.manager.createDirectory(atPath: String.init(format: "%@/%@", currentPath, name), withIntermediateDirectories: false, attributes: nil)
+            return true
+        } catch let error {
+            print(error)
+            return false
+        }
+    }
+    
+    public func moveFiles(paths: [String]) {
+        for path in paths {
+            do {
+                if self.manager.fileExists(atPath: path) {
+                    let url = URL(fileURLWithPath: path)
+                    try self.manager.moveItem(atPath: path, toPath: String.init(format: "%@/%@", currentPath, url.lastPathComponent))
+                }
+            } catch let error {
+                print(error)
+            }
         }
     }
     

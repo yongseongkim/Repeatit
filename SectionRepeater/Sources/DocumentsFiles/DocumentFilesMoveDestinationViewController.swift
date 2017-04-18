@@ -13,6 +13,7 @@ class DocumentFilesMoveDestinationViewController: UIViewController {
     
     fileprivate var collectionView: UICollectionView? {
         didSet {
+            self.collectionView?.backgroundColor = UIColor.white
             self.collectionView?.dataSource = self
             self.collectionView?.delegate = self
             self.collectionView?.register(DocumentFileCell.self)
@@ -20,6 +21,7 @@ class DocumentFilesMoveDestinationViewController: UIViewController {
     }
     fileprivate var displayManager: FileDisplayManager?
     fileprivate var directories = [FileDisplayItem]()
+    public var selectedPaths: [String]?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,15 +38,19 @@ class DocumentFilesMoveDestinationViewController: UIViewController {
         self.displayManager = Dependencies.sharedInstance().resolve(serviceType: FileDisplayManager.self)
         self.displayManager?.delegate = self
         self.displayManager?.loadCurrentPathContents()
-        
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "AddFolder", style: .done, target: self, action: #selector(addButtonTapped))
+
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelButtonTapped))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "MoveHere", style: .done, target: self, action: #selector(doneButtonTapped))
     }
     
-    func addButtonTapped() {
+    func cancelButtonTapped() {
+        self.dismiss(animated: true, completion: nil)
     }
     
     func doneButtonTapped() {
+        if let paths = self.selectedPaths {
+            self.displayManager?.moveFiles(paths: paths)
+        }
         self.dismiss(animated: true, completion: nil)
     }
 }
