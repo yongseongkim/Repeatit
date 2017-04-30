@@ -6,7 +6,7 @@
 //  Copyright © 2017년 yongseongkim. All rights reserved.
 //
 
-import Foundation
+import AVFoundation
 
 extension AVPlayer {
     var isPlaying: Bool {
@@ -14,7 +14,7 @@ extension AVPlayer {
     }
     
     var currentSeconds: Double {
-        return self.currentTime().seconds
+        return self.currentTime().seconds.roundToPlace(place: 2)
     }
     
     var durationSeconds: Double {

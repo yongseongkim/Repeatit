@@ -11,8 +11,15 @@ import AVFoundation
 import AudioKit
 import MediaPlayer
 
+class PlayItemContext {
+    var audioItem: AudioItem?
+    var mediaItem: MPMediaItem?
+    var mediaItems: [MPMediaItem]?
+}
+
 class AudioPlayerViewController: UIViewController {
     
+    @IBOutlet weak var contentViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var playerSlider: UISlider!
     @IBOutlet weak var albumCoverImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -34,6 +41,7 @@ class AudioPlayerViewController: UIViewController {
     @IBOutlet weak var volumeView: AudioVolumeView!
     @IBOutlet weak var rateButton: UIButton!
     
+    public var context: PlayItemContext?
     public var item: AudioItem?
     fileprivate var manager: AudioManager
     fileprivate var audioFile: EZAudioFile?
@@ -65,15 +73,31 @@ class AudioPlayerViewController: UIViewController {
         self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioTimeChanged), name: .onAudioManagerTimeChanged, object: nil)
         self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioBookmarkUpdated), name: .onAudioManagerBookmarkUpdated, object: nil)
         self.manager.notificationCenter.addObserver(self, selector: #selector(handleAudioRateChanged), name: .onAudioManagerRateChanged, object: nil)
-        guard let item = self.item else { return }
-        self.manager.play(targetURL: item.fileURL)
         
+        guard let contenxt = self.context else { return }
+        if let item = contenxt.audioItem {
+            self.item = item
+            self.manager.play(targetURL: item.fileURL)
+        }
+        if let mpitem = contenxt.mediaItem, let mpitems = contenxt.mediaItems {
+            self.manager.play(item: mpitem, items: mpitems)
+        }
+        if contenxt.audioItem == nil && contenxt.mediaItem == nil {
+            return
+        }
         AppDelegate.currentAppDelegate()?.notificationCenter.addObserver(self, selector: #selector(enterForeground), name: .onEnterForeground, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.setup()
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        if self.contentViewTopConstraint.constant != self.topLayoutGuide.length {
+            self.contentViewTopConstraint.constant = self.topLayoutGuide.length
+        }
     }
 
     // MARK - Private
@@ -97,17 +121,29 @@ class AudioPlayerViewController: UIViewController {
         weak var weakSelf = self
         let inset = self.waveformContainer.bounds.width / 2
         self.waveformContainer.contentInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
-        var width = UIScreen.main.bounds.width
+        var width = UIScreen.mainScreenWidth()
         if let duration = duration {
             width = CGFloat(duration.value()) * 10
             self.waveformContainer.contentSize = CGSize(width:width, height:self.waveformContainer.bounds.height)
+            
+            for time in stride(from: 0, to: duration, by: 5) {
+                let tickView = UIView(frame: CGRect(x: time * 10, y: 0, width: 1, height: 8))
+                tickView.backgroundColor = UIColor.black
+                self.waveformContainer.addSubview(tickView)
+                let tickLabel = UILabel(frame: CGRect(x: time * 10 + 1, y: 2, width: 27, height: 12))
+                let minutes = Int(time / 60)
+                let seconds = Int(time.truncatingRemainder(dividingBy: 60))
+                tickLabel.text = String(format: "%02d:%02d", minutes, seconds)
+                tickLabel.font = UIFont(name: tickLabel.font.fontName, size: 9.0)
+                self.waveformContainer.addSubview(tickLabel)
+            }
         }
         self.audioPlotWidthConstraint.constant = width
         self.audioFile = EZAudioFile(url: url)
         self.audioPlot.plotType = .buffer
         self.audioPlot.shouldFill = true
         self.audioPlot.shouldMirror = true
-        self.audioPlot.color = UIColor.blue
+        self.audioPlot.color = UIColor.greenery()
         self.audioFile?.getWaveformData(completionBlock: { (waveformData: UnsafeMutablePointer<UnsafeMutablePointer<Float>?>?, length: Int32) in
             weakSelf?.audioPlot.updateBuffer(waveformData?[0], withBufferSize: UInt32(length))
         })
@@ -121,8 +157,8 @@ class AudioPlayerViewController: UIViewController {
         self.bookmarkViews = [UIView]()
         for time in self.manager.getBookmarkTimes() {
             let ratio = time / duration
-            let waveformContainerSize = self.waveformContainer.contentSize
-            let view = UIView(frame: CGRect(x: waveformContainerSize.width * CGFloat(ratio), y: 0, width: 1, height: waveformContainerSize.height))
+            let waveContainerSize = self.waveformContainer.contentSize
+            let view = UIView(frame: CGRect(x: Double(waveContainerSize.width).multiplied(by: ratio).subtracting(0.5), y: 0, width: 1, height: Double(waveContainerSize.height)))
             view.backgroundColor = UIColor.red
             self.waveformContainer.addSubview(view)
             self.bookmarkViews?.append(view)
@@ -237,6 +273,7 @@ class AudioPlayerViewController: UIViewController {
     @IBAction func lyricsViewTapped(_ sender: Any) {
         self.lyricsView.isHidden = true
     }
+    
     // MARK - Notification Handling
     func handleAudioItemChanged(object: NSNotification) {
         guard let item = object.object as? AVPlayerItem else { return }
@@ -267,7 +304,10 @@ class AudioPlayerViewController: UIViewController {
         self.waveformContainer.delegate = nil
         self.waveformContainer.contentOffset = CGPoint(x: (CGFloat(progress) * self.waveformContainer.contentSize.width) - self.waveformContainer.contentInset.left, y: 0)
         self.waveformContainer.delegate = self
-        self.timeLabel.text = String(format: "%ld:%.1lf", Int(currentSeconds/60), currentSeconds.truncatingRemainder(dividingBy: 60))
+        let minutes = Int(currentSeconds/60)
+        let seconds = Int(currentSeconds.truncatingRemainder(dividingBy: 60))
+        let millis = Int((currentSeconds.truncatingRemainder(dividingBy: 60) - floor(currentSeconds.truncatingRemainder(dividingBy: 60))) * 10)
+        self.timeLabel.text = String(format: "%02d:%02d.%d", minutes, seconds, millis)
     }
     
     func handleAudioBookmarkUpdated() {
@@ -280,6 +320,10 @@ class AudioPlayerViewController: UIViewController {
 }
 
 extension AudioPlayerViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+    }
+    
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         if (self.scrollViewDecelerate) {
             return

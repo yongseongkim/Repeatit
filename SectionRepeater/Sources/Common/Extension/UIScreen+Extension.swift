@@ -6,7 +6,7 @@
 //  Copyright © 2017년 yongseongkim. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 extension UIScreen {
     class func mainScreenSize() -> CGSize {

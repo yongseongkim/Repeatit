@@ -34,7 +34,7 @@ class iTuensSongsViewController: UIViewController {
     }
 }
 
-extension iTuensSongsViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension iTuensSongsViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let items = self.items {
             return items.count
@@ -52,8 +52,14 @@ extension iTuensSongsViewController: UICollectionViewDataSource, UICollectionVie
         let screenWidth = UIScreen.main.bounds.width
         return CGSize(width: screenWidth, height: iTunesSongCollectionViewCell.height())
     }
-}
-
-extension iTuensSongsViewController: UICollectionViewDelegate {
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let context = PlayItemContext()
+        context.mediaItem = self.items?[indexPath.row]
+        context.mediaItems = self.items
+        let playerController = AudioPlayerViewController(nibName: AudioPlayerViewController.className(), bundle: nil)
+        playerController.modalPresentationStyle = .custom
+        playerController.context = context
+        self.present(playerController, animated: true, completion: nil)
+    }
 }

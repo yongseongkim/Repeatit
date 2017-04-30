@@ -13,33 +13,31 @@ class DocumentFilesMoveDestinationViewController: UIViewController {
     
     fileprivate var collectionView: UICollectionView? {
         didSet {
+            if let collectionView = collectionView {
+                self.view.addSubview(collectionView)
+                collectionView.snp.makeConstraints { (make) in
+                    make.top.equalTo(self.view)
+                    make.right.equalTo(self.view)
+                    make.bottom.equalTo(self.view)
+                    make.left.equalTo(self.view)
+                }
+            }
             self.collectionView?.backgroundColor = UIColor.white
             self.collectionView?.dataSource = self
             self.collectionView?.delegate = self
             self.collectionView?.register(DocumentFileCell.self)
         }
     }
-    fileprivate var displayManager: FileDisplayManager?
     fileprivate var directories = [FileDisplayItem]()
+    public var displayManager: FileDisplayManager?
     public var selectedPaths: [String]?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: UICollectionViewFlowLayout())
-        self.view.addSubview(collectionView)
-        collectionView.snp.makeConstraints { (make) in
-            make.top.equalTo(self.view)
-            make.right.equalTo(self.view)
-            make.bottom.equalTo(self.view)
-            make.left.equalTo(self.view)
-        }
-        self.collectionView = collectionView
-        
-        self.displayManager = Dependencies.sharedInstance().resolve(serviceType: FileDisplayManager.self)
+        self.collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: UICollectionViewFlowLayout())
         self.displayManager?.delegate = self
         self.displayManager?.loadCurrentPathContents()
 
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelButtonTapped))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "MoveHere", style: .done, target: self, action: #selector(doneButtonTapped))
     }
     
@@ -67,12 +65,14 @@ extension DocumentFilesMoveDestinationViewController: UICollectionViewDataSource
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: false)
         let item = self.directories[indexPath.row]
-        if (item.isParentDirectory){
-            self.displayManager?.moveToParentDirectory()
-            return
+        if let path = self.displayManager?.directoryPath(directoryName: item.name) {
+            let viewController = DocumentFilesMoveDestinationViewController()
+            viewController.selectedPaths = self.selectedPaths
+            viewController.displayManager = FileDisplayManager(rootPath: path)
+            self.navigationController?.pushViewController(viewController, animated: true)
         }
-        self.displayManager?.moveToDirectory(directoryName: item.name)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

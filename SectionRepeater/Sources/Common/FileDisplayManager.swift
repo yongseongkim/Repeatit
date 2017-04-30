@@ -110,7 +110,14 @@ class FileDisplayManager {
         self.loadCurrentPathContents()
     }
     
-    public func removeFile(item: FileDisplayItem) {
+    public func directoryPath(directoryName: String) -> String {
+        self.paths.append(directoryName)
+        let path = self.rootPath.appendingFormat("/%@", self.paths.joined(separator: "/"))
+        self.paths.removeLast()
+        return path
+    }
+    
+    public func deleteFile(item: FileDisplayItem) {
         do {
             let url = URL(fileURLWithPath: item.path)
             try self.manager.removeItem(at: url)

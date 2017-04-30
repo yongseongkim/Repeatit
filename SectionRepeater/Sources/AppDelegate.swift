@@ -33,12 +33,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.makeKeyAndVisible()
         
         let defaultRealmURL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
-        do {
-            let contents = try FileManager.default.contentsOfDirectory(atPath: defaultRealmURL.path)
-            for content in contents {
-                try FileManager.default.removeItem(at: defaultRealmURL.appendingPathComponent(content))
-            }
-        } catch let error as NSError { }
+//        do {
+//            let contents = try FileManager.default.contentsOfDirectory(atPath: defaultRealmURL.path)
+//            for content in contents {
+//                try FileManager.default.removeItem(at: defaultRealmURL.appendingPathComponent(content))
+//            }
+//        } catch let _ as NSError { }
         var config = Realm.Configuration()
         config.fileURL = defaultRealmURL.appendingPathComponent("sectionRepeater.realm")
         Realm.Configuration.defaultConfiguration = config
@@ -46,22 +46,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
+        print("applicationWillResignActive")
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
+        print("applicationDidEnterBackground")
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
+        print("applicationWillEnterForeground")
         self.notificationCenter.post(name: .onEnterForeground, object: nil)
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
+        print("applicationDidBecomeActive")
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
+        print("applicationWillTerminate")
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        print("application open")
         return true
     }
 }

@@ -7,10 +7,16 @@
 //
 
 import Foundation
+import Darwin
 
-let sideValue = 1 * pow(0.1, 10)
+let sideValue = Darwin.pow(0.1, 2)
 
 extension Double {
+    func roundToPlace(place: Int) -> Double {
+        let divisor = Darwin.pow(10.0, Double(place))
+        return self.multiplied(by: divisor).rounded() / divisor
+    }
+    
     func leftSide() -> Double {
         return self.subtracting(sideValue)
     }

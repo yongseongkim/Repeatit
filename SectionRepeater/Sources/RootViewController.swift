@@ -20,6 +20,7 @@ class RootViewController: UITabBarController {
         super.viewDidLoad()
         let documentsViewController = DocumentAudioFilesViewController()
         documentsViewController.tabBarItem = UITabBarItem(title: "documents", image: UIImage(), tag: 0)
+        documentsViewController.displayManager = Dependencies.sharedInstance().resolve(serviceType: FileDisplayManager.self)
         let iTunesViewController = iTuensSongsViewController(nibName: iTuensSongsViewController.className(), bundle: nil)
         iTunesViewController.tabBarItem = UITabBarItem(title: "iTunes", image: UIImage(), tag: 0)
         

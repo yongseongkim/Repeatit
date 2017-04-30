@@ -31,10 +31,6 @@ class AudioManager: NSObject {
     fileprivate var player: AVPlayer?
     fileprivate var playerItem: AVPlayerItem? {
         didSet {
-            guard let item = playerItem else {
-                self.player = nil
-                return
-            }
             if let periodicObserver = self.periodicObserver {
                 self.player?.removeTimeObserver(periodicObserver)
                 self.periodicObserver = nil
@@ -42,6 +38,10 @@ class AudioManager: NSObject {
             if let boundaryObserver = self.boundaryObserver {
                 self.player?.removeTimeObserver(boundaryObserver)
                 self.boundaryObserver = nil
+            }
+            guard let item = playerItem else {
+                self.player = nil
+                return
             }
             self.player = AVPlayer(playerItem: AVPlayerItem(asset: item.asset))
             self.periodicObserver = self.player?.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(0.05, Int32(NSEC_PER_SEC)), queue: nil, using: { (time) in
@@ -75,10 +75,11 @@ class AudioManager: NSObject {
             }
         }
     }
-    public var rate: Float {
-        get {
-            guard let player = self.player else { return 1.0 }
-            return player.rate
+    public var rate: Float = 1.0 {
+        didSet {
+            guard let player = self.player else { return }
+            player.rate = rate
+            self.notificationCenter.post(name: .onAudioManagerRateChanged, object: nil)
         }
     }
     public var mode = AudioRepeatMode.None
@@ -179,7 +180,27 @@ class AudioManager: NSObject {
         } catch let error as NSError {
             print(error)
         }
-
+    }
+    
+    public func play(item: MPMediaItem, items: [MPMediaItem]) {
+        guard let targetURL = item.value(forProperty: MPMediaItemPropertyAssetURL) as? URL else { return }
+        // doesn't play if it is same.
+        if let currentItem = self.playerItem, AVPlayerItem(url: targetURL) == currentItem { return }
+        var targetItem:AVPlayerItem?
+        
+        for mpitem in items {
+            if let url = mpitem.value(forProperty: MPMediaItemPropertyAssetURL) as? URL {
+                self.playlist.append(AVPlayerItem(url: url))
+                if (url.absoluteString == targetURL.absoluteString) {
+                    targetItem = AVPlayerItem(url: url)
+                }
+            }
+        }
+        
+        if let targetItem = targetItem {
+            self.playerItem = targetItem
+            self.internalPlay()
+        }
     }
     
     public func pause() {
@@ -201,7 +222,7 @@ class AudioManager: NSObject {
         if (afterSeconds < player.durationSeconds) {
             time = afterSeconds
         }
-        player.seek(to: CMTime(seconds: time, preferredTimescale: 1))
+        player.seek(to: time)
     }
 
     public func moveBackwardCurrentAudio() {
@@ -229,7 +250,7 @@ class AudioManager: NSObject {
     
     public func moveCurrentBookmark() {
         guard let currentSeconds = self.currentPlayingSeconds() else { return }
-        let previousBookmarkTimes = self.bookmarkTimes.filter { (bookmark) -> Bool in return bookmark < currentSeconds }
+        let previousBookmarkTimes = self.bookmarkTimes.filter { (bookmark) -> Bool in return bookmark <= currentSeconds }
         if let currentBookmark = previousBookmarkTimes.last {
             self.move(at: currentBookmark.rightSide())
             return
@@ -256,12 +277,12 @@ class AudioManager: NSObject {
         if (time > player.durationSeconds) {
             time = player.durationSeconds
         }
-        player.seek(to: time)
+        player.seek(to: time.roundToPlace(place: 2))
     }
     
     public func move(ratio: Double) {
         guard let player = self.player else { return }
-        self.move(at: ratio * player.durationSeconds)
+        self.move(at: (ratio * player.durationSeconds).roundToPlace(place: 2))
     }
     
     public func playNextAudio() {
@@ -324,11 +345,9 @@ class AudioManager: NSObject {
     
     public func nextRate() {
         guard let player = self.player else { return }
-        guard let item = self.playerItem else { return }
         if let index = self.rates.index(of: player.rate) {
             let nextRateIndex = (index + 1) % self.rates.count
-            player.rate = self.rates[nextRateIndex]
-            self.notificationCenter.post(name: .onAudioManagerRateChanged, object: item)
+            self.rate = self.rates[nextRateIndex]
         }
     }
     
@@ -365,8 +384,9 @@ class AudioManager: NSObject {
     
     func handleReachBoundaryTime() {
         if (!self.switchRepeat) { return }
+        // 실제 bookmark한 시간보다 0.002초 늦게불림
         guard let currentSeconds = self.currentPlayingSeconds() else { return }
-        let previousBookmarks = self.bookmarkTimes.filter { (bookmark) -> Bool in return bookmark < currentSeconds - 0.1 }
+        let previousBookmarks = self.bookmarkTimes.filter { (bookmark) -> Bool in return bookmark < currentSeconds.leftSide() }
         if let previousBookmark = previousBookmarks.last {
             self.move(at: previousBookmark.rightSide())
         }
