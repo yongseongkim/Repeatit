@@ -1,5 +1,5 @@
 //
-//  DocumentFileEditOptionView.swift
+//  FilesEditOptionView.swift
 //  SectionRepeater
 //
 //  Created by KimYongSeong on 2017. 4. 30..
@@ -9,15 +9,15 @@
 import UIKit
 import SnapKit
 
-protocol DocumentFileEditOptionViewDelegate {
+protocol FilesEditOptionViewDelegate {
     func optionMoveButtonTapped()
     func optionDeleteButtonTapped()
     func optionDoneButtonTapped()
 }
 
-class DocumentFileEditOptionView: UIView {
+class FilesEditOptionView: UIView {
 
-    public var delegate: DocumentFileEditOptionViewDelegate?
+    public var delegate: FilesEditOptionViewDelegate?
     
     class func height() -> CGFloat {
         return 44

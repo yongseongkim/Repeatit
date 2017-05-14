@@ -8,7 +8,14 @@ target 'SectionRepeater' do
   pod 'SnapKit', '~> 3.1.2'
   pod 'AudioKit', '~> 3.5'
   pod 'RealmSwift', '~> 2.4'
-  pod 'FileKit', '~> 4.0.1'
+  pod 'Then', '~> 2.1'
+  pod 'URLNavigator', '~> 1.2'
+  
+  # Reactive
+  pod 'RxSwift',    '~> 3.0'
+  pod 'RxCocoa',    '~> 3.0'
+  pod 'RxDataSources', '~> 1.0'
+  pod "RxGesture"
 end
 
 post_install do |installer|

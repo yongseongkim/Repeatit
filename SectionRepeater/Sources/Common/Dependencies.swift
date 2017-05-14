@@ -24,9 +24,7 @@ class Dependencies {
     fileprivate var container: Container?
     func setup() {
         guard let container = self.container else { return }
-        let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
         container.register(AudioManager.self) { _ in AudioManager() }.inObjectScope(.container)
-        container.register(FileDisplayManager.self) { _ in FileDisplayManager(rootPath: documentsPath) }
     }
     
     func resolve<Service>(serviceType: Service.Type) -> Service? {

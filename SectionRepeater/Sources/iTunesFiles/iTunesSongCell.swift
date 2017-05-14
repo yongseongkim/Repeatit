@@ -1,5 +1,5 @@
 //
-//  iTunesSongCollectionViewCell.swift
+//  iTunesSongCell.swift
 //  SectionRepeater
 //
 //  Created by KimYongSeong on 2017. 2. 7..
@@ -9,7 +9,7 @@
 import UIKit
 import MediaPlayer
 
-class iTunesSongCollectionViewCell: UICollectionViewCell {
+class iTunesSongCell: UICollectionViewCell {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var artistNameLabel: UILabel!

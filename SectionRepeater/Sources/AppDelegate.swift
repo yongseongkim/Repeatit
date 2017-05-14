@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import Then
 
 extension Notification.Name {
     static let onEnterForeground = Notification.Name("appdelegate.enterforeground")

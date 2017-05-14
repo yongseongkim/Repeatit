@@ -11,19 +11,20 @@
 		2E1A3B811E8FB38200F785D0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E1A3B801E8FB38200F785D0 /* Images.xcassets */; };
 		2E2E33F11E8770C500AF26DE /* DoubleObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2E33F01E8770C500AF26DE /* DoubleObject.swift */; };
 		2E49C3E31E7574FE0079CFA3 /* FileDisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E49C3E21E7574FE0079CFA3 /* FileDisplayManager.swift */; };
-		2E49C3E81E757C920079CFA3 /* DocumentAudioFilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E49C3E61E757C920079CFA3 /* DocumentAudioFilesViewController.swift */; };
-		2E49C3EE1E757CB80079CFA3 /* iTuensSongsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E49C3EA1E757CB80079CFA3 /* iTuensSongsViewController.swift */; };
-		2E49C3EF1E757CB80079CFA3 /* iTuensSongsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E49C3EB1E757CB80079CFA3 /* iTuensSongsViewController.xib */; };
-		2E49C3F01E757CB80079CFA3 /* iTunesSongCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E49C3EC1E757CB80079CFA3 /* iTunesSongCollectionViewCell.swift */; };
-		2E49C3F11E757CB80079CFA3 /* iTunesSongCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E49C3ED1E757CB80079CFA3 /* iTunesSongCollectionViewCell.xib */; };
+		2E49C3EE1E757CB80079CFA3 /* iTunesSongListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E49C3EA1E757CB80079CFA3 /* iTunesSongListViewController.swift */; };
+		2E49C3F01E757CB80079CFA3 /* iTunesSongCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E49C3EC1E757CB80079CFA3 /* iTunesSongCell.swift */; };
+		2E49C3F11E757CB80079CFA3 /* iTunesSongCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E49C3ED1E757CB80079CFA3 /* iTunesSongCell.xib */; };
 		2E5B63F21E7829A400A89D72 /* AudioVolumeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5B63F11E7829A400A89D72 /* AudioVolumeView.swift */; };
-		2E62149B1EB5C22A004421EA /* DocumentFileEditOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E62149A1EB5C22A004421EA /* DocumentFileEditOptionView.swift */; };
+		2E7101561EC8573100A80C25 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7101551EC8573100A80C25 /* File.swift */; };
 		2E7AC21F1E47195700BA03B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E7AC21E1E47195700BA03B7 /* Assets.xcassets */; };
 		2E7AC2221E47195700BA03B7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E7AC2201E47195700BA03B7 /* LaunchScreen.storyboard */; };
 		2E83A5031EA327000073C258 /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E83A5021EA327000073C258 /* Double+Extension.swift */; };
-		2E83A5061EA3396F0073C258 /* DocumentFilesMoveDestinationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E83A5041EA3396F0073C258 /* DocumentFilesMoveDestinationViewController.swift */; };
-		2E83A50A1EA3426A0073C258 /* DocumentFileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E83A5081EA3426A0073C258 /* DocumentFileCell.swift */; };
-		2E83A50B1EA3426A0073C258 /* DocumentFileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E83A5091EA3426A0073C258 /* DocumentFileCell.xib */; };
+		2EC3C0211EC86FA200812AA9 /* FilesEditOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC3C01B1EC86FA200812AA9 /* FilesEditOptionView.swift */; };
+		2EC3C0221EC86FA200812AA9 /* FileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC3C01C1EC86FA200812AA9 /* FileCell.swift */; };
+		2EC3C0231EC86FA200812AA9 /* FileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2EC3C01D1EC86FA200812AA9 /* FileCell.xib */; };
+		2EC3C0241EC86FA200812AA9 /* FileListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC3C01E1EC86FA200812AA9 /* FileListViewController.swift */; };
+		2EC3C0251EC86FA200812AA9 /* FileSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC3C01F1EC86FA200812AA9 /* FileSection.swift */; };
+		2EC3C0261EC86FA200812AA9 /* FilesMoveDestinationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC3C0201EC86FA200812AA9 /* FilesMoveDestinationViewController.swift */; };
 		2ECAA9C51EA6397D0034DEEC /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECAA9C41EA6397D0034DEEC /* UIColor+Extension.swift */; };
 		2ECBA23E1E7E530500F43AF7 /* Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECBA23D1E7E530500F43AF7 /* Dependencies.swift */; };
 		2ECBA2421E7E73B900F43AF7 /* BookmarkObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECBA2411E7E73B900F43AF7 /* BookmarkObject.swift */; };
@@ -65,21 +66,22 @@
 		2E243DB71E62896300601200 /* CoreAudioKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudioKit.framework; path = System/Library/Frameworks/CoreAudioKit.framework; sourceTree = SDKROOT; };
 		2E2E33F01E8770C500AF26DE /* DoubleObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoubleObject.swift; sourceTree = "<group>"; };
 		2E49C3E21E7574FE0079CFA3 /* FileDisplayManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDisplayManager.swift; sourceTree = "<group>"; };
-		2E49C3E61E757C920079CFA3 /* DocumentAudioFilesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentAudioFilesViewController.swift; sourceTree = "<group>"; };
-		2E49C3EA1E757CB80079CFA3 /* iTuensSongsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTuensSongsViewController.swift; sourceTree = "<group>"; };
-		2E49C3EB1E757CB80079CFA3 /* iTuensSongsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iTuensSongsViewController.xib; sourceTree = "<group>"; };
-		2E49C3EC1E757CB80079CFA3 /* iTunesSongCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesSongCollectionViewCell.swift; sourceTree = "<group>"; };
-		2E49C3ED1E757CB80079CFA3 /* iTunesSongCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iTunesSongCollectionViewCell.xib; sourceTree = "<group>"; };
+		2E49C3EA1E757CB80079CFA3 /* iTunesSongListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesSongListViewController.swift; sourceTree = "<group>"; };
+		2E49C3EC1E757CB80079CFA3 /* iTunesSongCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesSongCell.swift; sourceTree = "<group>"; };
+		2E49C3ED1E757CB80079CFA3 /* iTunesSongCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iTunesSongCell.xib; sourceTree = "<group>"; };
 		2E5B63F11E7829A400A89D72 /* AudioVolumeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioVolumeView.swift; sourceTree = "<group>"; };
-		2E62149A1EB5C22A004421EA /* DocumentFileEditOptionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentFileEditOptionView.swift; sourceTree = "<group>"; };
+		2E7101551EC8573100A80C25 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		2E7AC2141E47195700BA03B7 /* SectionRepeater.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SectionRepeater.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E7AC21E1E47195700BA03B7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../Assets.xcassets; sourceTree = "<group>"; };
 		2E7AC2211E47195700BA03B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2E7AC2231E47195700BA03B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
 		2E83A5021EA327000073C258 /* Double+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
-		2E83A5041EA3396F0073C258 /* DocumentFilesMoveDestinationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentFilesMoveDestinationViewController.swift; sourceTree = "<group>"; };
-		2E83A5081EA3426A0073C258 /* DocumentFileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentFileCell.swift; sourceTree = "<group>"; };
-		2E83A5091EA3426A0073C258 /* DocumentFileCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DocumentFileCell.xib; sourceTree = "<group>"; };
+		2EC3C01B1EC86FA200812AA9 /* FilesEditOptionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilesEditOptionView.swift; sourceTree = "<group>"; };
+		2EC3C01C1EC86FA200812AA9 /* FileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileCell.swift; sourceTree = "<group>"; };
+		2EC3C01D1EC86FA200812AA9 /* FileCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileCell.xib; sourceTree = "<group>"; };
+		2EC3C01E1EC86FA200812AA9 /* FileListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileListViewController.swift; sourceTree = "<group>"; };
+		2EC3C01F1EC86FA200812AA9 /* FileSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSection.swift; sourceTree = "<group>"; };
+		2EC3C0201EC86FA200812AA9 /* FilesMoveDestinationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilesMoveDestinationViewController.swift; sourceTree = "<group>"; };
 		2ECAA9C41EA6397D0034DEEC /* UIColor+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		2ECBA23D1E7E530500F43AF7 /* Dependencies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dependencies.swift; sourceTree = "<group>"; };
 		2ECBA2411E7E73B900F43AF7 /* BookmarkObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarkObject.swift; sourceTree = "<group>"; };
@@ -143,26 +145,12 @@
 			path = SupoortFiles;
 			sourceTree = "<group>";
 		};
-		2E49C3E41E757C7C0079CFA3 /* DocumentsFiles */ = {
-			isa = PBXGroup;
-			children = (
-				2E49C3E61E757C920079CFA3 /* DocumentAudioFilesViewController.swift */,
-				2E83A5041EA3396F0073C258 /* DocumentFilesMoveDestinationViewController.swift */,
-				2E83A5081EA3426A0073C258 /* DocumentFileCell.swift */,
-				2E83A5091EA3426A0073C258 /* DocumentFileCell.xib */,
-				2E62149A1EB5C22A004421EA /* DocumentFileEditOptionView.swift */,
-			);
-			name = DocumentsFiles;
-			path = SectionRepeater/Sources/DocumentsFiles;
-			sourceTree = SOURCE_ROOT;
-		};
 		2E49C3E51E757C7C0079CFA3 /* iTunesFiles */ = {
 			isa = PBXGroup;
 			children = (
-				2E49C3EA1E757CB80079CFA3 /* iTuensSongsViewController.swift */,
-				2E49C3EB1E757CB80079CFA3 /* iTuensSongsViewController.xib */,
-				2E49C3EC1E757CB80079CFA3 /* iTunesSongCollectionViewCell.swift */,
-				2E49C3ED1E757CB80079CFA3 /* iTunesSongCollectionViewCell.xib */,
+				2E49C3EA1E757CB80079CFA3 /* iTunesSongListViewController.swift */,
+				2E49C3EC1E757CB80079CFA3 /* iTunesSongCell.swift */,
+				2E49C3ED1E757CB80079CFA3 /* iTunesSongCell.xib */,
 			);
 			name = iTunesFiles;
 			path = SectionRepeater/Sources/iTunesFiles;
@@ -180,6 +168,7 @@
 		2E77D1591E798C4A0047F436 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				2E7101551EC8573100A80C25 /* File.swift */,
 				2ECBA2411E7E73B900F43AF7 /* BookmarkObject.swift */,
 				2E2E33F01E8770C500AF26DE /* DoubleObject.swift */,
 			);
@@ -214,6 +203,20 @@
 			path = SectionRepeater;
 			sourceTree = "<group>";
 		};
+		2EC3C01A1EC86FA200812AA9 /* Files */ = {
+			isa = PBXGroup;
+			children = (
+				2EC3C01F1EC86FA200812AA9 /* FileSection.swift */,
+				2EC3C01E1EC86FA200812AA9 /* FileListViewController.swift */,
+				2EC3C0201EC86FA200812AA9 /* FilesMoveDestinationViewController.swift */,
+				2EC3C01B1EC86FA200812AA9 /* FilesEditOptionView.swift */,
+				2EC3C01C1EC86FA200812AA9 /* FileCell.swift */,
+				2EC3C01D1EC86FA200812AA9 /* FileCell.xib */,
+			);
+			name = Files;
+			path = SectionRepeater/Sources/Files;
+			sourceTree = SOURCE_ROOT;
+		};
 		2ED87D841E9D0DAC00982FAB /* AudioPlayer */ = {
 			isa = PBXGroup;
 			children = (
@@ -234,7 +237,7 @@
 			children = (
 				2EEEF6101E598AD600D2C279 /* Common */,
 				2E77D1591E798C4A0047F436 /* Model */,
-				2E49C3E41E757C7C0079CFA3 /* DocumentsFiles */,
+				2EC3C01A1EC86FA200812AA9 /* Files */,
 				2E49C3E51E757C7C0079CFA3 /* iTunesFiles */,
 				2ED87D841E9D0DAC00982FAB /* AudioPlayer */,
 				2EEEF60F1E598AD600D2C279 /* AppDelegate.swift */,
@@ -312,7 +315,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0820;
-				LastUpgradeCheck = 0820;
+				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = yongseongkim;
 				TargetAttributes = {
 					2E7AC2131E47195700BA03B7 = {
@@ -358,14 +361,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E7AC2221E47195700BA03B7 /* LaunchScreen.storyboard in Resources */,
+				2EC3C0231EC86FA200812AA9 /* FileCell.xib in Resources */,
 				2E1A3B811E8FB38200F785D0 /* Images.xcassets in Resources */,
 				2ED87D941E9D19D900982FAB /* AudioPlayerView.xib in Resources */,
 				2ED87D8C1E9D0DAC00982FAB /* AudioBookmarkCollectionViewCell.xib in Resources */,
 				2E7AC21F1E47195700BA03B7 /* Assets.xcassets in Resources */,
 				2ED87D8E1E9D0DAC00982FAB /* AudioBookmarksViewController.xib in Resources */,
-				2E83A50B1EA3426A0073C258 /* DocumentFileCell.xib in Resources */,
-				2E49C3EF1E757CB80079CFA3 /* iTuensSongsViewController.xib in Resources */,
-				2E49C3F11E757CB80079CFA3 /* iTunesSongCollectionViewCell.xib in Resources */,
+				2E49C3F11E757CB80079CFA3 /* iTunesSongCell.xib in Resources */,
 				2ED87D901E9D0DAC00982FAB /* AudioPlayerViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -427,28 +429,30 @@
 			files = (
 				2EEEF6201E598AD600D2C279 /* UICollectionView+Extension.swift in Sources */,
 				2E5B63F21E7829A400A89D72 /* AudioVolumeView.swift in Sources */,
+				2EC3C0241EC86FA200812AA9 /* FileListViewController.swift in Sources */,
 				2ECBA23E1E7E530500F43AF7 /* Dependencies.swift in Sources */,
 				2ECBA2441E84191100F43AF7 /* AVPlayer+Extension.swift in Sources */,
 				2E2E33F11E8770C500AF26DE /* DoubleObject.swift in Sources */,
-				2E49C3E81E757C920079CFA3 /* DocumentAudioFilesViewController.swift in Sources */,
 				2EEEF6291E598AD600D2C279 /* RootViewController.swift in Sources */,
-				2E83A50A1EA3426A0073C258 /* DocumentFileCell.swift in Sources */,
-				2E49C3EE1E757CB80079CFA3 /* iTuensSongsViewController.swift in Sources */,
+				2E49C3EE1E757CB80079CFA3 /* iTunesSongListViewController.swift in Sources */,
 				2ECAA9C51EA6397D0034DEEC /* UIColor+Extension.swift in Sources */,
-				2E62149B1EB5C22A004421EA /* DocumentFileEditOptionView.swift in Sources */,
 				2ECBA2421E7E73B900F43AF7 /* BookmarkObject.swift in Sources */,
+				2EC3C0261EC86FA200812AA9 /* FilesMoveDestinationViewController.swift in Sources */,
 				2EEEF61E1E598AD600D2C279 /* AppDelegate.swift in Sources */,
 				2ED87D921E9D196600982FAB /* AudioPlayerView.swift in Sources */,
-				2E83A5061EA3396F0073C258 /* DocumentFilesMoveDestinationViewController.swift in Sources */,
+				2EC3C0211EC86FA200812AA9 /* FilesEditOptionView.swift in Sources */,
+				2EC3C0251EC86FA200812AA9 /* FileSection.swift in Sources */,
 				2E49C3E31E7574FE0079CFA3 /* FileDisplayManager.swift in Sources */,
+				2E7101561EC8573100A80C25 /* File.swift in Sources */,
 				2EEEF61F1E598AD600D2C279 /* NSObject+Extension.swift in Sources */,
 				2E83A5031EA327000073C258 /* Double+Extension.swift in Sources */,
 				2ED87D8F1E9D0DAC00982FAB /* AudioPlayerViewController.swift in Sources */,
 				2EEB178D1E6DA37600CE3918 /* AudioItem.swift in Sources */,
 				2EEEF6301E5991C200D2C279 /* AudioManager.swift in Sources */,
-				2E49C3F01E757CB80079CFA3 /* iTunesSongCollectionViewCell.swift in Sources */,
+				2E49C3F01E757CB80079CFA3 /* iTunesSongCell.swift in Sources */,
 				2ED87D8B1E9D0DAC00982FAB /* AudioBookmarkCollectionViewCell.swift in Sources */,
 				2E1A3B7F1E8F932300F785D0 /* UIScreen+Extension.swift in Sources */,
+				2EC3C0221EC86FA200812AA9 /* FileCell.swift in Sources */,
 				2ED87D8D1E9D0DAC00982FAB /* AudioBookmarksViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -565,6 +569,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1AD631199E9D44D763A2EDC1 /* Pods-SectionRepeater.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = SectionRepeater/SectionRepeater.entitlements;
@@ -584,6 +589,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7D066DCECA8DD050B00ED171 /* Pods-SectionRepeater.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = SectionRepeater/SectionRepeater.entitlements;
