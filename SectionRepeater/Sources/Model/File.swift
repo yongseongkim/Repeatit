@@ -11,11 +11,46 @@ import UIKit
 import AVFoundation
 
 struct AudioInformation {
+    var url: URL?
     var title: String?
     var artist: String?
     var albumTitle: String?
     var artwork: UIImage?
     var lyrics: String?
+    
+    init(url: URL) {
+        self.url = url
+        let playerItem = AVPlayerItem(url: url)
+        let metadataList = playerItem.asset.metadata
+        for item in metadataList {
+            if item.value == nil {
+                continue
+            }
+            if item.commonKey == "title", let title = item.stringValue {
+                self.title = title
+            }
+            if item.commonKey == "artist", let artist = item.stringValue {
+                self.artist = artist
+            }
+            if item.commonKey == "albumName", let albumTitle = item.stringValue {
+                self.albumTitle = albumTitle
+            }
+            if item.commonKey == "artwork", let data = item.dataValue {
+                self.artwork = UIImage(data: data)
+            }
+            if let key = item.key as? String, let data = item.stringValue {
+                if key == "USLT" {
+                    self.lyrics = data
+                }
+            }
+        }
+        if (self.title == nil) {
+            self.title = url.lastPathComponent
+        }
+        if (self.artist == nil) {
+            self.artist = "Unkown Artist"
+        }
+    }
 }
 
 class File {
@@ -32,38 +67,7 @@ class File {
         if !File.isAudioFile(url: url) {
             return
         }
-        var audioInformation = AudioInformation()
-        let playerItem = AVPlayerItem(url: url)
-        let metadataList = playerItem.asset.metadata
-        for item in metadataList {
-            if item.value == nil {
-                continue
-            }
-            if item.commonKey == "title", let title = item.stringValue {
-                audioInformation.title = title
-            }
-            if item.commonKey == "artist", let artist = item.stringValue {
-                audioInformation.artist = artist
-            }
-            if item.commonKey == "albumName", let albumTitle = item.stringValue {
-                audioInformation.albumTitle = albumTitle
-            }
-            if item.commonKey == "artwork", let data = item.dataValue {
-                audioInformation.artwork = UIImage(data: data)
-            }
-            if let key = item.key as? String, let data = item.stringValue {
-                if key == "USLT" {
-                    audioInformation.lyrics = data
-                }
-            }
-        }
-        if (audioInformation.title == nil) {
-            audioInformation.title = url.lastPathComponent
-        }
-        if (audioInformation.artist == nil) {
-            audioInformation.artist = "Unkown Artist"
-        }
-        self.audioInformation = audioInformation
+        self.audioInformation = AudioInformation(url: url)
     }
     
     class func isAudioFile(url: URL) -> Bool {

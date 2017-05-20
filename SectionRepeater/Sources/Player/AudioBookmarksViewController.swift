@@ -17,14 +17,9 @@ class AudioBookmarksViewController: UIViewController {
         }
     }
 
-    fileprivate var manager: AudioManager?
+    fileprivate let player = Dependencies.sharedInstance().resolve(serviceType: Player.self)
     fileprivate var bookmarkTimes: [Double]?
     public var targetPath: String?
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.manager = Dependencies.sharedInstance().resolve(serviceType: AudioManager.self)
-    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -32,7 +27,7 @@ class AudioBookmarksViewController: UIViewController {
     }
     
     func loadBookmark() {
-        self.bookmarkTimes = self.manager?.getBookmarkTimes()
+        self.bookmarkTimes = self.player?.bookmarks
         self.collectionView.reloadData()
     }
     
@@ -71,7 +66,7 @@ extension AudioBookmarksViewController: UICollectionViewDataSource, UICollection
 extension AudioBookmarksViewController: AudioBookmarkCollectionViewCellDelegate {
     func didTapDeleteButton(cell: AudioBookmarkCollectionViewCell) {
         guard let removedTime = cell.time else { return }
-        self.manager?.removeBookmarkTimeObject(removedTime: removedTime)
+        self.player?.removeBookmark(at: removedTime)
         self.loadBookmark()
     }
 }

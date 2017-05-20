@@ -29,7 +29,7 @@ class FilesEditOptionView: UIView {
     
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
-        self.backgroundColor = UIColor.greenery()
+        self.backgroundColor = UIColor.greenery
         let moveButton = UIButton()
         moveButton.setTitle("move", for: .normal)
         moveButton.setTitleColor(UIColor.black, for: .normal)

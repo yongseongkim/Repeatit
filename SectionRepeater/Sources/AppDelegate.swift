@@ -14,7 +14,6 @@ extension Notification.Name {
     static let onEnterForeground = Notification.Name("appdelegate.enterforeground")
 }
 
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 

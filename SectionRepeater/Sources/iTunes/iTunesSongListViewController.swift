@@ -8,6 +8,7 @@
 
 import UIKit
 import MediaPlayer
+import URLNavigator
 
 class iTunesSongListViewController: UIViewController {
     
@@ -18,10 +19,12 @@ class iTunesSongListViewController: UIViewController {
         ).then { (view) in
             view.backgroundColor = UIColor.white
             view.register(iTunesSongCell.self)
+            view.contentInset = UIEdgeInsetsMake(64, 0, 49 ,0)
     }
     
     //MARK: Properties
-    var items = MPMediaQuery.songs().items {
+    let player = Dependencies.sharedInstance().resolve(serviceType: Player.self)
+    var items = [MPMediaItem]() {
         didSet {
             self.collectionView.reloadData()
         }
@@ -29,7 +32,6 @@ class iTunesSongListViewController: UIViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        self.items = MPMediaQuery.songs().items
         AppDelegate.currentAppDelegate()?.notificationCenter.addObserver(self, selector: #selector(enterForeground), name: .onEnterForeground, object: nil)
     }
     
@@ -46,8 +48,16 @@ class iTunesSongListViewController: UIViewController {
         self.automaticallyAdjustsScrollViewInsets = false
         self.view.addSubview(self.collectionView)
         
+        self.updateConstraints()
         self.bind()
         self.collectionView.reloadData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let items = MPMediaQuery.songs().items {
+            self.items = items
+        }
     }
     
     func updateConstraints() {
@@ -75,15 +85,12 @@ class iTunesSongListViewController: UIViewController {
 
 extension iTunesSongListViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let items = self.items {
-            return items.count
-        }
-        return 0
+        return self.items.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.deqeueResuableCell(forIndexPath: indexPath) as iTunesSongCell
-        cell.item = items?[indexPath.row]
+        cell.item = items[indexPath.row]
         return cell
     }
     
@@ -93,12 +100,13 @@ extension iTunesSongListViewController: UICollectionViewDataSource, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let context = PlayItemContext()
-        context.mediaItem = self.items?[indexPath.row]
-        context.mediaItems = self.items
-        let playerController = AudioPlayerViewController(nibName: AudioPlayerViewController.className(), bundle: nil)
-        playerController.modalPresentationStyle = .custom
-        playerController.context = context
-        self.present(playerController, animated: true, completion: nil)
+        do {
+            try self.player?.play(items: self.items, startAt: indexPath.row)
+            let playerController = PlayerViewController(nibName: PlayerViewController.className(), bundle: nil)
+            playerController.modalPresentationStyle = .custom
+            Navigator.present(playerController)
+        } catch let error {
+            print(error)
+        }
     }
 }

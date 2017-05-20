@@ -47,6 +47,7 @@ class FileListViewController: UIViewController {
             self.collectionView.reloadData()
         }
     }
+    fileprivate let player = Dependencies.sharedInstance().resolve(serviceType: Player.self)
     public var currentPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] {
         didSet {
             self.loadFiles()
@@ -193,12 +194,12 @@ extension FileListViewController: UICollectionViewDataSource, UICollectionViewDe
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.deqeueResuableCell(forIndexPath: indexPath) as FileCell
+        cell.isSelected = false
         guard let section = FileSectionType(rawValue: indexPath.section) else { return }
         if (isEditingFiles) {
             return
         }
-        let cell = collectionView.deqeueResuableCell(forIndexPath: indexPath) as FileCell
-        cell.isSelected = false
         switch section {
         case .Directory:
             let fileListViewController = FileListViewController()
@@ -206,12 +207,14 @@ extension FileListViewController: UICollectionViewDataSource, UICollectionViewDe
             Navigator.push(fileListViewController)
             return
         case .File:
-            let playerController = AudioPlayerViewController(nibName: AudioPlayerViewController.className(), bundle: nil)
-            playerController.modalPresentationStyle = .custom
-            let context = PlayItemContext()
-            context.audioItem = AudioItem(url: self.files[indexPath.row].url)
-            playerController.context = context
-            Navigator.present(playerController)
+            do {
+                try self.player?.play(files: self.files, startAt: indexPath.row)
+                let playerController = PlayerViewController(nibName: PlayerViewController.className(), bundle: nil)
+                playerController.modalPresentationStyle = .custom
+                Navigator.present(playerController)
+            } catch let error {
+                print(error)
+            }
             return
         }
     }

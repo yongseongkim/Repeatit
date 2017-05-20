@@ -14,7 +14,7 @@ extension AVPlayer {
     }
     
     var currentSeconds: Double {
-        return self.currentTime().seconds.roundToPlace(place: 2)
+        return self.currentTime().seconds
     }
     
     var durationSeconds: Double {

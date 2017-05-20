@@ -24,7 +24,7 @@ class Dependencies {
     fileprivate var container: Container?
     func setup() {
         guard let container = self.container else { return }
-        container.register(AudioManager.self) { _ in AudioManager() }.inObjectScope(.container)
+        container.register(Player.self) { _ in Player() }.inObjectScope(.container)
     }
     
     func resolve<Service>(serviceType: Service.Type) -> Service? {

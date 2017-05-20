@@ -22,7 +22,7 @@ class FileCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-//        self.bind()
+        self.bind()
     }
     
     public var file: File? {
@@ -38,29 +38,6 @@ class FileCell: UICollectionViewCell {
     }
     
     func bind() {
-//        self.contentView.rx.tapGesture()
-//            .when(.recognized)
-//            .subscribe(onNext: { [weak self] (tap) in
-//                guard let `self` = self else { return }
-//                if (self.editing) {
-//                    self.isSelected = !self.isSelected
-//                    return
-//                }
-//                guard let file = self.file else { return }
-//                if file.isDirectory {
-//                    let documentsViewController = DocumentsViewController()
-//                    documentsViewController.currentPath = file.url.path
-//                    Navigator.push(documentsViewController)
-//                } else {
-//                    let context = PlayItemContext()
-//                    context.audioItem = AudioItem(url: file.url)
-//                    let playerController = AudioPlayerViewController(nibName: AudioPlayerViewController.className(), bundle: nil)
-//                    playerController.modalPresentationStyle = .custom
-//                    playerController.context = context
-//                    Navigator.present(playerController)
-//                }
-//            })
-//            .disposed(by: self.disposeBag)
     }
     
     override var isSelected: Bool {
