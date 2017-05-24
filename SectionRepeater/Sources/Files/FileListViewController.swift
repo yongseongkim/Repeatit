@@ -22,7 +22,6 @@ class FileListViewController: UIViewController {
         collectionViewLayout: UICollectionViewFlowLayout()
         ).then { (view) in
             view.backgroundColor = UIColor.white
-            view.allowsMultipleSelection = true
             view.register(FileCell.self)
     }
     fileprivate let optionView = FilesEditOptionView()
@@ -32,25 +31,27 @@ class FileListViewController: UIViewController {
     fileprivate var files = [File]()
     fileprivate var isEditingFiles = false {
         didSet {
-            self.navigationController?.setNavigationBarHidden(isEditing, animated: true)
-            self.optionView.isHidden = !isEditing
+            self.navigationController?.setNavigationBarHidden(isEditingFiles, animated: true)
+            self.optionView.isHidden = !isEditingFiles
             for cell in self.collectionView.visibleCells {
                 cell.isSelected = false
             }
-            if isEditing {
+            if isEditingFiles {
                 self.collectionView.contentInset = UIEdgeInsetsMake(FilesEditOptionView.height()
                     + FilesEditOptionView.edgeInset().top
                     + FilesEditOptionView.edgeInset().bottom + 20, 0, 49 ,0)
             } else {
                 self.collectionView.contentInset = UIEdgeInsetsMake(64, 0, 49 ,0)
             }
-            self.collectionView.reloadData()
+            self.collectionView.allowsMultipleSelection = isEditingFiles
+            self.loadFiles(url: self.currentURL)
         }
     }
     fileprivate let player = Dependencies.sharedInstance().resolve(serviceType: Player.self)
-    public var currentPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] {
-        didSet {
-            self.loadFiles()
+    public var relativePath: String = ""
+    fileprivate var currentURL: URL {
+        get {
+            return URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]).appendingPathComponent(relativePath)
         }
     }
 
@@ -78,12 +79,12 @@ class FileListViewController: UIViewController {
         self.bind()
         self.updateConstraint()
         self.isEditingFiles = false
-        self.loadFiles()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.collectionView.reloadData()
+        self.title = self.currentURL.lastPathComponent
+        self.loadFiles(url: self.currentURL)
     }
     
     func updateConstraint() {
@@ -123,9 +124,11 @@ class FileListViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "Confirm", style: .default) { [weak self] (action) in
             do {
-                if let name = alert.textFields?.first?.text, let path = self?.currentPath {
-                    let url = URL(fileURLWithPath: String(format: "%@/%@", path, name))
-                    try FileManager.default.createDirectory(at: url, withIntermediateDirectories: false, attributes: nil)
+                if let name = alert.textFields?.first?.text, let targetURL = URL(string: name, relativeTo: self?.currentURL) {
+                    try FileManager.default.createDirectory(at: targetURL, withIntermediateDirectories: true, attributes: nil)
+                    if let currentURL = self?.currentURL {
+                        self?.loadFiles(url: currentURL)
+                    }
                 }
             } catch let error {
                 print(error)
@@ -138,30 +141,6 @@ class FileListViewController: UIViewController {
         self.isEditingFiles = false
         self.navigationItem.rightBarButtonItems = [UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(addButtonTapped)),
                                                    UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editButtonTapped))]
-    }
-    
-    fileprivate func loadFiles() {
-        var directories = [File]()
-        var files = [File]()
-        do {
-            let fileNames = try FileManager.default.contentsOfDirectory(atPath: self.currentPath)
-            for fileName in fileNames {
-                let url = URL(fileURLWithPath: self.currentPath.appendingFormat("/%@", fileName))
-                var isDir:ObjCBool = true
-                if (FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir)) {
-                    if (isDir.boolValue) {
-                        directories.append(File(url: url, isDirectory: true))
-                    } else {
-                        files.append(File(url: url))
-                    }
-                }
-            }
-        } catch let error {
-            print(error)
-        }
-        self.directories = directories
-        self.files = files
-        self.collectionView.reloadData()
     }
 }
 
@@ -203,7 +182,7 @@ extension FileListViewController: UICollectionViewDataSource, UICollectionViewDe
         switch section {
         case .Directory:
             let fileListViewController = FileListViewController()
-            fileListViewController.currentPath = self.directories[indexPath.row].url.path
+            fileListViewController.relativePath = self.relativePath.appending(String(format: "/%@", self.directories[indexPath.row].url.lastPathComponent))
             Navigator.push(fileListViewController)
             return
         case .File:
@@ -228,7 +207,53 @@ extension FileListViewController: UICollectionViewDataSource, UICollectionViewDe
     }
 }
 
+extension FileListViewController: LoadFilesProtocol {
+    func didLoadFiles(directories: [File], files: [File]) {
+        self.directories = directories
+        self.files = files
+        self.collectionView.reloadData()
+    }
+}
+
 extension FileListViewController: FilesEditOptionViewDelegate {
+    func optionEditButtonTapped() {
+        guard let selectedItems = self.collectionView.indexPathsForSelectedItems else { return }
+        if selectedItems.count > 1 {
+            // 선택된 아이템이 2개 이상인 경우 edit할 수 없다.
+            return
+        }
+        guard let indexPath = selectedItems.first else { return }
+        var file: File? = nil
+        guard let section = FileSectionType(rawValue: indexPath.section) else { return }
+        switch section {
+        case .Directory:
+            file = self.directories[indexPath.row]
+            break
+        case .File:
+            file = self.files[indexPath.row]
+            break
+        }
+        let alert = UIAlertController(title: "Rename", message: nil, preferredStyle: .alert)
+        alert.addTextField { (textField) in
+            textField.text = file?.url.lastPathComponent
+        }
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Confirm", style: .default) { [weak self] (action) in
+            do {
+                if let name = alert.textFields?.first?.text, let targetFile = file {
+                    let targetURL = URL(fileURLWithPath: String(format: "%@/%@", targetFile.url.deletingLastPathComponent().path, name))
+                    try FileManager.default.moveItem(at: targetFile.url, to: targetURL)
+                    if let currentURL = self?.currentURL {
+                        self?.loadFiles(url: currentURL)
+                    }
+                }
+            } catch let error {
+                print(error)
+            }
+        })
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     func optionMoveButtonTapped() {
         var paths = [String]()
         if let indexPaths = self.collectionView.indexPathsForSelectedItems {
@@ -245,7 +270,6 @@ extension FileListViewController: FilesEditOptionViewDelegate {
             }
         }
         let viewController = FilesMoveDestinationViewController()
-        viewController.currentPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
         viewController.selectedPaths = paths
         let naviController = UINavigationController(rootViewController: viewController)
         self.present(naviController, animated: true, completion: nil)

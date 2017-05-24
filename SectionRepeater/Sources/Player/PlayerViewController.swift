@@ -179,7 +179,7 @@ class PlayerViewController: UIViewController {
             let ratio = time / duration
             let waveContainerSize = self.waveformContainer.contentSize
             let view = UIView(frame: CGRect(x: Double(waveContainerSize.width).multiplied(by: ratio).subtracting(0.5), y: 0, width: 1, height: Double(waveContainerSize.height)))
-            view.backgroundColor = UIColor.red
+            view.backgroundColor = UIColor.directoireBlue
             self.waveformContainer.addSubview(view)
             self.bookmarkViews?.append(view)
         }
@@ -192,6 +192,7 @@ class PlayerViewController: UIViewController {
         } else {
             self.playButton.setTitle("Play", for: .normal)
         }
+        self.rateButton.setTitle(String(format: "x%.1f", state.rate), for: .normal)
         switch state.repeatMode {
         case .All:
             self.repeatModeButton.setTitle("Repeat All", for: .normal)
@@ -261,12 +262,28 @@ class PlayerViewController: UIViewController {
         }
     }
     
-    @IBAction func moveBeforeButtonTapped(_ sender: Any) {
+    @IBAction func moveBefore7SecondsButtonTapped(_ sender: Any) {
+        self.player.moveBackward(seconds: 7)
+    }
+    
+    @IBAction func moveBefore5SecondsButtonTapped(_ sender: Any) {
+        self.player.moveBackward(seconds: 5)
+    }
+    
+    @IBAction func moveBefore3SecondsButtonTapped(_ sender: Any) {
         self.player.moveBackward(seconds: 3)
     }
     
-    @IBAction func moveAfterButtonTapped(_ sender: Any) {
-        self.player.moveForward(seconds: 3)
+    @IBAction func moveBefore1SecondsButtonTapped(_ sender: Any) {
+        self.player.moveBackward(seconds: 1)
+    }
+    
+    @IBAction func moveAfter5SecondsButtonTapped(_ sender: Any) {
+        self.player.moveForward(seconds: 5)
+    }
+    
+    @IBAction func moveAfter10SecondsButtonTapped(_ sender: Any) {
+        self.player.moveForward(seconds: 10)
     }
     
     @IBAction func playNextButtonTapped(_ sender: Any) {
@@ -295,6 +312,7 @@ class PlayerViewController: UIViewController {
     }
     
     @IBAction func rateButtonTapped(_ sender: Any) {
+        self.player.nextRate()
     }
     
     @IBAction func lyricsButtonTapped(_ sender: Any) {

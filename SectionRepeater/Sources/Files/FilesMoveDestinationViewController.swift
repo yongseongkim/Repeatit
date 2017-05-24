@@ -9,6 +9,7 @@
 import UIKit
 import SnapKit
 import Then
+import URLNavigator
 
 class FilesMoveDestinationViewController: UIViewController {
 
@@ -20,28 +21,20 @@ class FilesMoveDestinationViewController: UIViewController {
             view.backgroundColor = UIColor.white
             view.register(FileCell.self)
             view.allowsMultipleSelection = true
-            view.contentInset = UIEdgeInsetsMake(64, 0, 49 ,0)
+            view.contentInset = UIEdgeInsetsMake(64, 0, 119 , 0)
+    }
+    fileprivate let moveHereButton = UIButton().then { (button) in
+        button.setTitle("MoveHere", for: .normal)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.contentHorizontalAlignment = .center
+        button.backgroundColor = UIColor.greenery
     }
     
     //MARK: Properties
-    public var currentPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] {
-        didSet {
-            var directories = [File]()
-            do {
-                let fileNames = try FileManager.default.contentsOfDirectory(atPath: self.currentPath)
-                for fileName in fileNames {
-                    let url = URL(fileURLWithPath: currentPath.appendingFormat("/%@", fileName))
-                    var isDir:ObjCBool = true
-                    if (FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir)) {
-                        if (isDir.boolValue) {
-                            directories.append(File(url: url, isDirectory: true))
-                        }
-                    }
-                }
-            } catch let error {
-                print(error)
-            }
-            self.directories = directories
+    public var relativePath: String = ""
+    fileprivate var currentURL: URL {
+        get {
+            return URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]).appendingPathComponent(relativePath)
         }
     }
     fileprivate var directories = [File]()
@@ -49,7 +42,7 @@ class FilesMoveDestinationViewController: UIViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "MoveHere", style: .done, target: self, action: #selector(doneButtonTapped))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(cancelButtonTapped))
         AppDelegate.currentAppDelegate()?.notificationCenter.addObserver(self, selector: #selector(enterForeground), name: .onEnterForeground, object: nil)
     }
     
@@ -65,9 +58,11 @@ class FilesMoveDestinationViewController: UIViewController {
         super.viewDidLoad()
         self.automaticallyAdjustsScrollViewInsets = false
         self.view.addSubview(self.collectionView)
+        self.view.addSubview(self.moveHereButton)
         
         self.updateConstraint()
         self.bind()
+        self.loadOnlyDirectories(url: self.currentURL)
     }
     
     func updateConstraint() {
@@ -77,11 +72,18 @@ class FilesMoveDestinationViewController: UIViewController {
             make.right.equalTo(self.view)
             make.bottom.equalTo(self.view)
         }
+        self.moveHereButton.snp.makeConstraints { (make) in
+            make.centerX.equalTo(self.view.snp.centerX)
+            make.bottom.equalTo(self.view).offset(-20)
+            make.width.equalTo(240)
+            make.height.equalTo(40)
+        }
     }
     
     func bind() {
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
+        self.moveHereButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
     }
     
     func enterForeground() {
@@ -93,27 +95,29 @@ class FilesMoveDestinationViewController: UIViewController {
     }
     
     func doneButtonTapped() {
-        if let paths = self.selectedPaths {
-            for path in paths {
-                do {
-                    if FileManager.default.fileExists(atPath: path) {
-                        let url = URL(fileURLWithPath: path)
-                        try FileManager.default.moveItem(atPath: path, toPath: String.init(format: "%@/%@", currentPath, url.lastPathComponent))
-                    }
-                } catch let error {
-                    print(error)
+        guard let paths = self.selectedPaths else { return }
+        for path in paths {
+            do {
+                if FileManager.default.fileExists(atPath: path) {
+                    let url = URL(fileURLWithPath: path)
+                    try FileManager.default.moveItem(atPath: path, toPath: self.currentURL.appendingPathComponent(url.lastPathComponent).path)
                 }
+            } catch let error {
+                print(error)
             }
         }
         self.dismiss(animated: true, completion: nil)
     }
 }
 
-extension FilesMoveDestinationViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+extension FilesMoveDestinationViewController: LoadFilesProtocol {
+    func didLoadFiles(directories: [File], files: [File]) {
+        self.directories = directories
+        self.collectionView.reloadData()
     }
-    
+}
+
+extension FilesMoveDestinationViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.directories.count
     }
@@ -130,5 +134,14 @@ extension FilesMoveDestinationViewController: UICollectionViewDataSource, UIColl
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.deqeueResuableCell(forIndexPath: indexPath) as FileCell
+        cell.isSelected = false
+        let destinationViewController = FilesMoveDestinationViewController()
+        destinationViewController.selectedPaths = self.selectedPaths
+        destinationViewController.relativePath = self.relativePath.appending(String(format: "/%@", self.directories[indexPath.row].url.lastPathComponent))
+        Navigator.push(destinationViewController)
     }
 }

@@ -1,5 +1,4 @@
 PODS:
-  - Alamofire (4.4.0)
   - AudioKit (3.6)
   - Realm (2.5.1):
     - Realm/Headers (= 2.5.1)
@@ -21,7 +20,6 @@ PODS:
   - URLNavigator (1.2.0)
 
 DEPENDENCIES:
-  - Alamofire (~> 4.3)
   - AudioKit (~> 3.5)
   - RealmSwift (~> 2.4)
   - RxCocoa (~> 3.0)
@@ -34,7 +32,6 @@ DEPENDENCIES:
   - URLNavigator (~> 1.2)
 
 SPEC CHECKSUMS:
-  Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
   AudioKit: 7823de92f3c9570178d2347042867b6a93be1464
   Realm: 32f86104d37c8521f864d4274050b38ba6190733
   RealmSwift: f719e7511c902b8908593e8f143f59e47931bdb6
@@ -47,6 +44,6 @@ SPEC CHECKSUMS:
   Then: 8496793c8fcac95482b943909b440724c7d8d82c
   URLNavigator: 3ff788c985a0aae654e7de4959c4b0ea8a45f022
 
-PODFILE CHECKSUM: cc0cbff4f02e7aa80b3f237090bda9d3dcd245e3
+PODFILE CHECKSUM: c232898535826d5c24e65fb56701f2a468f3480c
 
-COCOAPODS: 1.1.1
+COCOAPODS: 1.2.0

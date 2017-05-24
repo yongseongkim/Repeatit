@@ -4,7 +4,7 @@
 target 'SectionRepeater' do
   use_frameworks!
   pod 'Swinject', '~> 2.0'
-  pod 'Alamofire', '~> 4.3'
+
   pod 'SnapKit', '~> 3.1.2'
   pod 'AudioKit', '~> 3.5'
   pod 'RealmSwift', '~> 2.4'

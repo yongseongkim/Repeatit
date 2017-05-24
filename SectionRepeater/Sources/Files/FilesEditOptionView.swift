@@ -10,6 +10,7 @@ import UIKit
 import SnapKit
 
 protocol FilesEditOptionViewDelegate {
+    func optionEditButtonTapped()
     func optionMoveButtonTapped()
     func optionDeleteButtonTapped()
     func optionDoneButtonTapped()
@@ -30,8 +31,15 @@ class FilesEditOptionView: UIView {
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
         self.backgroundColor = UIColor.greenery
+        
+        let editButton = UIButton()
+        editButton.setTitle("Edit", for: .normal)
+        editButton.setTitleColor(UIColor.black, for: .normal)
+        editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
+        self.addSubview(editButton)
+        
         let moveButton = UIButton()
-        moveButton.setTitle("move", for: .normal)
+        moveButton.setTitle("Move", for: .normal)
         moveButton.setTitleColor(UIColor.black, for: .normal)
         moveButton.addTarget(self, action: #selector(moveButtonTapped), for: .touchUpInside)
         self.addSubview(moveButton)
@@ -48,10 +56,17 @@ class FilesEditOptionView: UIView {
         doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
         self.addSubview(doneButton)
         
-        moveButton.snp.makeConstraints { (make) in
+        
+        editButton.snp.makeConstraints { (make) in
             make.top.equalTo(self)
             make.left.equalTo(self)
             make.bottom.equalTo(self)
+        }
+        moveButton.snp.makeConstraints { (make) in
+            make.top.equalTo(self)
+            make.left.equalTo(editButton.snp.right)
+            make.bottom.equalTo(self)
+            make.width.equalTo(editButton.snp.width)
         }
         deleteButton.snp.makeConstraints { (make) in
             make.top.equalTo(self)
@@ -64,8 +79,12 @@ class FilesEditOptionView: UIView {
             make.right.equalTo(self)
             make.left.equalTo(deleteButton.snp.right)
             make.bottom.equalTo(self)
-            make.width.equalTo(moveButton.snp.width)
+            make.width.equalTo(deleteButton.snp.width)
         }
+    }
+    
+    func editButtonTapped() {
+        self.delegate?.optionEditButtonTapped()
     }
     
     func moveButtonTapped() {

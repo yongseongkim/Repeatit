@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            for content in contents {
 //                try FileManager.default.removeItem(at: defaultRealmURL.appendingPathComponent(content))
 //            }
-//        } catch let _ as NSError { }
+//        } catch _ { }
         var config = Realm.Configuration()
         config.fileURL = defaultRealmURL.appendingPathComponent("sectionRepeater.realm")
         Realm.Configuration.defaultConfiguration = config
