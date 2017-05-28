@@ -289,74 +289,74 @@
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bmC-Fd-ANM">
                                     <rect key="frame" x="0.0" y="52" width="320" height="52"/>
                                     <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RRk-O9-Wr2">
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gjd-wP-5zA">
                                             <rect key="frame" x="0.0" y="0.0" width="53" height="52"/>
-                                            <state key="normal" title="Prev7"/>
+                                            <state key="normal" title="AtStart"/>
                                             <connections>
-                                                <action selector="moveBefore7SecondsButtonTapped:" destination="-1" eventType="touchUpInside" id="RwC-yB-jal"/>
+                                                <action selector="moveAtStartButtonTapped:" destination="-1" eventType="touchUpInside" id="Mdx-De-T1L"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RRk-O9-Wr2">
+                                            <rect key="frame" x="53" y="0.0" width="52.5" height="52"/>
+                                            <state key="normal" title="Prev5"/>
+                                            <connections>
+                                                <action selector="moveBefore5SecondsButtonTapped:" destination="-1" eventType="touchUpInside" id="4HC-Kd-Tw3"/>
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IBO-5x-vNr">
-                                            <rect key="frame" x="52.5" y="0.0" width="53.5" height="52"/>
-                                            <state key="normal" title="Prev5"/>
+                                            <rect key="frame" x="105" y="0.0" width="53.5" height="52"/>
+                                            <state key="normal" title="Prev2"/>
                                             <connections>
-                                                <action selector="moveBefore5SecondsButtonTapped:" destination="-1" eventType="touchUpInside" id="w83-I6-7G0"/>
+                                                <action selector="moveBefore2SecondsButtonTapped:" destination="-1" eventType="touchUpInside" id="ON0-ej-Cdz"/>
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2ZZ-Is-1hm">
-                                            <rect key="frame" x="106" y="0.0" width="53.5" height="52"/>
-                                            <state key="normal" title="Prev3"/>
-                                            <connections>
-                                                <action selector="moveBefore3SecondsButtonTapped:" destination="-1" eventType="touchUpInside" id="b1F-ho-NeJ"/>
-                                            </connections>
-                                        </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gjd-wP-5zA">
-                                            <rect key="frame" x="159.5" y="0.0" width="53.5" height="52"/>
+                                            <rect key="frame" x="158.5" y="0.0" width="54" height="52"/>
                                             <state key="normal" title="Prev1"/>
                                             <connections>
-                                                <action selector="moveBefore1SecondsButtonTapped:" destination="-1" eventType="touchUpInside" id="4Sw-aL-EIQ"/>
+                                                <action selector="moveBefore1SecondsButtonTapped:" destination="-1" eventType="touchUpInside" id="JEf-d4-FgL"/>
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mQv-i0-Csn">
-                                            <rect key="frame" x="213" y="0.0" width="53.5" height="52"/>
+                                            <rect key="frame" x="212.5" y="0.0" width="53.5" height="52"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <state key="normal" title="After5"/>
                                             <connections>
-                                                <action selector="moveAfter5SecondsButtonTapped:" destination="-1" eventType="touchUpInside" id="sA8-Ad-dPp"/>
+                                                <action selector="moveAfter5SecondsButtonTapped:" destination="-1" eventType="touchUpInside" id="TEF-aO-Qr0"/>
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1KB-X5-vSb">
-                                            <rect key="frame" x="266.5" y="0.0" width="53.5" height="52"/>
+                                            <rect key="frame" x="266" y="0.0" width="54" height="52"/>
                                             <state key="normal" title="After10"/>
                                             <connections>
-                                                <action selector="moveAfter10SecondsButtonTapped:" destination="-1" eventType="touchUpInside" id="mNV-Yb-FHb"/>
+                                                <action selector="moveAfter10SecondsButtonTapped:" destination="-1" eventType="touchUpInside" id="2YA-qE-fMy"/>
                                             </connections>
                                         </button>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <constraints>
-                                        <constraint firstItem="Gjd-wP-5zA" firstAttribute="width" secondItem="2ZZ-Is-1hm" secondAttribute="width" id="11U-5w-KAr"/>
                                         <constraint firstAttribute="bottom" secondItem="IBO-5x-vNr" secondAttribute="bottom" id="363-6z-Wh2"/>
                                         <constraint firstAttribute="height" constant="52" id="3N4-Q4-kLs"/>
                                         <constraint firstAttribute="bottom" secondItem="mQv-i0-Csn" secondAttribute="bottom" id="3v6-He-ILG"/>
                                         <constraint firstItem="2ZZ-Is-1hm" firstAttribute="top" secondItem="bmC-Fd-ANM" secondAttribute="top" id="4eD-RP-1lx"/>
                                         <constraint firstItem="1KB-X5-vSb" firstAttribute="top" secondItem="bmC-Fd-ANM" secondAttribute="top" id="4gm-sw-QNu"/>
+                                        <constraint firstItem="mQv-i0-Csn" firstAttribute="width" secondItem="2ZZ-Is-1hm" secondAttribute="width" id="6Go-dk-cuX"/>
                                         <constraint firstItem="2ZZ-Is-1hm" firstAttribute="leading" secondItem="IBO-5x-vNr" secondAttribute="trailing" id="6lb-jE-wNV"/>
                                         <constraint firstItem="mQv-i0-Csn" firstAttribute="top" secondItem="bmC-Fd-ANM" secondAttribute="top" id="8SU-bF-Bu1"/>
+                                        <constraint firstItem="RRk-O9-Wr2" firstAttribute="leading" secondItem="Gjd-wP-5zA" secondAttribute="trailing" id="Aap-aY-0LW"/>
                                         <constraint firstAttribute="trailing" secondItem="1KB-X5-vSb" secondAttribute="trailing" id="CqP-bS-Duq"/>
-                                        <constraint firstItem="Gjd-wP-5zA" firstAttribute="leading" secondItem="2ZZ-Is-1hm" secondAttribute="trailing" id="DZA-eg-PE3"/>
                                         <constraint firstAttribute="bottom" secondItem="1KB-X5-vSb" secondAttribute="bottom" id="Iic-kJ-AQV"/>
                                         <constraint firstAttribute="bottom" secondItem="Gjd-wP-5zA" secondAttribute="bottom" id="M8J-g4-jwn"/>
+                                        <constraint firstItem="Gjd-wP-5zA" firstAttribute="leading" secondItem="bmC-Fd-ANM" secondAttribute="leading" id="MAW-46-7Ow"/>
                                         <constraint firstAttribute="bottom" secondItem="RRk-O9-Wr2" secondAttribute="bottom" id="Ov9-LE-pOP"/>
                                         <constraint firstAttribute="bottom" secondItem="2ZZ-Is-1hm" secondAttribute="bottom" id="XV3-Nh-NZF"/>
                                         <constraint firstItem="IBO-5x-vNr" firstAttribute="width" secondItem="RRk-O9-Wr2" secondAttribute="width" id="fax-9d-nb0"/>
+                                        <constraint firstItem="mQv-i0-Csn" firstAttribute="leading" secondItem="2ZZ-Is-1hm" secondAttribute="trailing" id="hTs-24-7h3"/>
                                         <constraint firstItem="IBO-5x-vNr" firstAttribute="top" secondItem="bmC-Fd-ANM" secondAttribute="top" id="iND-KS-Oam"/>
                                         <constraint firstItem="1KB-X5-vSb" firstAttribute="width" secondItem="mQv-i0-Csn" secondAttribute="width" id="jPM-f7-Wsf"/>
-                                        <constraint firstItem="mQv-i0-Csn" firstAttribute="leading" secondItem="Gjd-wP-5zA" secondAttribute="trailing" id="nQH-4G-DOU"/>
+                                        <constraint firstItem="RRk-O9-Wr2" firstAttribute="width" secondItem="Gjd-wP-5zA" secondAttribute="width" id="k0F-JZ-rgY"/>
                                         <constraint firstItem="1KB-X5-vSb" firstAttribute="leading" secondItem="mQv-i0-Csn" secondAttribute="trailing" id="o17-qc-Hk7"/>
-                                        <constraint firstItem="mQv-i0-Csn" firstAttribute="width" secondItem="Gjd-wP-5zA" secondAttribute="width" id="oUj-TP-sLl"/>
                                         <constraint firstItem="2ZZ-Is-1hm" firstAttribute="width" secondItem="IBO-5x-vNr" secondAttribute="width" id="rhz-dS-HQg"/>
-                                        <constraint firstItem="RRk-O9-Wr2" firstAttribute="leading" secondItem="bmC-Fd-ANM" secondAttribute="leading" id="uhM-Ue-mtK"/>
                                         <constraint firstItem="RRk-O9-Wr2" firstAttribute="top" secondItem="bmC-Fd-ANM" secondAttribute="top" id="vM1-hg-bDj"/>
                                         <constraint firstItem="Gjd-wP-5zA" firstAttribute="top" secondItem="bmC-Fd-ANM" secondAttribute="top" id="zRA-O2-iY8"/>
                                         <constraint firstItem="IBO-5x-vNr" firstAttribute="leading" secondItem="RRk-O9-Wr2" secondAttribute="trailing" id="ztQ-Ep-6SB"/>

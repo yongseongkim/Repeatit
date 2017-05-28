@@ -262,20 +262,20 @@ class PlayerViewController: UIViewController {
         }
     }
     
-    @IBAction func moveBefore7SecondsButtonTapped(_ sender: Any) {
-        self.player.moveBackward(seconds: 7)
-    }
-    
     @IBAction func moveBefore5SecondsButtonTapped(_ sender: Any) {
         self.player.moveBackward(seconds: 5)
     }
     
-    @IBAction func moveBefore3SecondsButtonTapped(_ sender: Any) {
+    @IBAction func moveBefore2SecondsButtonTapped(_ sender: Any) {
         self.player.moveBackward(seconds: 3)
     }
     
     @IBAction func moveBefore1SecondsButtonTapped(_ sender: Any) {
         self.player.moveBackward(seconds: 1)
+    }
+    
+    @IBAction func moveAtStartButtonTapped(_ sender: Any) {
+        self.player.move(at: 0)
     }
     
     @IBAction func moveAfter5SecondsButtonTapped(_ sender: Any) {
