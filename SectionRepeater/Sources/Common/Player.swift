@@ -99,9 +99,7 @@ class Player {
     fileprivate var boundaryObserver: Any?
     fileprivate var bookmarkTimes = [Double]() {
         didSet {
-            guard let item = currentItem else { return }
             self.updateLatestBookmark(at: self.currentSeconds)
-            self.didSetBookmarkTimes(item:item, times: self.bookmarkTimes)
         }
     }
     fileprivate var latestBookmark: Double = 0
@@ -237,6 +235,7 @@ class Player {
     }
     
     func addBookmark() throws {
+        guard let item = self.currentItem else { return }
         // 둘째 자리까지 기록
         let current = self.currentSeconds.roundTo(place: 3)
         if self.isAlreadyExistBookmarkNearby(current: current, times: self.bookmarkTimes) {
@@ -248,10 +247,13 @@ class Player {
         var times = self.bookmarkTimes
         times.append(current)
         self.bookmarkTimes = times.sorted()
+        self.didUpdatedBookmark(item:item, times: self.bookmarkTimes)
     }
     
     func removeBookmark(at: Double) {
+        guard let item = self.currentItem else { return }
         self.bookmarkTimes = self.bookmarkTimes.filter { return $0 != at }.sorted()
+        self.didUpdatedBookmark(item:item, times: self.bookmarkTimes)
     }
     
     func nextRepeatMode() {
@@ -318,12 +320,12 @@ class Player {
             let realm = try! Realm()
             if let bookmarkObj = realm.objects(BookmarkObject.self).filter("path = '\(bookmarkKey)'").first {
                 self.bookmarkTimes = bookmarkObj.times.map({ (dObj) -> Double in return dObj.value }).sorted()
-                self.addBookmarkBounday(times: self.bookmarkTimes)
+                self.addBookmarkBoundary(times: self.bookmarkTimes)
             }
         }
     }
     
-    fileprivate func didSetBookmarkTimes(item: PlayerItem, times: [Double]) {
+    fileprivate func didUpdatedBookmark(item: PlayerItem, times: [Double]) {
         guard let bookmarkKey = item.bookmarkKey else { return }
         let realm = try! Realm()
         try? realm.write {
@@ -332,12 +334,8 @@ class Player {
                 bookmarkObj.times.append(DoubleObject(doubleValue: time))
             })
             realm.create(BookmarkObject.self, value: bookmarkObj, update: true)
-//            print("set bookmark")
-//            for object in realm.objects(BookmarkObject.self) {
-//                print(object)
-//            }
         }
-        self.addBookmarkBounday(times: times)
+        self.addBookmarkBoundary(times: times)
         self.notificationCenter.post(name: .playerBookmakrUpdated, object: item)
     }
     
@@ -349,7 +347,7 @@ class Player {
         self.latestBookmark = time
     }
     
-    fileprivate func addBookmarkBounday(times: [Double]) {
+    fileprivate func addBookmarkBoundary(times: [Double]) {
         if let observer = self.boundaryObserver {
             self.player?.removeTimeObserver(observer)
             self.boundaryObserver = nil

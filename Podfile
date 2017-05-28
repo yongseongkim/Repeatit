@@ -3,6 +3,7 @@
 
 target 'SectionRepeater' do
   use_frameworks!
+  pod 'Alamofire', '~> 4.4'
   pod 'Swinject', '~> 2.0'
 
   pod 'SnapKit', '~> 3.1.2'

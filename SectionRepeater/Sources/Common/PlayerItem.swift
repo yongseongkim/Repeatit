@@ -50,7 +50,6 @@ class PlayerItem: NSObject {
             let item = PlayerItem()
             item.fileItem = file
             if let info = file.audioInformation {
-                print(info)
                 item.title = info.title
                 item.artist = info.artist
                 item.albumTitle = info.albumTitle

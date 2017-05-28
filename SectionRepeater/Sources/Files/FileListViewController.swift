@@ -8,6 +8,7 @@
 
 import UIKit
 import URLNavigator
+import Alamofire
 
 enum FileSectionType: Int {
     case Directory
@@ -134,8 +135,6 @@ class FileListViewController: UIViewController {
     
     func doneButtonTapped()  {
         self.isEditingFiles = false
-        self.navigationItem.rightBarButtonItems = [UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(addButtonTapped)),
-                                                   UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editButtonTapped))]
     }
 }
 

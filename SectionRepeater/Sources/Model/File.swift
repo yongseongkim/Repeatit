@@ -27,13 +27,13 @@ struct AudioInformation {
                 continue
             }
             if item.commonKey == "title", let title = item.stringValue {
-                self.title = title
+                self.title = self.encodingMetadataString(string: title)
             }
             if item.commonKey == "artist", let artist = item.stringValue {
-                self.artist = artist
+                self.artist = self.encodingMetadataString(string: artist)
             }
             if item.commonKey == "albumName", let albumTitle = item.stringValue {
-                self.albumTitle = albumTitle
+                self.albumTitle = self.encodingMetadataString(string: albumTitle)
             }
             if item.commonKey == "artwork", let data = item.dataValue {
                 self.artwork = UIImage(data: data)
@@ -44,9 +44,16 @@ struct AudioInformation {
                 }
             }
         }
-        if (self.title == nil) {
-            self.title = url.lastPathComponent
+    }
+    
+    func encodingMetadataString(string: String) -> String? {
+        if let cString = (string as NSString).cString(using: String.Encoding.windowsCP1252.rawValue) {
+            let encoding = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.EUC_KR.rawValue))
+            if let result = NSString(cString: cString, encoding: encoding) as String? {
+                return result
+            }
         }
+        return nil
     }
 }
 

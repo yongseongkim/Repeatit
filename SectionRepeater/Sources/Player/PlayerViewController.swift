@@ -90,9 +90,8 @@ class PlayerViewController: UIViewController {
             self.dismiss(animated: true, completion: nil)
             return
         }
-        print(item.title, item.artist)
-        self.titleLabel.text = item.title
-        self.artistNameLabel.text = item.artist
+        self.titleLabel.text = item.title ?? item.url?.lastPathComponent
+        self.artistNameLabel.text = item.artist ?? "Unknown Artist"
         self.albumCoverImageView.image = item.artwork
         self.lyricsTextView.text = item.lyrics
         self.loadWavefromIfNecessary(item: item)
