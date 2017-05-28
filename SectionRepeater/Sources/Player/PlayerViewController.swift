@@ -86,22 +86,23 @@ class PlayerViewController: UIViewController {
     }
     
     fileprivate func setup() {
-        guard let information = self.player.audioInformation else {
+        guard let item = self.player.currentItem else {
             self.dismiss(animated: true, completion: nil)
             return
         }
-        self.titleLabel.text = information.title
-        self.artistNameLabel.text = information.artist
-        self.albumCoverImageView.image = information.artwork
-        self.lyricsTextView.text = information.lyrics
-        self.loadWavefromIfNecessary(information: information)
+        print(item.title, item.artist)
+        self.titleLabel.text = item.title
+        self.artistNameLabel.text = item.artist
+        self.albumCoverImageView.image = item.artwork
+        self.lyricsTextView.text = item.lyrics
+        self.loadWavefromIfNecessary(item: item)
         self.loadBookmarks(duration: self.player.duration)
         self.setupButtons()
     }
     
-    fileprivate func loadWavefromIfNecessary(information: AudioInformation) {
+    fileprivate func loadWavefromIfNecessary(item: PlayerItem) {
         weak var weakSelf = self
-        guard let url = information.url else { return }
+        guard let url = item.url else { return }
         if let currentLoadedURL = self.audioFile?.url {
             if currentLoadedURL.path == url.path {
                 return
@@ -161,7 +162,7 @@ class PlayerViewController: UIViewController {
             // EZAudio가 ipod 노래 waveform을 읽지 못한다.
             self.audioFile = EZAudioFile(url: url)
             self.audioFile?.getWaveformData(completionBlock: { [weak self] (waveformData: UnsafeMutablePointer<UnsafeMutablePointer<Float>?>?, length: Int32) in
-                if let currentURL = self?.player.audioInformation?.url {
+                if let currentURL = self?.player.currentItem?.url {
                     if url.absoluteString == currentURL.absoluteString {
                         weakSelf?.audioPlot?.updateBuffer(waveformData?[0], withBufferSize: UInt32(length))
                     }

@@ -31,13 +31,8 @@ class FilesMoveDestinationViewController: UIViewController {
     }
     
     //MARK: Properties
-    public var relativePath: String = ""
-    fileprivate var currentURL: URL {
-        get {
-            return URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]).appendingPathComponent(relativePath)
-        }
-    }
     fileprivate var directories = [File]()
+    public var currentURL: URL = URL.documentsURL
     public var selectedPaths: [String]?
     
     init() {
@@ -141,7 +136,7 @@ extension FilesMoveDestinationViewController: UICollectionViewDataSource, UIColl
         cell.isSelected = false
         let destinationViewController = FilesMoveDestinationViewController()
         destinationViewController.selectedPaths = self.selectedPaths
-        destinationViewController.relativePath = self.relativePath.appending(String(format: "/%@", self.directories[indexPath.row].url.lastPathComponent))
+        destinationViewController.currentURL = self.currentURL.appendingPathComponent(self.directories[indexPath.row].url.lastPathComponent)
         Navigator.push(destinationViewController)
     }
 }

@@ -101,7 +101,7 @@ extension iTunesSongListViewController: UICollectionViewDataSource, UICollection
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         do {
-            try self.player?.play(items: self.items, startAt: indexPath.row)
+            try self.player?.play(items: PlayerItem.items(mediaItems: self.items), startAt: indexPath.row)
             let playerController = PlayerViewController(nibName: PlayerViewController.className(), bundle: nil)
             playerController.modalPresentationStyle = .custom
             Navigator.present(playerController)

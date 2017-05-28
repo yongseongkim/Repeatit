@@ -48,12 +48,7 @@ class FileListViewController: UIViewController {
         }
     }
     fileprivate let player = Dependencies.sharedInstance().resolve(serviceType: Player.self)
-    public var relativePath: String = ""
-    fileprivate var currentURL: URL {
-        get {
-            return URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]).appendingPathComponent(relativePath)
-        }
-    }
+    public var currentURL: URL = URL.documentsURL
 
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -182,12 +177,12 @@ extension FileListViewController: UICollectionViewDataSource, UICollectionViewDe
         switch section {
         case .Directory:
             let fileListViewController = FileListViewController()
-            fileListViewController.relativePath = self.relativePath.appending(String(format: "/%@", self.directories[indexPath.row].url.lastPathComponent))
+            fileListViewController.currentURL = self.currentURL.appendingPathComponent(self.directories[indexPath.row].url.lastPathComponent)
             Navigator.push(fileListViewController)
             return
         case .File:
             do {
-                try self.player?.play(files: self.files, startAt: indexPath.row)
+                try self.player?.play(items: PlayerItem.items(files: self.files), startAt: indexPath.row)
                 let playerController = PlayerViewController(nibName: PlayerViewController.className(), bundle: nil)
                 playerController.modalPresentationStyle = .custom
                 Navigator.present(playerController)

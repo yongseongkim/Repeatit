@@ -47,9 +47,6 @@ struct AudioInformation {
         if (self.title == nil) {
             self.title = url.lastPathComponent
         }
-        if (self.artist == nil) {
-            self.artist = "Unkown Artist"
-        }
     }
 }
 
@@ -64,20 +61,12 @@ class File {
         self.name = url.lastPathComponent
         self.isDirectory = isDirectory
         
-        if !File.isAudioFile(url: url) {
+        if !url.isPlayerSupported() {
             return
         }
         self.audioInformation = AudioInformation(url: url)
     }
-    
-    class func isAudioFile(url: URL) -> Bool {
-        let supportedFormats = ["aac","adts","ac3","aif","aiff","aifc","caf","mp3","mp4","m4a","snd","au","sd2","wav"]
-        if (supportedFormats.contains(url.pathExtension)) {
-            return true
-        }
-        return false
-    }
-    
+
     func isEqual(object: Any?) -> Bool {
         if let other = object as? File {
             return self.url.absoluteString == other.url.absoluteString

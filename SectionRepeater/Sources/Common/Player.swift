@@ -46,7 +46,6 @@ class Player {
     fileprivate static let rates: [Float] = [0.5, 0.8, Player.defaultRate, 1.25, 1.5]
     
     //MARK: Properties
-    public var audioInformation: AudioInformation?
     public var bookmarks: [Double] {
         get {
             return self.bookmarkTimes
@@ -75,13 +74,12 @@ class Player {
             return state
         }
     }
-    
-    fileprivate var player: AVPlayer?
-    fileprivate var currentItem: AVPlayerItem? {
+    public var currentItem: PlayerItem? {
         didSet {
             self.didSetPlayerItem(currentItem: currentItem)
         }
     }
+    fileprivate var player: AVPlayer?
     fileprivate var currentItemIndex: Int? {
         get {
             guard let currentItem = self.currentItem else {
@@ -90,7 +88,7 @@ class Player {
             return items.index(of: currentItem)
         }
     }
-    fileprivate var items = [AVPlayerItem]()
+    fileprivate var items = [PlayerItem]()
     fileprivate var repeatMode = RepeatMode.None
     fileprivate var rate = Player.defaultRate {
         didSet {
@@ -122,27 +120,18 @@ class Player {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func play(files: [File], startAt: Int) throws {
-        if (files.count <= startAt) {
+    func play(items: [PlayerItem], startAt: Int) throws {
+        if (items.count <= startAt) {
             throw PlayerError.playlistOutOfRange
         }
-        if let currentURL = self.currentItem?.url {
-            // 똑같은 url을 play하지 않는다.
-            if files[startAt].url.absoluteString == currentURL.absoluteString {
+        
+        if let currentItem = self.currentItem {
+            if currentItem == items[startAt] {
                 return
             }
         }
-        self.items = files.map({ (f) -> AVPlayerItem in
-            return AVPlayerItem(url: f.url)
-        })
-        self.currentItem = self.items[startAt]
-    }
-    
-    func play(items: [MPMediaItem], startAt: Int) throws {
-        let files = items.map { (item) -> File in
-            return File(url: item.value(forProperty: MPMediaItemPropertyAssetURL) as! URL)
-        }
-        try self.play(files: files, startAt: startAt)
+        self.items = items
+        self.currentItem = items[startAt]
     }
     
     func pause() {
@@ -156,7 +145,7 @@ class Player {
     }
     
     func playNext() {
-        var item: AVPlayerItem? = nil
+        var item: PlayerItem? = nil
         switch self.repeatMode {
         case .One:
             item = self.currentItem
@@ -178,7 +167,7 @@ class Player {
     }
     
     func playPrev() {
-        var item: AVPlayerItem? = nil
+        var item: PlayerItem? = nil
         switch self.repeatMode {
         case .One:
             item = self.currentItem
@@ -212,7 +201,7 @@ class Player {
     }
     
     func moveForward(seconds: Double) {
-        var time = self.currentSeconds + self.duration
+        var time = self.currentSeconds + seconds
         if (time >= duration) {
             time = duration.leftSide()
         }
@@ -295,7 +284,7 @@ class Player {
     }
     
     //MARK: Private
-    fileprivate func didSetPlayerItem(currentItem: AVPlayerItem?) {
+    fileprivate func didSetPlayerItem(currentItem: PlayerItem?) {
         // 기존에 있는 observer 제거
         if let periodicObserver = self.periodicObserver {
             self.player?.removeTimeObserver(periodicObserver)
@@ -305,21 +294,16 @@ class Player {
             self.player?.removeTimeObserver(boundaryObserver)
             self.boundaryObserver = nil
         }
-        if let url = currentItem?.url {
-            self.audioInformation = AudioInformation(url: url)
-        } else {
-            self.audioInformation = nil
-        }
         self.loadPlayer(item: currentItem)
         self.notificationCenter.post(name: .playerItemDidSet, object: currentItem)
     }
     
-    fileprivate func loadPlayer(item: AVPlayerItem?) {
-        guard let item = currentItem else {
+    fileprivate func loadPlayer(item: PlayerItem?) {
+        guard let url = currentItem?.url else {
             self.player = nil
             return
         }
-        self.player = AVPlayer(playerItem: AVPlayerItem(asset: item.asset))
+        self.player = AVPlayer(playerItem: AVPlayerItem(url: url))
         self.player?.rate = self.rate
         self.player?.play()
         self.notificationCenter.post(name: .playerStateUpdated, object: item)
@@ -330,31 +314,31 @@ class Player {
                                                                      using: { (time) in
                                                                         self.handleTimeChanged(time.seconds) })
         self.bookmarkTimes = [Double]()
-        if let currentPath = item.url?.path {
+        if let bookmarkKey = item?.bookmarkKey {
             let realm = try! Realm()
-            if let bookmarkObj = realm.objects(BookmarkObject.self).filter("path = '\(currentPath)'").first {
+            if let bookmarkObj = realm.objects(BookmarkObject.self).filter("path = '\(bookmarkKey)'").first {
                 self.bookmarkTimes = bookmarkObj.times.map({ (dObj) -> Double in return dObj.value }).sorted()
                 self.addBookmarkBounday(times: self.bookmarkTimes)
             }
         }
     }
     
-    fileprivate func didSetBookmarkTimes(item: AVPlayerItem, times: [Double]) {
-        guard let currentItemPath = item.url?.path else { return }
+    fileprivate func didSetBookmarkTimes(item: PlayerItem, times: [Double]) {
+        guard let bookmarkKey = item.bookmarkKey else { return }
         let realm = try! Realm()
         try? realm.write {
-            let bookmarkObj = BookmarkObject(path: currentItemPath)
+            let bookmarkObj = BookmarkObject(path: bookmarkKey)
             times.forEach({ (time) in
                 bookmarkObj.times.append(DoubleObject(doubleValue: time))
             })
             realm.create(BookmarkObject.self, value: bookmarkObj, update: true)
-            print("set bookmark")
-            for object in realm.objects(BookmarkObject.self) {
-                print(object)
-            }
+//            print("set bookmark")
+//            for object in realm.objects(BookmarkObject.self) {
+//                print(object)
+//            }
         }
         self.addBookmarkBounday(times: times)
-        self.notificationCenter.post(name: .playerBookmakrUpdated, object: self.currentItem)
+        self.notificationCenter.post(name: .playerBookmakrUpdated, object: item)
     }
     
     fileprivate func updateLatestBookmark(at: Double) {

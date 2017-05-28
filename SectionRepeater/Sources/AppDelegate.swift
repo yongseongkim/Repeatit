@@ -33,12 +33,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.makeKeyAndVisible()
         
         let defaultRealmURL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
-//        do {
-//            let contents = try FileManager.default.contentsOfDirectory(atPath: defaultRealmURL.path)
-//            for content in contents {
-//                try FileManager.default.removeItem(at: defaultRealmURL.appendingPathComponent(content))
-//            }
-//        } catch _ { }
+        do {
+            let contents = try FileManager.default.contentsOfDirectory(atPath: defaultRealmURL.path)
+            for content in contents {
+                try FileManager.default.removeItem(at: defaultRealmURL.appendingPathComponent(content))
+            }
+        } catch _ { }
         var config = Realm.Configuration()
         config.fileURL = defaultRealmURL.appendingPathComponent("sectionRepeater.realm")
         Realm.Configuration.defaultConfiguration = config
