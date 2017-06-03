@@ -7,9 +7,6 @@
 //
 
 import UIKit
-import RxCocoa
-import RxSwift
-import RxGesture
 import URLNavigator
 
 class FileCell: UICollectionViewCell {
@@ -18,7 +15,6 @@ class FileCell: UICollectionViewCell {
     @IBOutlet weak var selectedImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     public var editing: Bool = false
-    fileprivate var disposeBag = DisposeBag()
     
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -3,7 +3,7 @@
 
 target 'SectionRepeater' do
   use_frameworks!
-  pod 'Alamofire', '~> 4.4'
+#  pod 'Alamofire', '~> 4.4'
   pod 'Swinject', '~> 2.0'
 
   pod 'SnapKit', '~> 3.1.2'
@@ -13,10 +13,10 @@ target 'SectionRepeater' do
   pod 'URLNavigator', '~> 1.2'
   
   # Reactive
-  pod 'RxSwift',    '~> 3.0'
-  pod 'RxCocoa',    '~> 3.0'
-  pod 'RxDataSources', '~> 1.0'
-  pod "RxGesture"
+#  pod 'RxSwift',    '~> 3.0'
+#  pod 'RxCocoa',    '~> 3.0'
+#  pod 'RxDataSources', '~> 1.0'
+#  pod "RxGesture"
 end
 
 post_install do |installer|

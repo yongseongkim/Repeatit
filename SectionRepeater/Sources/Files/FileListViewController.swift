@@ -8,7 +8,6 @@
 
 import UIKit
 import URLNavigator
-import Alamofire
 
 enum FileSectionType: Int {
     case Directory

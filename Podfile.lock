@@ -1,52 +1,32 @@
 PODS:
-  - Alamofire (4.4.0)
   - AudioKit (3.6)
   - Realm (2.5.1):
     - Realm/Headers (= 2.5.1)
   - Realm/Headers (2.5.1)
   - RealmSwift (2.5.1):
     - Realm (= 2.5.1)
-  - RxCocoa (3.4.0):
-    - RxSwift (~> 3.4)
-  - RxDataSources (1.0.3):
-    - RxCocoa (~> 3.0)
-    - RxSwift (~> 3.0)
-  - RxGesture (1.0.1):
-    - RxCocoa (~> 3.4)
-    - RxSwift (~> 3.4)
-  - RxSwift (3.4.0)
   - SnapKit (3.1.2)
   - Swinject (2.0.0)
   - Then (2.1.0)
   - URLNavigator (1.2.0)
 
 DEPENDENCIES:
-  - Alamofire (~> 4.4)
   - AudioKit (~> 3.5)
   - RealmSwift (~> 2.4)
-  - RxCocoa (~> 3.0)
-  - RxDataSources (~> 1.0)
-  - RxGesture
-  - RxSwift (~> 3.0)
   - SnapKit (~> 3.1.2)
   - Swinject (~> 2.0)
   - Then (~> 2.1)
   - URLNavigator (~> 1.2)
 
 SPEC CHECKSUMS:
-  Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
   AudioKit: 7823de92f3c9570178d2347042867b6a93be1464
   Realm: 32f86104d37c8521f864d4274050b38ba6190733
   RealmSwift: f719e7511c902b8908593e8f143f59e47931bdb6
-  RxCocoa: d14ef6b6029e1ddc6e966508c09289090de68ff9
-  RxDataSources: a021a0e944ba5f7991259829d973afdbfa719c0b
-  RxGesture: 1f770b247c69e8133fb8f4ef263571efd0ae91a1
-  RxSwift: 3789a1af753002a14edecdb698a2424624296a9c
   SnapKit: 12b24f569cb7c143acc9c22b9d91b23e7b1c84a2
   Swinject: 2e964a80d70ab09b3949c99032711f89147bfd60
   Then: 8496793c8fcac95482b943909b440724c7d8d82c
   URLNavigator: 3ff788c985a0aae654e7de4959c4b0ea8a45f022
 
-PODFILE CHECKSUM: e70d9ff05044f1c8089040acd9e8497490048619
+PODFILE CHECKSUM: a49ac84c73fca9f2eadc1c05ad0659ba824427a8
 
 COCOAPODS: 1.2.0

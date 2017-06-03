@@ -568,7 +568,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1AD631199E9D44D763A2EDC1 /* Pods-SectionRepeater.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = SectionRepeater/SectionRepeater.entitlements;
@@ -588,7 +588,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7D066DCECA8DD050B00ED171 /* Pods-SectionRepeater.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = SectionRepeater/SectionRepeater.entitlements;
