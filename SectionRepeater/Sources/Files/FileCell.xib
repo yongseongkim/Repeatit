@@ -78,6 +78,7 @@
                 <outlet property="coverImageView" destination="0KY-q8-uaT" id="cj6-6x-fHq"/>
                 <outlet property="nameLabel" destination="Y7v-mx-7D5" id="x4b-RV-O9e"/>
                 <outlet property="selectedImageView" destination="XTX-zs-yy8" id="fCI-H4-YFm"/>
+                <outlet property="separateViewHeightConstraint" destination="hIe-sT-Aob" id="cEl-yH-DaF"/>
             </connections>
             <point key="canvasLocation" x="14" y="-40"/>
         </collectionViewCell>

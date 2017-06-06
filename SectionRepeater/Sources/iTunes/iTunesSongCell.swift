@@ -37,9 +37,9 @@ class iTunesSongCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.coverImageView.layer.borderColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1.0).cgColor
-        self.coverImageView.layer.borderWidth = 0.5
-        self.seperateViewHeightConstraint.constant = 0.5
+        self.coverImageView.layer.borderColor = UIColor.gray220.cgColor
+        self.coverImageView.layer.borderWidth = UIScreen.scaleWidth
+        self.seperateViewHeightConstraint.constant = UIScreen.scaleWidth
     }
 
 }

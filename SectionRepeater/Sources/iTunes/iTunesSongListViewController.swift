@@ -95,8 +95,7 @@ extension iTunesSongListViewController: UICollectionViewDataSource, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let screenWidth = UIScreen.main.bounds.width
-        return CGSize(width: screenWidth, height: iTunesSongCell.height())
+        return CGSize(width: UIScreen.mainWidth, height: iTunesSongCell.height())
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

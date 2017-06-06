@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import AVFoundation
+import SwiftyImage
 
 struct AudioInformation {
     var url: URL?

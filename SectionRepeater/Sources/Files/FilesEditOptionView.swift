@@ -71,7 +71,7 @@ class FilesEditOptionView: UIView {
             make.left.equalTo(self)
             make.bottom.equalTo(self)
             make.right.equalTo(self)
-            make.height.equalTo(1 / UIScreen.main.scale)
+            make.height.equalTo(UIScreen.scaleWidth)
         }
         
         editButton.snp.makeConstraints { (make) in

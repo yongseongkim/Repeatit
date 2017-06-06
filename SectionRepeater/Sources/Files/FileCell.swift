@@ -14,26 +14,34 @@ class FileCell: UICollectionViewCell {
     @IBOutlet weak var coverImageView: UIImageView!
     @IBOutlet weak var selectedImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var separateViewHeightConstraint: NSLayoutConstraint!
     public var editing: Bool = false
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.bind()
+        self.separateViewHeightConstraint.constant = UIScreen.scaleWidth
     }
     
     public var file: File? {
         didSet {
             if let file = file {
-                coverImageView.image = nil
+                if file.isDirectory {
+                    // TODO: set directory image
+                    coverImageView.image = nil
+                }
+                if let image = file.audioInformation?.artwork {
+                    coverImageView.image = image
+                } else {
+                    // TODO: set default image
+                    coverImageView.image = nil
+                }
+                
                 nameLabel.text = file.name
             } else {
                 coverImageView.image = nil
                 nameLabel.text = ""
             }
         }
-    }
-    
-    func bind() {
     }
     
     override var isSelected: Bool {

@@ -21,8 +21,16 @@ class PlayerViewController: UIViewController {
     @IBOutlet weak var artistNameLabel: UILabel!
     @IBOutlet weak var lyricsView: UIView!
     @IBOutlet weak var lyricsTextView: UITextView!
+    
+    @IBOutlet weak var timeSliderTimeLabel: UILabel!
+    @IBOutlet weak var timeSlider: UISlider!
+    @IBOutlet weak var timeSliderDurationLabel: UILabel!
+    
     @IBOutlet weak var waveformView: WaveformView!
     @IBOutlet weak var timeLabel: UILabel!
+    @IBOutlet weak var timeSeparateViewWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var durationLabel: UILabel!
+    
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var forwardButton: UIButton!
     @IBOutlet weak var backwardButton: UIButton!
@@ -58,6 +66,10 @@ class PlayerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.waveformView.delegate = self
+        self.timeSeparateViewWidthConstraint.constant = UIScreen.scaleWidth
+        self.timeSlider.setThumbImage(UIImage.size(width: 3, height: 16).color(UIColor.greenery).image, for: .normal)
+        self.timeSlider.setMinimumTrackImage(UIImage.size(width: self.timeSlider.bounds.width, height: 3).color(UIColor.greenery).image, for: .normal)
+        self.timeSlider.setMaximumTrackImage(UIImage.size(width: self.timeSlider.bounds.width, height: 3).color(UIColor.gray220).image, for: .normal)
         self.player.notificationCenter.addObserver(self, selector: #selector(handlePlayerItemDidSet(object:)), name: Notification.Name.playerItemDidSet, object: nil)
         self.player.notificationCenter.addObserver(self, selector: #selector(handlePlayerStateUpdatedNotification), name: Notification.Name.playerStateUpdated, object: nil)
         self.player.notificationCenter.addObserver(self, selector: #selector(handlePlayingTimeUpdatedNotification), name: Notification.Name.playerTimeUpdated, object: nil)
@@ -93,11 +105,19 @@ class PlayerViewController: UIViewController {
         self.lyricsTextView.text = item.lyrics
         self.loadWavefromIfNecessary(item: item)
 //        self.loadBookmarks(duration: self.player.duration)
+        let duration = self.player.duration
+        let minutes = Int(duration/60)
+        let seconds = Int(duration.truncatingRemainder(dividingBy: 60))
+        self.timeSliderDurationLabel.text = String(format: "%02d:%02d", minutes, seconds)
+        self.durationLabel.text = String(format: "%02d:%02d", minutes, seconds)
         self.setupButtons()
     }
     
     fileprivate func loadWavefromIfNecessary(item: PlayerItem) {
         guard let url = item.url else { return }
+        if url.absoluteString == self.waveformView.url?.absoluteString {
+            return
+        }
         self.waveformView.loadWaveform(url: url)
     }
     
@@ -155,6 +175,8 @@ class PlayerViewController: UIViewController {
             progress = self.player.currentSeconds / self.player.duration
         }
         self.waveformView.move(progress: progress)
+        self.timeSlider.value = Float(progress)
+        self.timeSlider.sendActions(for: .valueChanged)
     }
     
     func handleBookmarkUpdatedNotification() {
@@ -165,6 +187,32 @@ class PlayerViewController: UIViewController {
     // MARK - IB Actions
     @IBAction func closeButtonTapped(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func timeSliderValueChanged(_ sender: Any) {
+        let current = Double(self.timeSlider.value) * self.player.duration
+        let minutes = Int(abs(current/60))
+        let seconds = Int(abs(current.truncatingRemainder(dividingBy: 60)))
+        self.timeSliderTimeLabel.text = String(format: "%02d:%02d", minutes, seconds)
+    }
+    
+    @IBAction func timeSliderTouchDown(_ sender: Any) {
+        self.playingWhenScrollStart = self.player.state.isPlaying
+        self.player.pause()
+    }
+    
+    @IBAction func timeSliderTouchUpInside(_ sender: Any) {
+        self.player.move(at: Double(self.timeSlider.value) * self.player.duration)
+        if (self.playingWhenScrollStart) {
+            self.player.resume()
+        }
+    }
+    
+    @IBAction func timeSliderTouchUpOutside(_ sender: Any) {
+        self.player.move(at: Double(self.timeSlider.value) * self.player.duration)
+        if (self.playingWhenScrollStart) {
+            self.player.resume()
+        }
     }
     
     @IBAction func showBookmarksButtonTapped(_ sender: Any) {
@@ -256,7 +304,11 @@ class PlayerViewController: UIViewController {
 }
 
 extension PlayerViewController: WaveformViewDelegate {
-    func waveformViewDidScroll(scrollView: UIScrollView, progress: Double) {
+    func waveformViewDidScroll(scrollView: UIScrollView) {
+        var progress: Double = 0
+        if (scrollView.contentSize.width > 0) {
+            progress = Double((scrollView.contentOffset.x + scrollView.contentInset.left) / scrollView.contentSize.width)
+        }
         let current = progress * self.player.duration
         let minutes = Int(abs(current/60))
         let seconds = Int(abs(current.truncatingRemainder(dividingBy: 60)))

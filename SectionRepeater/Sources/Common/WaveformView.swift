@@ -12,7 +12,7 @@ import Accelerate
 import SwiftyImage
 
 protocol WaveformViewDelegate {
-    func waveformViewDidScroll(scrollView: UIScrollView, progress: Double)
+    func waveformViewDidScroll(scrollView: UIScrollView)
     func waveformViewWillBeginDragging(scrollView: UIScrollView)
     func waveformViewDidEndDragging(_ scrollView: UIScrollView, decelerate: Bool)
     func waveformViewDidEndDecelerating(scrollView: UIScrollView)
@@ -24,7 +24,7 @@ class WaveformView: UIView {
     static let samplesPerPixel: Int = 3000
     
     public var delegate: WaveformViewDelegate?
-    fileprivate var url: URL?
+    public var url: URL?
     fileprivate let scrollView = UIScrollView(frame: .zero).then { (scrollView) in
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
@@ -169,15 +169,11 @@ class WaveformView: UIView {
 
 extension WaveformView: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        var progress: Double = 0
-        if (self.scrollView.contentSize.width > 0) {
-            progress = Double((scrollView.contentOffset.x + self.scrollView.contentInset.left) / self.scrollView.contentSize.width)
-        }
         self.progressView?.snp.updateConstraints({ (make) in
-            make.width.equalTo(scrollView.contentSize.width * CGFloat(progress))
+            make.width.equalTo(scrollView.contentOffset.x + self.scrollView.contentInset.left)
         })
         self.scrollView.layoutIfNeeded()
-        self.delegate?.waveformViewDidScroll(scrollView: scrollView, progress: progress)
+        self.delegate?.waveformViewDidScroll(scrollView: scrollView)
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {

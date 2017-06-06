@@ -9,15 +9,8 @@
 import UIKit
 
 extension UIScreen {
-    class func mainScreenSize() -> CGSize {
-        return UIScreen.main.bounds.size
-    }
-    
-    class func mainScreenWidth() -> CGFloat {
-        return UIScreen.mainScreenSize().width
-    }
-    
-    class func mainScreenHeight() -> CGFloat {
-        return UIScreen.mainScreenSize().height
-    }
+    static let mainSize = UIScreen.main.bounds.size
+    static let mainWidth = UIScreen.mainSize.width
+    static let mainHeight = UIScreen.mainSize.height
+    static let scaleWidth = 1 / UIScreen.main.scale
 }
