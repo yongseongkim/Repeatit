@@ -18,68 +18,98 @@ protocol FilesEditOptionViewDelegate {
 
 class FilesEditOptionView: UIView {
 
-    public var delegate: FilesEditOptionViewDelegate?
-    
-    class func height() -> CGFloat {
-        return 44
+    //MARK: UI Componenets
+    fileprivate let editButton = UIButton().then { (button) in
+        button.setTitle("Edit", for: .normal)
+        button.setTitleColor(UIColor.greenery, for: .normal)
+        button.setTitleColor(UIColor.greenery.withAlphaComponent(0.4), for: .disabled)
+        button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
+    }
+    fileprivate let moveButton = UIButton().then { (button) in
+        button.setTitle("Move", for: .normal)
+        button.setTitleColor(UIColor.greenery, for: .normal)
+        button.setTitleColor(UIColor.greenery.withAlphaComponent(0.4), for: .disabled)
+        button.addTarget(self, action: #selector(moveButtonTapped), for: .touchUpInside)
+    }
+    fileprivate let deleteButton = UIButton().then { (button) in
+        button.setTitle("Delete", for: .normal)
+        button.setTitleColor(UIColor.greenery, for: .normal)
+        button.setTitleColor(UIColor.greenery.withAlphaComponent(0.4), for: .disabled)
+        button.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
+    }
+    fileprivate let doneButton = UIButton().then { (button) in
+        button.setTitle("Done", for: .normal)
+        button.setTitleColor(UIColor.greenery, for: .normal)
+        button.setTitleColor(UIColor.greenery.withAlphaComponent(0.4), for: .disabled)
+        button.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
     }
     
-    class func edgeInset() -> UIEdgeInsets {
-        return UIEdgeInsetsMake(5, 10, 5, 10)
+    //MARK: Properties
+    public var delegate: FilesEditOptionViewDelegate?
+    public var selectedIndexPaths: [IndexPath]? {
+        didSet {
+            self.updateStatus()
+        }
+    }
+    public var currentURL: URL?
+    
+    class func height() -> CGFloat {
+        return 64
     }
     
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
-        self.backgroundColor = UIColor.greenery
-        
-        let editButton = UIButton()
-        editButton.setTitle("Edit", for: .normal)
-        editButton.setTitleColor(UIColor.black, for: .normal)
-        editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
+        self.backgroundColor = UIColor.white
         self.addSubview(editButton)
-        
-        let moveButton = UIButton()
-        moveButton.setTitle("Move", for: .normal)
-        moveButton.setTitleColor(UIColor.black, for: .normal)
-        moveButton.addTarget(self, action: #selector(moveButtonTapped), for: .touchUpInside)
         self.addSubview(moveButton)
-        
-        let deleteButton = UIButton()
-        deleteButton.setTitle("Delete", for: .normal)
-        deleteButton.setTitleColor(UIColor.black, for: .normal)
-        deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
         self.addSubview(deleteButton)
-        
-        let doneButton = UIButton()
-        doneButton.setTitle("Done", for: .normal)
-        doneButton.setTitleColor(UIColor.black, for: .normal)
-        doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
         self.addSubview(doneButton)
-        
+        let borderView = UIView()
+        borderView.backgroundColor = UIColor.gray150
+        self.addSubview(borderView)
+        borderView.snp.makeConstraints { (make) in
+            make.left.equalTo(self)
+            make.bottom.equalTo(self)
+            make.right.equalTo(self)
+            make.height.equalTo(1 / UIScreen.main.scale)
+        }
         
         editButton.snp.makeConstraints { (make) in
-            make.top.equalTo(self)
+            make.top.equalTo(self).offset(20)
             make.left.equalTo(self)
             make.bottom.equalTo(self)
         }
         moveButton.snp.makeConstraints { (make) in
-            make.top.equalTo(self)
+            make.top.equalTo(self).offset(20)
             make.left.equalTo(editButton.snp.right)
             make.bottom.equalTo(self)
             make.width.equalTo(editButton.snp.width)
         }
         deleteButton.snp.makeConstraints { (make) in
-            make.top.equalTo(self)
+            make.top.equalTo(self).offset(20)
             make.left.equalTo(moveButton.snp.right)
             make.bottom.equalTo(self)
             make.width.equalTo(moveButton.snp.width)
         }
         doneButton.snp.makeConstraints { (make) in
-            make.top.equalTo(self)
+            make.top.equalTo(self).offset(20)
             make.right.equalTo(self)
             make.left.equalTo(deleteButton.snp.right)
             make.bottom.equalTo(self)
             make.width.equalTo(deleteButton.snp.width)
+        }
+        self.updateStatus()
+    }
+    
+    func updateStatus() {
+        if let selectedPaths = self.selectedIndexPaths {
+            self.editButton.isEnabled = (selectedPaths.count == 1)
+            self.moveButton.isEnabled = (selectedPaths.count > 0)
+            self.deleteButton.isEnabled = (selectedPaths.count > 0)
+        } else {
+            self.editButton.isEnabled = false
+            self.moveButton.isEnabled = false
+            self.deleteButton.isEnabled = false
         }
     }
     

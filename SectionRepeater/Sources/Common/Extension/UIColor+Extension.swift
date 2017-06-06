@@ -38,4 +38,7 @@ extension UIColor {
     static let bronzeMist = UIColor(red: 156/255, green: 126/255, blue: 65/255, alpha: 1.0)
     // OTHER
     static let gray243 = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1.0)
+    static let gray220 = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1.0)
+    static let gray200 = UIColor(red: 200/255, green: 200/255, blue: 200/255, alpha: 1.0)
+    static let gray150 = UIColor(red: 150/255, green: 150/255, blue: 150/255, alpha: 1.0)
 }

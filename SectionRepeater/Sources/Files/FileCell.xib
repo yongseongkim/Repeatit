@@ -44,15 +44,25 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pNw-sD-gkz">
+                                <rect key="frame" x="59" y="48.5" width="241" height="1"/>
+                                <color key="backgroundColor" red="0.86274509799999999" green="0.86274509799999999" blue="0.86274509799999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="hIe-sT-Aob"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="pNw-sD-gkz" firstAttribute="leading" secondItem="0KY-q8-uaT" secondAttribute="trailing" constant="5" id="45Q-0z-s6o"/>
+                            <constraint firstAttribute="trailing" secondItem="pNw-sD-gkz" secondAttribute="trailing" constant="20" id="5le-6d-Izg"/>
                             <constraint firstItem="XTX-zs-yy8" firstAttribute="centerY" secondItem="PrV-9g-NSa" secondAttribute="centerY" id="HfQ-60-O5S"/>
                             <constraint firstItem="Y7v-mx-7D5" firstAttribute="leading" secondItem="0KY-q8-uaT" secondAttribute="trailing" constant="10" id="L1N-kh-Afj"/>
                             <constraint firstItem="XTX-zs-yy8" firstAttribute="leading" secondItem="PrV-9g-NSa" secondAttribute="leading" constant="10" id="VYG-0b-ett"/>
                             <constraint firstItem="0KY-q8-uaT" firstAttribute="centerY" secondItem="PrV-9g-NSa" secondAttribute="centerY" id="Y5C-ya-TR1"/>
                             <constraint firstAttribute="trailing" secondItem="Y7v-mx-7D5" secondAttribute="trailing" constant="10" id="cPn-ab-Hhw"/>
                             <constraint firstItem="0KY-q8-uaT" firstAttribute="leading" secondItem="PrV-9g-NSa" secondAttribute="leading" constant="10" id="dsP-xh-BnQ"/>
+                            <constraint firstAttribute="bottom" secondItem="pNw-sD-gkz" secondAttribute="bottom" id="eVb-0A-534"/>
                             <constraint firstItem="Y7v-mx-7D5" firstAttribute="centerY" secondItem="PrV-9g-NSa" secondAttribute="centerY" id="gKs-dk-nJo"/>
                         </constraints>
                     </view>

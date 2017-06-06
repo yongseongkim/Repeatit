@@ -14,22 +14,22 @@ extension AVPlayer {
     }
     
     var currentSeconds: Double {
-        var time = self.currentTime().seconds
-        if (time < 0) {
-            time = 0
-        }
-        return time
+        print(CMTimeGetSeconds(self.currentTime()))
+        return CMTimeGetSeconds(self.currentTime())
     }
     
     var durationSeconds: Double {
         if let duration = self.currentItem?.asset.duration {
-            return duration.seconds
+            return CMTimeGetSeconds(duration)
         }
         return 0.0
     }
     
     func seek(to: Double) {
-        self.seek(to: CMTime(seconds: to, preferredTimescale: self.currentTime().timescale))
+        if let scale = self.currentItem?.asset.duration.timescale {
+            print("seek", to)
+            self.seek(to: CMTime(seconds: to, preferredTimescale: scale), toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero)
+        }
     }
 }
 

@@ -6,12 +6,11 @@ target 'SectionRepeater' do
 #  pod 'Alamofire', '~> 4.4'
   pod 'Swinject', '~> 2.0'
 
-  pod 'SnapKit', '~> 3.1.2'
-  pod 'AudioKit', '~> 3.5'
+  pod 'SnapKit', '~> 3.1.2' 
   pod 'RealmSwift', '~> 2.4'
   pod 'Then', '~> 2.1'
   pod 'URLNavigator', '~> 1.2'
-  
+  pod 'SwiftyImage', '~> 1.1'  
   # Reactive
 #  pod 'RxSwift',    '~> 3.0'
 #  pod 'RxCocoa',    '~> 3.0'
