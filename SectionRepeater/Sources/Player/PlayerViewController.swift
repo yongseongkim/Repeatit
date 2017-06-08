@@ -168,7 +168,6 @@ class PlayerViewController: UIViewController {
         self.waveformView.loadBookmarks()
     }
     
-    
     // MARK - IB Actions
     @IBAction func closeButtonTapped(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)

@@ -126,7 +126,7 @@ class WaveformView: UIView {
         for time in bookmarkTimes {
             let ratio = CGFloat(time / self.duration)
             let contentSize = self.scrollView.contentSize
-            let view = UIView(frame: CGRect(x: contentSize.width * ratio - 0.5, y: 0, width: 1, height: contentSize.height))
+            let view = UIView(frame: CGRect(x: contentSize.width * ratio - 1, y: 0, width: 2, height: contentSize.height))
             view.backgroundColor = UIColor.directoireBlue
             self.scrollView.addSubview(view)
             self.bookmarkViews.append(view)
