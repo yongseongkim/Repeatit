@@ -37,7 +37,7 @@ struct PlayerState {
     var rate:Float = Player.defaultRate
 }
 
-class Player {
+class Player: NSObject {
     //MARK: Constant
     public let notificationCenter = NotificationCenter()
     fileprivate static let bookmarkNearbyLimitSeconds = 0.3
@@ -46,22 +46,15 @@ class Player {
     fileprivate static let rates: [Float] = [0.5, 0.8, Player.defaultRate, 1.25, 1.5]
     
     //MARK: Properties
-    public var bookmarks: [Double] {
-        get {
-            return self.bookmarkTimes
-        }
+    public var bookmarkTimes: [Double] {
+        return self._bookmarkTimes
     }
-    public var currentSeconds: Double {
-        get {
-            guard let current = self.player?.currentSeconds else { return 0 }
-            return current
-        }
+    public var currentTime: Double {
+        return self._currentTime
     }
     public var duration: Double {
-        get {
-            guard let duration = self.player?.durationSeconds else { return 0 }
-            return duration
-        }
+        guard let duration = self.player?.durationSeconds else { return 0 }
+        return duration
     }
     public var state: PlayerState {
         get {
@@ -80,13 +73,12 @@ class Player {
         }
     }
     fileprivate var player: AVPlayer?
+    fileprivate var movedTime: Double = 0
     fileprivate var currentItemIndex: Int? {
-        get {
-            guard let currentItem = self.currentItem else {
-                return nil
-            }
-            return items.index(of: currentItem)
+        guard let currentItem = self.currentItem else {
+            return nil
         }
+        return items.index(of: currentItem)
     }
     fileprivate var items = [PlayerItem]()
     fileprivate var repeatMode = RepeatMode.None
@@ -97,14 +89,11 @@ class Player {
     }
     fileprivate var periodicObserver: Any?
     fileprivate var boundaryObserver: Any?
-    fileprivate var bookmarkTimes = [Double]() {
-        didSet {
-            self.updateLatestBookmark(at: self.currentSeconds)
-        }
-    }
-    fileprivate var latestBookmark: Double = 0
+    fileprivate var _currentTime: Double = 0
+    fileprivate var _bookmarkTimes = [Double]()
     
-    init() {
+    override init() {
+        super.init()
         do {
             try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
             try AVAudioSession.sharedInstance().setActive(true)
@@ -186,74 +175,81 @@ class Player {
         self.currentItem = item
     }
     
-    func move(at: Double) {
-        var time = at
+    func move(to: Double) {
+        // 모든 move는 이 method를 call해야 한다. movedTime 관리를 위해
+        var time = to
         if (time < 0) {
             time = 0
         }
         if (time > self.duration) {
             time = self.duration.leftSide()
         }
-        self.updateLatestBookmark(at: time)
+        time = time.roundTo(place: 2)
+        self.movedTime = time
         self.player?.seek(to: time)
     }
     
     func moveForward(seconds: Double) {
-        var time = self.currentSeconds + seconds
+        var time = self._currentTime + seconds
         if (time >= duration) {
             time = duration.leftSide()
         }
-        self.player?.seek(to: time)
+        self.move(to: time)
     }
     
     func moveBackward(seconds: Double) {
-        var time = self.currentSeconds - seconds
+        var time = self._currentTime - seconds
         if (time < 0) {
             time = 0
         }
-        self.player?.seek(to: time)
+        self.move(to: time)
     }
     
-    func moveLastestBookmark() {
-        self.move(at: self.latestBookmark)
+    func moveLatestBookmark() {
+        var time: Double = 0
+        if let currentBookmark = (self._bookmarkTimes.filter { return $0 <= self._currentTime }.last) {
+            time = currentBookmark
+        }
+        self.move(to: time.rightSide())
     }
     
     func movePreviousBookmark() {
         var time: Double = 0
-        if let previous = (self.bookmarkTimes.filter { return $0 < self.latestBookmark }.last) {
-            time = previous
+        let filtered = self._bookmarkTimes.filter { return $0 <= self._currentTime }
+        if filtered.count > 1 {
+            time = filtered[filtered.count - 2]
         }
-        self.move(at: time)
+        self.move(to: time.rightSide())
     }
     
     func moveNextBookmark() {
-        var time: Double = self.latestBookmark
-        if let next = (self.bookmarkTimes.filter { return $0 > self.latestBookmark }.first) {
-            time = next
+        if let nextBookmark = (self._bookmarkTimes.filter { return $0 > self._currentTime }).first {
+            self.move(to: nextBookmark.rightSide())
+            return
         }
-        self.move(at: time)
+        self.moveLatestBookmark()
     }
     
     func addBookmark() throws {
         guard let item = self.currentItem else { return }
         // 둘째 자리까지 기록
-        let current = self.currentSeconds.roundTo(place: 3)
-        if self.isAlreadyExistBookmarkNearby(current: current, times: self.bookmarkTimes) {
+        let current = self._currentTime.roundTo(place: 2)
+        if self.isAlreadyExistBookmarkNearby(current: current, times: self._bookmarkTimes) {
             throw PlayerError.alreadExistBookmarkNearby
         }
         if current + Player.bookmarkNearbyLimitSeconds > self.duration {
             throw PlayerError.bookmarkTooCloseFinish
         }
-        var times = self.bookmarkTimes
+        var times = self._bookmarkTimes
         times.append(current)
-        self.bookmarkTimes = times.sorted()
-        self.didUpdatedBookmark(item:item, times: self.bookmarkTimes)
+        self._bookmarkTimes = times.sorted()
+        self.didUpdatedBookmark(item:item, times: self._bookmarkTimes)
     }
     
     func removeBookmark(at: Double) {
         guard let item = self.currentItem else { return }
-        self.bookmarkTimes = self.bookmarkTimes.filter { return $0 != at }.sorted()
-        self.didUpdatedBookmark(item:item, times: self.bookmarkTimes)
+        self._bookmarkTimes = self._bookmarkTimes.filter { return $0 != at }.sorted()
+        self.didUpdatedBookmark(item:item, times: self._bookmarkTimes)
     }
     
     func nextRepeatMode() {
@@ -278,11 +274,11 @@ class Player {
     }
     
     func handleReachBoundary() {
-        self.updateLatestBookmark(at: self.currentSeconds)
+        
     }
     
-    func handleTimeChanged(_ time: Double) {
-        self.notificationCenter.post(name: .playerTimeUpdated, object: self.player?.currentSeconds)
+    func handleTimeChanged() {
+        self.notificationCenter.post(name: .playerTimeUpdated, object: nil)
     }
     
     //MARK: Private
@@ -308,19 +304,30 @@ class Player {
         self.player = AVPlayer(playerItem: AVPlayerItem(url: url))
         self.player?.rate = self.rate
         self.player?.play()
-        self.notificationCenter.post(name: .playerStateUpdated, object: item)
-        
-        // observer 추가하기
-        self.periodicObserver = self.player?.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(0.05, Int32(NSEC_PER_SEC)),
+        self.movedTime = 0
+        self.periodicObserver = self.player?.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(0.01, Int32(NSEC_PER_SEC)),
                                                                      queue: nil,
-                                                                     using: { (time) in
-                                                                        self.handleTimeChanged(time.seconds) })
-        self.bookmarkTimes = [Double]()
+                                                                     using: { [weak self] (time) in
+                                                                        guard let `self` = self else { return }
+                                                                        let seconds = CMTimeGetSeconds(time).roundTo(place: 2)
+                                                                        if let status = self.player?.currentItem?.status, status == .readyToPlay {
+                                                                            if (seconds >= self.movedTime) {
+                                                                                self._currentTime = seconds
+                                                                            }
+                                                                            self.handleTimeChanged()
+                                                                        } else {
+                                                                            self._currentTime = 0
+                                                                        }
+            })
+        
+        self.notificationCenter.post(name: .playerStateUpdated, object: item)
+
+        self._bookmarkTimes = [Double]()
         if let bookmarkKey = item?.bookmarkKey {
             let realm = try! Realm()
             if let bookmarkObj = realm.objects(BookmarkObject.self).filter("path = '\(bookmarkKey)'").first {
-                self.bookmarkTimes = bookmarkObj.times.map({ (dObj) -> Double in return dObj.value }).sorted()
-                self.addBookmarkBoundary(times: self.bookmarkTimes)
+                self._bookmarkTimes = bookmarkObj.times.map({ (dObj) -> Double in return dObj.value }).sorted()
+                self.addBookmarkBoundary(times: self._bookmarkTimes)
             }
         }
     }
@@ -337,14 +344,6 @@ class Player {
         }
         self.addBookmarkBoundary(times: times)
         self.notificationCenter.post(name: .playerBookmakrUpdated, object: item)
-    }
-    
-    fileprivate func updateLatestBookmark(at: Double) {
-        var time: Double = 0
-        if let latest = (self.bookmarkTimes.filter { return $0 <= at}.last) {
-            time = latest
-        }
-        self.latestBookmark = time
     }
     
     fileprivate func addBookmarkBoundary(times: [Double]) {

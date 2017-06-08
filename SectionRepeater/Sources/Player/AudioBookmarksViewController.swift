@@ -27,7 +27,7 @@ class AudioBookmarksViewController: UIViewController {
     }
     
     func loadBookmark() {
-        self.bookmarkTimes = self.player?.bookmarks
+        self.bookmarkTimes = self.player?.bookmarkTimes
         self.collectionView.reloadData()
     }
     

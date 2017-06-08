@@ -126,7 +126,7 @@ class PlayerViewController: UIViewController {
 //            return view.removeFromSuperview()
 //        })
 //        self.bookmarkViews = [UIView]()
-//        for time in self.player.bookmarks {
+//        for time in self.player.bookmarkTimes {
 //            let ratio = time / duration
 //            let waveContainerSize = self.waveformView.contentSize
 //            let view = UIView(frame: CGRect(x: Double(waveContainerSize.width).multiplied(by: ratio).subtracting(0.5), y: 0, width: 1, height: Double(waveContainerSize.height)))
@@ -172,7 +172,7 @@ class PlayerViewController: UIViewController {
         }
         var progress: Double = 0
         if self.player.duration != 0 {
-            progress = self.player.currentSeconds / self.player.duration
+            progress = self.player.currentTime / self.player.duration
         }
         self.waveformView.move(progress: progress)
         self.timeSlider.value = Float(progress)
@@ -202,14 +202,14 @@ class PlayerViewController: UIViewController {
     }
     
     @IBAction func timeSliderTouchUpInside(_ sender: Any) {
-        self.player.move(at: Double(self.timeSlider.value) * self.player.duration)
+        self.player.move(to: Double(self.timeSlider.value) * self.player.duration)
         if (self.playingWhenScrollStart) {
             self.player.resume()
         }
     }
     
     @IBAction func timeSliderTouchUpOutside(_ sender: Any) {
-        self.player.move(at: Double(self.timeSlider.value) * self.player.duration)
+        self.player.move(to: Double(self.timeSlider.value) * self.player.duration)
         if (self.playingWhenScrollStart) {
             self.player.resume()
         }
@@ -226,7 +226,7 @@ class PlayerViewController: UIViewController {
     }
     
     @IBAction func moveStartCurrentBookmark(_ sender: Any) {
-        self.player.moveLastestBookmark()
+        self.player.moveLatestBookmark()
     }
     
     @IBAction func moveNextBookmark(_ sender: Any) {
@@ -254,7 +254,7 @@ class PlayerViewController: UIViewController {
     }
     
     @IBAction func moveAtStartButtonTapped(_ sender: Any) {
-        self.player.move(at: 0)
+        self.player.move(to: 0)
     }
     
     @IBAction func moveAfter5SecondsButtonTapped(_ sender: Any) {
@@ -340,7 +340,7 @@ extension PlayerViewController: WaveformViewDelegate {
     func waveformViewDidEndDecelerating(scrollView: UIScrollView) {
         self.scrollViewDecelerate = false
         let progress = Double((scrollView.contentInset.left + scrollView.contentOffset.x) / scrollView.contentSize.width)
-        self.player.move(at: progress * self.player.duration)
+        self.player.move(to: progress * self.player.duration)
         if (self.playingWhenScrollStart) {
             self.player.resume()
         }

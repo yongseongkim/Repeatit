@@ -26,10 +26,8 @@ extension AVPlayer {
     }
     
     func seek(to: Double) {
-        if let scale = self.currentItem?.asset.duration.timescale {
-            print("seek", to)
-            self.seek(to: CMTime(seconds: to, preferredTimescale: scale), toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero)
-        }
+        guard let scale = self.currentItem?.asset.duration.timescale else { return }
+        self.seek(to: CMTimeMakeWithSeconds(to, scale), toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero)
     }
 }
 
