@@ -34,6 +34,7 @@ enum RepeatMode {
 struct PlayerState {
     var isPlaying = false
     var repeatMode = RepeatMode.None
+    var repeatBookmark = false
     var rate:Float = Player.defaultRate
 }
 
@@ -63,6 +64,7 @@ class Player: NSObject {
                 state.isPlaying = player.isPlaying
             }
             state.repeatMode = self.repeatMode
+            state.repeatBookmark = self.repeatBookmark
             state.rate = self.rate
             return state
         }
@@ -82,6 +84,7 @@ class Player: NSObject {
     }
     fileprivate var items = [PlayerItem]()
     fileprivate var repeatMode = RepeatMode.None
+    fileprivate var repeatBookmark = false
     fileprivate var rate = Player.defaultRate {
         didSet {
             self.player?.rate = rate
@@ -185,6 +188,7 @@ class Player: NSObject {
             time = self.duration.leftSide()
         }
         time = time.roundTo(place: 2)
+        print("move:", time)
         self.movedTime = time
         self.player?.seek(to: time)
     }
@@ -207,7 +211,7 @@ class Player: NSObject {
     
     func moveLatestBookmark() {
         var time: Double = 0
-        if let currentBookmark = (self._bookmarkTimes.filter { return $0 <= self._currentTime }.last) {
+        if let currentBookmark = (self._bookmarkTimes.filter { return $0 < self._currentTime }.last) {
             time = currentBookmark
         }
         self.move(to: time.rightSide())
@@ -260,6 +264,11 @@ class Player: NSObject {
         }
     }
     
+    func switchRepeatBookmark() {
+        self.repeatBookmark = !self.repeatBookmark
+        self.notificationCenter.post(name: .playerStateUpdated, object: nil)
+    }
+    
     func nextRate() {
         if let index = Player.rates.index(of: self.rate) {
             let nextRate = Player.rates[((index + 1) % Player.rates.count)]
@@ -270,11 +279,18 @@ class Player: NSObject {
     
     //MARK: Handle event
     @objc func handleFinished(notification: Notification) {
+        if (self.repeatBookmark) {
+            self.moveLatestBookmark()
+            self.player?.play()
+            return
+        }
         self.playNext()
     }
     
     func handleReachBoundary() {
-        
+        if (self.repeatBookmark) {
+            self.moveLatestBookmark()
+        }
     }
     
     func handleTimeChanged() {
@@ -305,7 +321,7 @@ class Player: NSObject {
         self.player?.rate = self.rate
         self.player?.play()
         self.movedTime = 0
-        self.periodicObserver = self.player?.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(0.01, Int32(NSEC_PER_SEC)),
+        self.periodicObserver = self.player?.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(0.05, Int32(NSEC_PER_SEC)),
                                                                      queue: nil,
                                                                      using: { [weak self] (time) in
                                                                         guard let `self` = self else { return }
@@ -353,9 +369,13 @@ class Player: NSObject {
         }
         // crash if times is empty
         if times.count > 0 {
-            weak var weakSelf = self
-            self.boundaryObserver = self.player?.addBoundaryTimeObserver(forTimes: times as [NSValue], queue: nil, using: {
-                weakSelf?.handleReachBoundary()
+            self.boundaryObserver = self.player?.addBoundaryTimeObserver(forTimes: times as [NSValue], queue: nil, using: { [weak self] in
+                guard let `self` = self else { return }
+                guard let time = self.player?.currentTime() else { return }
+                let seconds = CMTimeGetSeconds(time)
+                if (self.movedTime <= seconds) {
+                    self.handleReachBoundary()
+                }
             })
         }
     }

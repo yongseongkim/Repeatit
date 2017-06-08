@@ -21,15 +21,18 @@ protocol WaveformViewDelegate {
 class WaveformView: UIView {
     static let sampleWidth: CGFloat = 2.0
     static let gapBetweenSamples: CGFloat = 1.0
-    static let samplesPerPixel: Int = 3000
+    static let samplesPerPixel: Int = 3000  // 14.7 samples per second
     
     public var delegate: WaveformViewDelegate?
     public var url: URL?
+    fileprivate var duration: Double = 0
     fileprivate let scrollView = UIScrollView(frame: .zero).then { (scrollView) in
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
     }
     fileprivate var progressView: UIView?
+    fileprivate var bookmarkViews = [UIView]()
+    fileprivate var player = Dependencies.sharedInstance().resolve(serviceType: Player.self)
     
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
@@ -46,10 +49,14 @@ class WaveformView: UIView {
     public func loadWaveform(url: URL) {
         // clean
         self.url = url
+        self.duration = CMTimeGetSeconds(AVURLAsset(url: url).duration)
         self.scrollView.contentInset = UIEdgeInsets(top: 0, left: self.bounds.width / 2, bottom: 0, right: self.bounds.width / 2)
         for subview in self.scrollView.subviews {
             subview.removeFromSuperview()
         }
+        let placeholderView = UIView(frame: CGRect(x: CGFloat(0), y: CGFloat(0), width: CGFloat(duration * 14.7), height: self.bounds.height))
+        placeholderView.backgroundColor = UIColor.clear
+        self.scrollView.addSubview(placeholderView)
         // add waveform
         DispatchQueue.global().async { [weak self] in
             guard let `self` = self else { return }
@@ -97,6 +104,7 @@ class WaveformView: UIView {
                         })
                         self.progressView = progressView
                         self.scrollView.contentSize = imageSize
+                        self.loadBookmarks()
                     }
                 }
             } catch let error {
@@ -107,6 +115,22 @@ class WaveformView: UIView {
     
     public func move(progress: Double) {
         self.scrollView.contentOffset = CGPoint(x: (CGFloat(progress) * self.scrollView.contentSize.width) - self.scrollView.contentInset.left, y: 0)
+    }
+    
+    public func loadBookmarks() {
+        self.bookmarkViews.forEach({ (view) in
+            return view.removeFromSuperview()
+        })
+        self.bookmarkViews = [UIView]()
+        guard let bookmarkTimes = self.player?.bookmarkTimes else { return }
+        for time in bookmarkTimes {
+            let ratio = CGFloat(time / self.duration)
+            let contentSize = self.scrollView.contentSize
+            let view = UIView(frame: CGRect(x: contentSize.width * ratio - 0.5, y: 0, width: 1, height: contentSize.height))
+            view.backgroundColor = UIColor.directoireBlue
+            self.scrollView.addSubview(view)
+            self.bookmarkViews.append(view)
+        }
     }
     
     fileprivate func loadSamples(url: URL?) throws -> [Float] {

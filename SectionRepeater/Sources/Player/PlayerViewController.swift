@@ -103,8 +103,7 @@ class PlayerViewController: UIViewController {
         self.artistNameLabel.text = item.artist ?? "Unknown Artist"
         self.albumCoverImageView.image = item.artwork
         self.lyricsTextView.text = item.lyrics
-        self.loadWavefromIfNecessary(item: item)
-//        self.loadBookmarks(duration: self.player.duration)
+        self.loadWaveformIfNecessary(item: item)
         let duration = self.player.duration
         let minutes = Int(duration/60)
         let seconds = Int(duration.truncatingRemainder(dividingBy: 60))
@@ -113,27 +112,12 @@ class PlayerViewController: UIViewController {
         self.setupButtons()
     }
     
-    fileprivate func loadWavefromIfNecessary(item: PlayerItem) {
+    fileprivate func loadWaveformIfNecessary(item: PlayerItem) {
         guard let url = item.url else { return }
         if url.absoluteString == self.waveformView.url?.absoluteString {
             return
         }
         self.waveformView.loadWaveform(url: url)
-    }
-    
-    fileprivate func loadBookmarks(duration: Double) {
-//        self.bookmarkViews?.forEach({ (view) in
-//            return view.removeFromSuperview()
-//        })
-//        self.bookmarkViews = [UIView]()
-//        for time in self.player.bookmarkTimes {
-//            let ratio = time / duration
-//            let waveContainerSize = self.waveformView.contentSize
-//            let view = UIView(frame: CGRect(x: Double(waveContainerSize.width).multiplied(by: ratio).subtracting(0.5), y: 0, width: 1, height: Double(waveContainerSize.height)))
-//            view.backgroundColor = UIColor.directoireBlue
-//            self.waveformView.addSubview(view)
-//            self.bookmarkViews?.append(view)
-//        }
     }
     
     fileprivate func setupButtons() {
@@ -155,6 +139,7 @@ class PlayerViewController: UIViewController {
             self.repeatModeButton.setTitle("None", for: .normal)
             break
         }
+        self.repeatBookmarkButton.setTitle(state.repeatBookmark ? "On" : "Off", for: .normal)
     }
     
     // MARK - Notification Handling
@@ -180,7 +165,7 @@ class PlayerViewController: UIViewController {
     }
     
     func handleBookmarkUpdatedNotification() {
-        self.loadBookmarks(duration: self.player.duration)
+        self.waveformView.loadBookmarks()
     }
     
     
@@ -278,6 +263,7 @@ class PlayerViewController: UIViewController {
     }
     
     @IBAction func repeatBookmarkButtonTapped(_ sender: Any) {
+        self.player.switchRepeatBookmark()
     }
     
     @IBAction func addBookmarkButtonTapped(_ sender: Any) {
