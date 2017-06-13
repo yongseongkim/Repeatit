@@ -40,7 +40,7 @@ class FileDestinationFileListViewController: UIViewController {
         super.viewDidLoad()
         self.automaticallyAdjustsScrollViewInsets = false
         self.view.addSubview(self.collectionView)
-        self.updateConstraint()
+        self.updateConstraints()
         self.bind()
     }
     
@@ -50,7 +50,7 @@ class FileDestinationFileListViewController: UIViewController {
         self.loadDirectories()
     }
     
-    func updateConstraint() {
+    func updateConstraints() {
         self.collectionView.snp.makeConstraints { (make) in
             make.top.equalTo(self.view)
             make.left.equalTo(self.view)

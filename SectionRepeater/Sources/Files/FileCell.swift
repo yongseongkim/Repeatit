@@ -24,23 +24,20 @@ class FileCell: UICollectionViewCell {
     
     public var file: File? {
         didSet {
+            var image: UIImage? = nil
+            var filename: String = ""
             if let file = file {
                 if file.isDirectory {
-                    // TODO: set directory image
-                    coverImageView.image = nil
-                }
-                if let image = file.audioInformation?.artwork {
-                    coverImageView.image = image
+                    image = UIImage(named: "empty_common_folder_44pt")
                 } else {
-                    // TODO: set default image
-                    coverImageView.image = nil
+                    image = file.audioInformation?.artwork
                 }
-                
-                nameLabel.text = file.name
+                filename = file.name
             } else {
-                coverImageView.image = nil
-                nameLabel.text = ""
+                image = nil
             }
+            self.coverImageView.image = image ?? UIImage(named: "empty_music_note_44pt")
+            self.nameLabel.text = filename
         }
     }
     

@@ -32,6 +32,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.rootViewController = RootViewController()
         self.window?.makeKeyAndVisible()
         
+        UINavigationBar.appearance().tintColor = UIColor.black
+        
         let defaultRealmURL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
 //        do {
 //            let contents = try FileManager.default.contentsOfDirectory(atPath: defaultRealmURL.path)

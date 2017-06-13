@@ -57,9 +57,13 @@ class FileListViewController: UIViewController {
     init(url: URL) {
         self.currentURL = url
         self.optionView.currentURL = self.currentURL
+        
         super.init(nibName: nil, bundle: nil)
-        self.navigationItem.rightBarButtonItems = [UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(addButtonTapped)),
-                                                   UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editButtonTapped))]
+        let optionButton = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44)).then { (button) in
+            button.setImage(UIImage(named: "btn_common_option_44pt"), for: .normal)
+            button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
+        }
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: optionButton)
         AppDelegate.currentAppDelegate()?.notificationCenter.addObserver(self, selector: #selector(enterForeground), name: .onEnterForeground, object: nil)
     }
     
@@ -78,7 +82,7 @@ class FileListViewController: UIViewController {
         self.view.addSubview(self.optionView)
         
         self.bind()
-        self.updateConstraint()
+        self.updateConstraints()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -87,7 +91,7 @@ class FileListViewController: UIViewController {
         self.loadFiles()
     }
     
-    func updateConstraint() {
+    func updateConstraints() {
         self.collectionView.snp.makeConstraints { (make) in
             make.top.equalTo(self.view)
             make.left.equalTo(self.view)
@@ -115,25 +119,6 @@ class FileListViewController: UIViewController {
     
     func editButtonTapped() {
         self.isEditingFiles = true
-    }
-    
-    func addButtonTapped() {
-        let alert = UIAlertController(title: "새폴더", message: nil, preferredStyle: .alert)
-        alert.addTextField { (textField) in
-            textField.placeholder = "폴더명을 입력해주세요."
-        }
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "Confirm", style: .default) { [weak self] (action) in
-            do {
-                if let name = alert.textFields?.first?.text, let targetURL = URL(string: name, relativeTo: self?.currentURL) {
-                    try FileManager.default.createDirectory(at: targetURL, withIntermediateDirectories: true, attributes: nil)
-                    self?.loadFiles()
-                }
-            } catch let error {
-                print(error)
-            }
-        })
-        self.present(alert, animated: true, completion: nil)
     }
     
     func doneButtonTapped()  {
@@ -219,6 +204,25 @@ extension FileListViewController: UICollectionViewDataSource, UICollectionViewDe
 }
 
 extension FileListViewController: FilesEditOptionViewDelegate {
+    func optionAddButtonTapped() {
+        let alert = UIAlertController(title: "새폴더", message: nil, preferredStyle: .alert)
+        alert.addTextField { (textField) in
+            textField.placeholder = "폴더명을 입력해주세요."
+        }
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Confirm", style: .default) { [weak self] (action) in
+            do {
+                if let name = alert.textFields?.first?.text, let targetURL = URL(string: name, relativeTo: self?.currentURL) {
+                    try FileManager.default.createDirectory(at: targetURL, withIntermediateDirectories: true, attributes: nil)
+                    self?.loadFiles()
+                }
+            } catch let error {
+                print(error)
+            }
+        })
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     func optionEditButtonTapped() {
         guard let selectedItems = self.collectionView.indexPathsForSelectedItems else { return }
         if selectedItems.count > 1 {

@@ -80,7 +80,7 @@ class WaveformView: UIView {
                             make.height.equalTo(imageSize.height)
                         })
 
-                        let progressImageView = UIImageView(image: image.with(color: UIColor.greenery))
+                        let progressImageView = UIImageView(image: image.with(color: UIColor.black))
                         progressImageView.backgroundColor = UIColor.clear
                         
                         let progressView = UIView(frame: .zero)

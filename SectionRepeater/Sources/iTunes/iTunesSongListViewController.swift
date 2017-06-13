@@ -45,6 +45,7 @@ class iTunesSongListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "Songs"
         self.automaticallyAdjustsScrollViewInsets = false
         self.view.addSubview(self.collectionView)
         

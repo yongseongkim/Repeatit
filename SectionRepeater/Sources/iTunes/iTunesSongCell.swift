@@ -16,7 +16,6 @@ class iTunesSongCell: UICollectionViewCell {
     @IBOutlet weak var coverImageView: UIImageView!
     @IBOutlet weak var seperateViewHeightConstraint: NSLayoutConstraint!
     
-    
     var item: MPMediaItem? {
         didSet {
             if let item = item {

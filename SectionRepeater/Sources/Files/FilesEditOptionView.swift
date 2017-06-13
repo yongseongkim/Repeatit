@@ -10,6 +10,7 @@ import UIKit
 import SnapKit
 
 protocol FilesEditOptionViewDelegate {
+    func optionAddButtonTapped()
     func optionEditButtonTapped()
     func optionMoveButtonTapped()
     func optionDeleteButtonTapped()
@@ -19,28 +20,24 @@ protocol FilesEditOptionViewDelegate {
 class FilesEditOptionView: UIView {
 
     //MARK: UI Componenets
+    fileprivate let addButton = UIButton().then { (button) in
+        button.setImage(UIImage(named: "btn_common_plus_44pt"), for: .normal)
+        button.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
+    }
     fileprivate let editButton = UIButton().then { (button) in
-        button.setTitle("Edit", for: .normal)
-        button.setTitleColor(UIColor.greenery, for: .normal)
-        button.setTitleColor(UIColor.greenery.withAlphaComponent(0.4), for: .disabled)
+        button.setImage(UIImage(named: "btn_edit_file_44pt"), for: .normal)
         button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
     }
     fileprivate let moveButton = UIButton().then { (button) in
-        button.setTitle("Move", for: .normal)
-        button.setTitleColor(UIColor.greenery, for: .normal)
-        button.setTitleColor(UIColor.greenery.withAlphaComponent(0.4), for: .disabled)
+        button.setImage(UIImage(named: "btn_move_file_44pt"), for: .normal)
         button.addTarget(self, action: #selector(moveButtonTapped), for: .touchUpInside)
     }
     fileprivate let deleteButton = UIButton().then { (button) in
-        button.setTitle("Delete", for: .normal)
-        button.setTitleColor(UIColor.greenery, for: .normal)
-        button.setTitleColor(UIColor.greenery.withAlphaComponent(0.4), for: .disabled)
+        button.setImage(UIImage(named: "btn_delete_file_44pt"), for: .normal)
         button.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
     }
     fileprivate let doneButton = UIButton().then { (button) in
-        button.setTitle("Done", for: .normal)
-        button.setTitleColor(UIColor.greenery, for: .normal)
-        button.setTitleColor(UIColor.greenery.withAlphaComponent(0.4), for: .disabled)
+        button.setImage(UIImage(named: "common_check_44pt"), for: .normal)
         button.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
     }
     
@@ -60,12 +57,14 @@ class FilesEditOptionView: UIView {
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
         self.backgroundColor = UIColor.white
+        self.addSubview(addButton)
         self.addSubview(editButton)
         self.addSubview(moveButton)
         self.addSubview(deleteButton)
         self.addSubview(doneButton)
+        
         let borderView = UIView()
-        borderView.backgroundColor = UIColor.gray150
+        borderView.backgroundColor = UIColor.gray145
         self.addSubview(borderView)
         borderView.snp.makeConstraints { (make) in
             make.left.equalTo(self)
@@ -74,10 +73,16 @@ class FilesEditOptionView: UIView {
             make.height.equalTo(UIScreen.scaleWidth)
         }
         
-        editButton.snp.makeConstraints { (make) in
+        addButton.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(20)
             make.left.equalTo(self)
             make.bottom.equalTo(self)
+        }
+        editButton.snp.makeConstraints { (make) in
+            make.top.equalTo(self).offset(20)
+            make.left.equalTo(addButton.snp.right)
+            make.bottom.equalTo(self)
+            make.width.equalTo(addButton.snp.width)
         }
         moveButton.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(20)
@@ -111,6 +116,10 @@ class FilesEditOptionView: UIView {
             self.moveButton.isEnabled = false
             self.deleteButton.isEnabled = false
         }
+    }
+
+    func addButtonTapped() {
+        self.delegate?.optionAddButtonTapped()
     }
     
     func editButtonTapped() {

@@ -67,8 +67,8 @@ class PlayerViewController: UIViewController {
         super.viewDidLoad()
         self.waveformView.delegate = self
         self.timeSeparateViewWidthConstraint.constant = UIScreen.scaleWidth
-        self.timeSlider.setThumbImage(UIImage.size(width: 3, height: 16).color(UIColor.greenery).image, for: .normal)
-        self.timeSlider.setMinimumTrackImage(UIImage.size(width: self.timeSlider.bounds.width, height: 3).color(UIColor.greenery).image, for: .normal)
+        self.timeSlider.setThumbImage(UIImage.size(width: 3, height: 16).color(UIColor.black).image, for: .normal)
+        self.timeSlider.setMinimumTrackImage(UIImage.size(width: self.timeSlider.bounds.width, height: 3).color(UIColor.black).image, for: .normal)
         self.timeSlider.setMaximumTrackImage(UIImage.size(width: self.timeSlider.bounds.width, height: 3).color(UIColor.gray220).image, for: .normal)
         self.player.notificationCenter.addObserver(self, selector: #selector(handlePlayerItemDidSet(object:)), name: Notification.Name.playerItemDidSet, object: nil)
         self.player.notificationCenter.addObserver(self, selector: #selector(handlePlayerStateUpdatedNotification), name: Notification.Name.playerStateUpdated, object: nil)
@@ -101,7 +101,11 @@ class PlayerViewController: UIViewController {
         }
         self.titleLabel.text = item.title ?? item.url?.lastPathComponent
         self.artistNameLabel.text = item.artist ?? "Unknown Artist"
-        self.albumCoverImageView.image = item.artwork
+        if let artwork = item.artwork {
+            self.albumCoverImageView.image = artwork
+        } else {
+            self.albumCoverImageView.image = UIImage(named: "empty_music_note_120pt")
+        }
         self.lyricsTextView.text = item.lyrics
         self.loadWaveformIfNecessary(item: item)
         let duration = self.player.duration
@@ -123,9 +127,9 @@ class PlayerViewController: UIViewController {
     fileprivate func setupButtons() {
         let state = self.player.state
         if state.isPlaying {
-            self.playButton.setTitle("Pause", for: .normal)
+            self.playButton.setImage(UIImage(named: "btn_pause_52pt"), for: .normal)
         } else {
-            self.playButton.setTitle("Play", for: .normal)
+            self.playButton.setImage(UIImage(named: "btn_play_52pt"), for: .normal)
         }
         self.rateButton.setTitle(String(format: "x%.1f", state.rate), for: .normal)
         switch state.repeatMode {

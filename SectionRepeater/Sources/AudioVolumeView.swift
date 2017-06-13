@@ -18,8 +18,8 @@ class AudioVolumeView: MPVolumeView {
                 airplayButton.isHidden = true
             }
         }
-        self.setVolumeThumbImage(UIImage.size(width: 3, height: 16).color(UIColor.greenery).image, for: .normal)
-        self.setMinimumVolumeSliderImage(UIImage.size(width: self.bounds.width, height: 3).color(UIColor.greenery).image, for: .normal)
+        self.setVolumeThumbImage(UIImage.size(width: 3, height: 16).color(UIColor.black).image, for: .normal)
+        self.setMinimumVolumeSliderImage(UIImage.size(width: self.bounds.width, height: 3).color(UIColor.black).image, for: .normal)
         self.setMaximumVolumeSliderImage(UIImage.size(width: self.bounds.width, height: 3).color(UIColor.gray220).image, for: .normal)
     }
     

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionReusableView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="iTunesAlbumDetailHeaderView" id="U6b-Vx-4bR" customClass="iTunesAlbumDetailHeaderView" customModule="SectionRepeater" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="140"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ByM-ji-pQ7">
+                    <rect key="frame" x="10" y="10" width="120" height="120"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="120" id="2Rl-iw-My5"/>
+                        <constraint firstAttribute="width" constant="120" id="GgH-46-x14"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Album" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bZH-vY-5wY">
+                    <rect key="frame" x="140" y="10" width="160" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Artist" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E1j-8X-THL">
+                    <rect key="frame" x="140" y="35.5" width="160" height="17"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 Songs" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iHL-zM-6Um">
+                    <rect key="frame" x="140" y="112" width="160" height="18"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="iHL-zM-6Um" secondAttribute="trailing" constant="20" id="041-gt-XUp"/>
+                <constraint firstItem="ByM-ji-pQ7" firstAttribute="leading" secondItem="U6b-Vx-4bR" secondAttribute="leading" constant="10" id="BQK-Qp-AIA"/>
+                <constraint firstAttribute="trailing" secondItem="E1j-8X-THL" secondAttribute="trailing" constant="20" id="C4v-Gc-ECD"/>
+                <constraint firstItem="E1j-8X-THL" firstAttribute="top" secondItem="bZH-vY-5wY" secondAttribute="bottom" constant="5" id="E3U-aN-kXt"/>
+                <constraint firstItem="iHL-zM-6Um" firstAttribute="bottom" secondItem="ByM-ji-pQ7" secondAttribute="bottom" id="Gbp-wi-deC"/>
+                <constraint firstItem="ByM-ji-pQ7" firstAttribute="centerY" secondItem="U6b-Vx-4bR" secondAttribute="centerY" id="jtc-zn-Z1o"/>
+                <constraint firstItem="iHL-zM-6Um" firstAttribute="leading" secondItem="ByM-ji-pQ7" secondAttribute="trailing" constant="10" id="kaK-Cf-j1y"/>
+                <constraint firstItem="bZH-vY-5wY" firstAttribute="top" secondItem="ByM-ji-pQ7" secondAttribute="top" id="lMs-l6-kgc"/>
+                <constraint firstItem="E1j-8X-THL" firstAttribute="leading" secondItem="ByM-ji-pQ7" secondAttribute="trailing" constant="10" id="omd-4K-OEq"/>
+                <constraint firstItem="bZH-vY-5wY" firstAttribute="leading" secondItem="ByM-ji-pQ7" secondAttribute="trailing" constant="10" id="t5L-co-LEP"/>
+                <constraint firstAttribute="trailing" secondItem="bZH-vY-5wY" secondAttribute="trailing" constant="20" id="vUO-0d-U8a"/>
+            </constraints>
+            <connections>
+                <outlet property="artistNameLabel" destination="E1j-8X-THL" id="p0f-j6-mZW"/>
+                <outlet property="coverImageView" destination="ByM-ji-pQ7" id="vnK-Am-tbh"/>
+                <outlet property="nameLabel" destination="bZH-vY-5wY" id="xeS-HG-5GZ"/>
+                <outlet property="numberOfSongsLabel" destination="iHL-zM-6Um" id="3k2-s7-UKS"/>
+            </connections>
+        </collectionReusableView>
+    </objects>
+</document>
