@@ -107,6 +107,13 @@ class PlayerViewController: UIViewController {
             self.albumCoverImageView.image = UIImage(named: "empty_music_note_120pt")
         }
         self.lyricsTextView.text = item.lyrics
+        if (item.lyrics ?? "").isEmpty {
+            if let url = item.mediaItem?.value(forProperty: MPMediaItemPropertyAssetURL) as? URL {
+                let songAsset = AVURLAsset(url: url, options: nil)
+                let lyrics = songAsset.lyrics
+                self.lyricsTextView.text = lyrics
+            }
+        }
         self.loadWaveformIfNecessary(item: item)
         let duration = self.player.duration
         let minutes = Int(duration/60)
