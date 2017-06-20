@@ -17,10 +17,10 @@ class iTunesArtistListViewController: UIViewController {
         ).then { (view) in
             view.backgroundColor = UIColor.white
             view.register(iTunesArtistCell.self)
-            view.contentInset = UIEdgeInsetsMake(64, 0, 49 ,0)
     }
     
     //MARK: Properties
+    fileprivate let player = Dependencies.sharedInstance().resolve(serviceType: Player.self)!
     fileprivate var collections = [MPMediaItemCollection]() {
         didSet {
             self.collectionView.reloadData()
@@ -47,8 +47,8 @@ class iTunesArtistListViewController: UIViewController {
         self.view.addSubview(self.collectionView)
         
         self.updateConstraints()
+        self.updateContentInset()
         self.bind()
-        self.collectionView.reloadData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -64,6 +64,14 @@ class iTunesArtistListViewController: UIViewController {
             make.left.equalTo(self.view)
             make.right.equalTo(self.view)
             make.bottom.equalTo(self.view)
+        }
+    }
+    
+    public func updateContentInset() {
+        if PlayerView.isVisible() {
+            self.collectionView.contentInset = UIEdgeInsetsMake(64, 0, 49 + PlayerView.height() ,0)
+        } else {
+            self.collectionView.contentInset = UIEdgeInsetsMake(64, 0, 49 ,0)
         }
     }
     

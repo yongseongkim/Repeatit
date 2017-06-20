@@ -21,8 +21,7 @@
 		2E3DC3FB1ECFF04C00FCBD67 /* AudioBookmarkCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F31ECFF04C00FCBD67 /* AudioBookmarkCollectionViewCell.xib */; };
 		2E3DC3FC1ECFF04C00FCBD67 /* AudioBookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F41ECFF04C00FCBD67 /* AudioBookmarksViewController.swift */; };
 		2E3DC3FD1ECFF04C00FCBD67 /* AudioBookmarksViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F51ECFF04C00FCBD67 /* AudioBookmarksViewController.xib */; };
-		2E3DC3FE1ECFF04C00FCBD67 /* AudioPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F61ECFF04C00FCBD67 /* AudioPlayerView.swift */; };
-		2E3DC3FF1ECFF04C00FCBD67 /* AudioPlayerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F71ECFF04C00FCBD67 /* AudioPlayerView.xib */; };
+		2E3DC3FE1ECFF04C00FCBD67 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F61ECFF04C00FCBD67 /* PlayerView.swift */; };
 		2E3DC4001ECFF04C00FCBD67 /* PlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F81ECFF04C00FCBD67 /* PlayerViewController.xib */; };
 		2E3DC4011ECFF04C00FCBD67 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F91ECFF04C00FCBD67 /* PlayerViewController.swift */; };
 		2E3EC4991EEEA8D7009472FB /* iTunesAlbumCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3EC4971EEEA8D7009472FB /* iTunesAlbumCell.swift */; };
@@ -90,8 +89,7 @@
 		2E3DC3F31ECFF04C00FCBD67 /* AudioBookmarkCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioBookmarkCollectionViewCell.xib; sourceTree = "<group>"; };
 		2E3DC3F41ECFF04C00FCBD67 /* AudioBookmarksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioBookmarksViewController.swift; sourceTree = "<group>"; };
 		2E3DC3F51ECFF04C00FCBD67 /* AudioBookmarksViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioBookmarksViewController.xib; sourceTree = "<group>"; };
-		2E3DC3F61ECFF04C00FCBD67 /* AudioPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerView.swift; sourceTree = "<group>"; };
-		2E3DC3F71ECFF04C00FCBD67 /* AudioPlayerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioPlayerView.xib; sourceTree = "<group>"; };
+		2E3DC3F61ECFF04C00FCBD67 /* PlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		2E3DC3F81ECFF04C00FCBD67 /* PlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayerViewController.xib; sourceTree = "<group>"; };
 		2E3DC3F91ECFF04C00FCBD67 /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		2E3EC4971EEEA8D7009472FB /* iTunesAlbumCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesAlbumCell.swift; sourceTree = "<group>"; };
@@ -170,8 +168,7 @@
 				2E3DC3F31ECFF04C00FCBD67 /* AudioBookmarkCollectionViewCell.xib */,
 				2E3DC3F41ECFF04C00FCBD67 /* AudioBookmarksViewController.swift */,
 				2E3DC3F51ECFF04C00FCBD67 /* AudioBookmarksViewController.xib */,
-				2E3DC3F61ECFF04C00FCBD67 /* AudioPlayerView.swift */,
-				2E3DC3F71ECFF04C00FCBD67 /* AudioPlayerView.xib */,
+				2E3DC3F61ECFF04C00FCBD67 /* PlayerView.swift */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -401,7 +398,6 @@
 				2E0E5E401EF0109C006C9E7B /* iTunesAlbumDetailHeaderView.xib in Resources */,
 				2E3EC49E1EEEA8E9009472FB /* iTunesArtistCell.xib in Resources */,
 				2E3DC4001ECFF04C00FCBD67 /* PlayerViewController.xib in Resources */,
-				2E3DC3FF1ECFF04C00FCBD67 /* AudioPlayerView.xib in Resources */,
 				2E3EC49A1EEEA8D7009472FB /* iTunesAlbumCell.xib in Resources */,
 				2E7D70061ED031BD0078BD1B /* iTunesSongCell.xib in Resources */,
 				2E3DC3FD1ECFF04C00FCBD67 /* AudioBookmarksViewController.xib in Resources */,
@@ -469,7 +465,7 @@
 				2EA4E68D1EDA764200016638 /* PlayerItem.swift in Sources */,
 				2EF214021EE6EE66007BEAEF /* AudioVolumeView.swift in Sources */,
 				2E0E5E381EEFFA88006C9E7B /* iTunesAlbumDetailViewController.swift in Sources */,
-				2E3DC3FE1ECFF04C00FCBD67 /* AudioPlayerView.swift in Sources */,
+				2E3DC3FE1ECFF04C00FCBD67 /* PlayerView.swift in Sources */,
 				2E3EC4A21EEEAB1F009472FB /* iTunesArtistListViewController.swift in Sources */,
 				2EC3C0241EC86FA200812AA9 /* FileListViewController.swift in Sources */,
 				2EA4E68F1EDA775400016638 /* URL+Extension.swift in Sources */,

@@ -20,7 +20,7 @@ class iTunesAlbumDetailViewController: UIViewController {
         view.alwaysBounceVertical = true
     }
     //MARK: Properties
-    fileprivate let player = Dependencies.sharedInstance().resolve(serviceType: Player.self)
+    fileprivate let player = Dependencies.sharedInstance().resolve(serviceType: Player.self)!
     fileprivate var collections = [MPMediaItemCollection]() {
         didSet {
             self.collectionView.reloadData()
@@ -102,7 +102,7 @@ extension iTunesAlbumDetailViewController: UICollectionViewDataSource, UICollect
                     items.append(item)
                 }
             })
-            try self.player?.play(items: PlayerItem.items(mediaItems: items), startAt: indexPath.row)
+            try self.player.play(items: PlayerItem.items(mediaItems: items), startAt: indexPath.row)
             let playerController = PlayerViewController(nibName: PlayerViewController.className(), bundle: nil)
             playerController.modalPresentationStyle = .custom
             Navigator.present(playerController)

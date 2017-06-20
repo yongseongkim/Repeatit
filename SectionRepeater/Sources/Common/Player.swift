@@ -97,12 +97,7 @@ class Player: NSObject {
     
     override init() {
         super.init()
-        do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch let error as NSError {
-            print(error)
-        }
+        UIApplication.shared.beginReceivingRemoteControlEvents()
         NotificationCenter.default.addObserver(self, selector: #selector(handleFinished(notification:)), name: .AVPlayerItemDidPlayToEndTime, object: nil)
     }
     
@@ -188,7 +183,6 @@ class Player: NSObject {
             time = self.duration.leftSide()
         }
         time = time.roundTo(place: 2)
-        print("move:", time)
         self.movedTime = time
         self.player?.seek(to: time)
     }
@@ -317,6 +311,14 @@ class Player: NSObject {
             self.player = nil
             return
         }
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+            try AVAudioSession.sharedInstance().setActive(true)
+            
+        } catch let error as NSError {
+            print(error)
+        }
+        
         self.player = AVPlayer(playerItem: AVPlayerItem(url: url))
         self.player?.rate = self.rate
         self.player?.play()

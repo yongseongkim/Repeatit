@@ -21,15 +21,15 @@ class iTunesAlbumListViewController: UIViewController {
     }
     
     //MARK: Properties
-    public var collection: MPMediaItemCollection? {
-        didSet {
-            self.loadArtistsAlbums()
-        }
-    }
-    
+    fileprivate let player = Dependencies.sharedInstance().resolve(serviceType: Player.self)!
     fileprivate var collections = [MPMediaItemCollection]() {
         didSet {
             self.collectionView.reloadData()
+        }
+    }
+    public var collection: MPMediaItemCollection? {
+        didSet {
+            self.loadArtistsAlbums()
         }
     }
     
@@ -53,6 +53,7 @@ class iTunesAlbumListViewController: UIViewController {
         self.view.addSubview(self.collectionView)
         
         self.updateConstraints()
+        self.updateContentInset()
         self.bind()
     }
     
@@ -67,6 +68,14 @@ class iTunesAlbumListViewController: UIViewController {
             make.left.equalTo(self.view)
             make.right.equalTo(self.view)
             make.bottom.equalTo(self.view)
+        }
+    }
+    
+    public func updateContentInset() {
+        if PlayerView.isVisible() {
+            self.collectionView.contentInset = UIEdgeInsetsMake(64, 0, 49 + PlayerView.height() ,0)
+        } else {
+            self.collectionView.contentInset = UIEdgeInsetsMake(64, 0, 49 ,0)
         }
     }
     

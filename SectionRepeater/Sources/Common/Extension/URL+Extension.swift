@@ -18,4 +18,11 @@ extension URL {
         }
         return false
     }
+    
+    func bookmarkKey() -> String {
+        guard let range = self.path.range(of: URL.documentsURL.path) else { return self.path }
+        var result = self.path
+        result.removeSubrange(range)
+        return result
+    }
 }

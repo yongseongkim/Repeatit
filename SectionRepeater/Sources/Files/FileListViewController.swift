@@ -8,6 +8,7 @@
 
 import UIKit
 import URLNavigator
+import RealmSwift
 
 enum FileSectionType: Int {
     case Directory
@@ -47,7 +48,7 @@ class FileListViewController: UIViewController {
             self.loadFiles()
         }
     }
-    fileprivate let player = Dependencies.sharedInstance().resolve(serviceType: Player.self)
+    fileprivate let player = Dependencies.sharedInstance().resolve(serviceType: Player.self)!
     fileprivate let currentURL: URL
     
     convenience init() {
@@ -57,7 +58,6 @@ class FileListViewController: UIViewController {
     init(url: URL) {
         self.currentURL = url
         self.optionView.currentURL = self.currentURL
-        
         super.init(nibName: nil, bundle: nil)
         let optionButton = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44)).then { (button) in
             button.setImage(UIImage(named: "btn_common_option_44pt"), for: .normal)
@@ -83,6 +83,7 @@ class FileListViewController: UIViewController {
         
         self.bind()
         self.updateConstraints()
+        self.updateContentInset()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -104,7 +105,6 @@ class FileListViewController: UIViewController {
             make.right.equalTo(self.view).offset(0)
             make.height.equalTo(FilesEditOptionView.height())
         })
-        self.collectionView.contentInset = UIEdgeInsetsMake(FilesEditOptionView.height(), 0, 49 ,0)
     }
     
     func bind() {
@@ -125,7 +125,15 @@ class FileListViewController: UIViewController {
         self.isEditingFiles = false
     }
     
-    func loadFiles() {
+    public func updateContentInset() {
+        if PlayerView.isVisible() {
+            self.collectionView.contentInset = UIEdgeInsetsMake(FilesEditOptionView.height(), 0, 49 + PlayerView.height() ,0)
+        } else {
+            self.collectionView.contentInset = UIEdgeInsetsMake(FilesEditOptionView.height(), 0, 49 ,0)
+        }
+    }
+    
+    fileprivate func loadFiles() {
         let (directories, files) = FileManager.default.loadFiles(url: self.currentURL)
         self.directories = directories
         self.files = files
@@ -176,7 +184,7 @@ extension FileListViewController: UICollectionViewDataSource, UICollectionViewDe
             return
         case .File:
             do {
-                try self.player?.play(items: PlayerItem.items(files: self.files), startAt: indexPath.row)
+                try self.player.play(items: PlayerItem.items(files: self.files), startAt: indexPath.row)
                 let playerController = PlayerViewController(nibName: PlayerViewController.className(), bundle: nil)
                 playerController.modalPresentationStyle = .custom
                 Navigator.present(playerController)
@@ -230,72 +238,44 @@ extension FileListViewController: FilesEditOptionViewDelegate {
             return
         }
         guard let indexPath = selectedItems.first else { return }
-        var file: File? = nil
         guard let section = FileSectionType(rawValue: indexPath.section) else { return }
-        switch section {
-        case .Directory:
-            file = self.directories[indexPath.row]
-            break
-        case .File:
-            file = self.files[indexPath.row]
-            break
-        }
+        let target = (section == .Directory) ? self.directories[indexPath.row] : self.files[indexPath.row]
         let alert = UIAlertController(title: "Rename", message: nil, preferredStyle: .alert)
         alert.addTextField { (textField) in
-            textField.text = file?.url.lastPathComponent
+            textField.text = target.url.lastPathComponent
         }
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "Confirm", style: .default) { [weak self] (action) in
-            do {
-                if let name = alert.textFields?.first?.text, let targetFile = file {
-                    let targetURL = URL(fileURLWithPath: String(format: "%@/%@", targetFile.url.deletingLastPathComponent().path, name))
-                    try FileManager.default.moveItem(at: targetFile.url, to: targetURL)
-                    self?.loadFiles()
-                }
-            } catch let error {
-                print(error)
+            if let name = alert.textFields?.first?.text {
+                File.rename(file: target, rename: name)
+                self?.loadFiles()
             }
         })
         self.present(alert, animated: true, completion: nil)
     }
     
     func optionMoveButtonTapped() {
-        var paths = [String]()
+        var files = [File]()
         if let indexPaths = self.collectionView.indexPathsForSelectedItems {
             for indexPath in indexPaths {
                 guard let section = FileSectionType(rawValue: indexPath.section) else { continue }
-                switch section {
-                case .Directory:
-                    paths.append(self.directories[indexPath.row].url.path)
-                    break
-                case .File:
-                    paths.append(self.files[indexPath.row].url.path)
-                    break
-                }
+                let target = (section == .Directory) ? self.directories[indexPath.row] : self.files[indexPath.row]
+                files.append(target)
             }
         }
-        let naviController = FileDestinationViewController(rootViewController: FileDestinationFileListViewController())
-        naviController.selectedPaths = paths
-        self.present(naviController, animated: true, completion: nil)
+        if (files.count > 0) {
+            let naviController = FileDestinationViewController(rootViewController: FileDestinationFileListViewController())
+            naviController.selectedFiles = files
+            self.present(naviController, animated: true, completion: nil)
+        }
     }
     
     func optionDeleteButtonTapped() {
         if let indexPaths = self.collectionView.indexPathsForSelectedItems {
-            for indexPath in indexPaths {
-                guard let section = FileSectionType(rawValue: indexPath.section) else { continue }
-                do {
-                    switch section {
-                    case .Directory:
-                        try FileManager.default.removeItem(at: self.directories[indexPath.row].url)
-                        break
-                    case .File:
-                        try FileManager.default.removeItem(at: self.files[indexPath.row].url)
-                        break
-                    }
-                } catch let error {
-                    print(error)
-                }
-            }
+            let files = indexPaths.map({ (ip) -> File in
+                return (FileSectionType(rawValue: ip.section)! == .Directory) ? self.directories[ip.row] : self.files[ip.row]
+            })
+            File.delete(files: files)
         }
         self.isEditingFiles = false
     }

@@ -14,13 +14,10 @@ class PlayerItem: NSObject {
     var mediaItem: MPMediaItem?
     
     lazy var url: URL? = { [weak self] in
-        if let file = self?.fileItem {
-            return file.url
-        }
         if let media = self?.mediaItem, let mediaURL = media.value(forProperty: MPMediaItemPropertyAssetURL) as? URL {
             return mediaURL
         }
-        return nil
+        return self?.fileItem?.url
     }()
     lazy var bookmarkKey: String? = { [weak self] in
         guard let targetURL = self?.url else { return nil }

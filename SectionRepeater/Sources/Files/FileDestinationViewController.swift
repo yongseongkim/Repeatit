@@ -11,7 +11,7 @@ import UIKit
 class FileDestinationViewController: UINavigationController {
     static let optionViewHeight:CGFloat = 44
     
-    public var selectedPaths: [String]?
+    public var selectedFiles: [File]?
     
     fileprivate let optionView = UIView(frame: .zero).then { (view) in
         view.backgroundColor = UIColor.greenery
@@ -23,7 +23,7 @@ class FileDestinationViewController: UINavigationController {
         button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
     }
     fileprivate let movehereButton = UIButton(frame: .zero).then { (button) in
-        button.setTitle("Move Here", for: .normal)
+        button.setTitle("Move here", for: .normal)
         button.setTitleColor(UIColor.white, for: .normal)
         button.contentHorizontalAlignment = .center
         button.addTarget(self, action: #selector(movehereButtonTapped), for: .touchUpInside)
@@ -59,18 +59,9 @@ class FileDestinationViewController: UINavigationController {
     }
     
     func movehereButtonTapped() {
-        guard let paths = self.selectedPaths else { return }
+        guard let files = self.selectedFiles else { return }
         guard let moveToURL = (self.viewControllers.last as? FileDestinationFileListViewController)?.currentURL else { return }
-        for path in paths {
-            do {
-                if FileManager.default.fileExists(atPath: path) {
-                    let url = URL(fileURLWithPath: path)
-                    try FileManager.default.moveItem(atPath: path, toPath: moveToURL.appendingPathComponent(url.lastPathComponent).path)
-                }
-            } catch let error {
-                print(error)
-            }
-        }
+        File.move(files: files, targetURL: moveToURL)
         self.dismiss(animated: true, completion: nil)
     }
 }

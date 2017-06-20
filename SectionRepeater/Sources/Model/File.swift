@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import AVFoundation
 import SwiftyImage
+import RealmSwift
 
 struct AudioInformation {
     var url: URL?
@@ -80,5 +81,69 @@ class File {
             return self.url.absoluteString == other.url.absoluteString
         }
         return false
+    }
+    
+    class func rename(file: File, rename: String) {
+        do {
+            let targetURL = URL(fileURLWithPath: String(format: "%@/%@", file.url.deletingLastPathComponent().path, rename))
+            try FileManager.default.moveItem(at: file.url, to: targetURL)
+            let realm = try! Realm()
+            if let oldObj = realm.objects(BookmarkObject.self).filter("path = '\(file.url.bookmarkKey())'").first {
+                try! realm.write {
+                    // 삭제하고 새로 만들면 invalidate error나기 때문에 times 옮긴 후 삭제해야 한다.
+                    realm.beginWrite()
+                    let newObj = BookmarkObject(path: targetURL.bookmarkKey())
+                    oldObj.times.forEach({ (time) in
+                        newObj.times.append(time)
+                    })
+                    realm.delete(oldObj)
+                    realm.create(BookmarkObject.self, value: newObj, update: true)
+                    try realm.commitWrite()
+                }
+            }
+        } catch let error {
+            print(error)
+        }
+    }
+    
+    class func move(files: [File], targetURL: URL) {
+        let realm = try! Realm()
+        for file in files {
+            let from = file.url
+            if !FileManager.default.fileExists(atPath: from.path) {
+                continue
+            }
+            do {
+                let moveTo = targetURL.appendingPathComponent(from.lastPathComponent)
+                try FileManager.default.moveItem(atPath: from.path, toPath: moveTo.path)
+                if let oldObj = realm.objects(BookmarkObject.self).filter("path = '\(from.bookmarkKey())'").first {
+                    // 삭제하고 새로 만들면 invalidate error나기 때문에 times 옮긴 후 삭제해야 한다.
+                    realm.beginWrite()
+                    let newObj = BookmarkObject(path: moveTo.bookmarkKey())
+                    oldObj.times.forEach({ (time) in
+                        newObj.times.append(time)
+                    })
+                    realm.delete(oldObj)
+                    realm.create(BookmarkObject.self, value: newObj, update: true)
+                    try realm.commitWrite()
+                }
+            } catch let error {
+                print(error)
+            }
+        }
+    }
+    
+    class func delete(files: [File]) {
+        for file in files {
+            do {
+                try FileManager.default.removeItem(at: file.url)
+                let realm = try! Realm()
+                if let bookmarkObj = realm.objects(BookmarkObject.self).filter("path = '\(file.url.bookmarkKey)'").first {
+                    realm.delete(bookmarkObj)
+                }
+            } catch let error {
+                print(error)
+            }
+        }
     }
 }

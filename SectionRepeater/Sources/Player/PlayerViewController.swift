@@ -42,7 +42,7 @@ class PlayerViewController: UIViewController {
     @IBOutlet weak var rateButton: UIButton!
 
     // Properties
-    fileprivate var player: Player
+    fileprivate let player: Player = Dependencies.sharedInstance().resolve(serviceType: Player.self)!
     fileprivate var timer: Timer?
     fileprivate var scrollViewDragging = false
     fileprivate var playingWhenScrollStart = false
@@ -50,7 +50,6 @@ class PlayerViewController: UIViewController {
     fileprivate var bookmarkViews: [UIView]?
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        self.player = Dependencies.sharedInstance().resolve(serviceType: Player.self)!
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
@@ -59,8 +58,8 @@ class PlayerViewController: UIViewController {
     }
     
     deinit {
-        AppDelegate.currentAppDelegate()?.notificationCenter.removeObserver(self)
         self.player.notificationCenter.removeObserver(self)
+        AppDelegate.currentAppDelegate()?.notificationCenter.removeObserver(self)
     }
 
     override func viewDidLoad() {

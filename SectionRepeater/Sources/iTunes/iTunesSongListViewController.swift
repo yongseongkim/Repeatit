@@ -19,11 +19,10 @@ class iTunesSongListViewController: UIViewController {
         ).then { (view) in
             view.backgroundColor = UIColor.white
             view.register(iTunesSongCell.self)
-            view.contentInset = UIEdgeInsetsMake(64, 0, 49 ,0)
     }
     
     //MARK: Properties
-    let player = Dependencies.sharedInstance().resolve(serviceType: Player.self)
+    fileprivate let player = Dependencies.sharedInstance().resolve(serviceType: Player.self)!
     var items = [MPMediaItem]() {
         didSet {
             self.collectionView.reloadData()
@@ -50,8 +49,8 @@ class iTunesSongListViewController: UIViewController {
         self.view.addSubview(self.collectionView)
         
         self.updateConstraints()
+        self.updateContentInset()
         self.bind()
-        self.collectionView.reloadData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -67,6 +66,14 @@ class iTunesSongListViewController: UIViewController {
             make.left.equalTo(self.view)
             make.right.equalTo(self.view)
             make.bottom.equalTo(self.view)
+        }
+    }
+    
+    public func updateContentInset() {
+        if PlayerView.isVisible() {
+            self.collectionView.contentInset = UIEdgeInsetsMake(64, 0, 49 + PlayerView.height() ,0)
+        } else {
+            self.collectionView.contentInset = UIEdgeInsetsMake(64, 0, 49 ,0)
         }
     }
     
@@ -101,7 +108,7 @@ extension iTunesSongListViewController: UICollectionViewDataSource, UICollection
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         do {
-            try self.player?.play(items: PlayerItem.items(mediaItems: self.items), startAt: indexPath.row)
+            try self.player.play(items: PlayerItem.items(mediaItems: self.items), startAt: indexPath.row)
             let playerController = PlayerViewController(nibName: PlayerViewController.className(), bundle: nil)
             playerController.modalPresentationStyle = .custom
             Navigator.present(playerController)

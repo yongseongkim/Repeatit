@@ -33,4 +33,17 @@ class iTunesListViewController: UINavigationController {
         }
     }
     
+    public func updateContentInset() {
+        for vc in self.viewControllers {
+            if let songList = vc as? iTunesSongListViewController {
+                songList.updateContentInset()
+            }
+            if let albumList = vc as? iTunesSongListViewController {
+                albumList.updateContentInset()
+            }
+            if let artistList = vc as? iTunesSongListViewController {
+                artistList.updateContentInset()
+            }
+        }
+    }
 }
