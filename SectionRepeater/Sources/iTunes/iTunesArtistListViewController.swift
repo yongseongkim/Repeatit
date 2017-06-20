@@ -69,9 +69,9 @@ class iTunesArtistListViewController: UIViewController {
     
     public func updateContentInset() {
         if PlayerView.isVisible() {
-            self.collectionView.contentInset = UIEdgeInsetsMake(64, 0, 49 + PlayerView.height() ,0)
+            self.collectionView.contentInset = UIEdgeInsetsMake(64, 0, PlayerView.height(), 0)
         } else {
-            self.collectionView.contentInset = UIEdgeInsetsMake(64, 0, 49 ,0)
+            self.collectionView.contentInset = UIEdgeInsetsMake(64, 0, 0, 0)
         }
     }
     

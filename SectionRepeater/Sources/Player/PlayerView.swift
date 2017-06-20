@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol PlayerViewControllerDelegate {
+protocol PlayerViewDelegate {
     func playerViewTapped()
 }
 
@@ -25,10 +25,7 @@ class PlayerView: UIView {
     }
 
     //MARK: UI Components
-    fileprivate let albumCoverImageView = UIImageView().then { (view) in
-        view.layer.borderWidth = UIScreen.scaleWidth
-        view.layer.borderColor = UIColor.gray220.cgColor
-    }
+    fileprivate let albumCoverImageView = UIImageView()
     fileprivate let titleLabel = UILabel().then { (label) in
         label.textColor = UIColor.black
         label.font = label.font.withSize(15)
@@ -38,22 +35,23 @@ class PlayerView: UIView {
         button.setImage(UIImage(named: "btn_play_44pt"), for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
     }
-    fileprivate let borderView = UIView().then { (view) in
-//        view.backgroundColor = UIColor.gray145
-    }
 
     //MARK: Properties
-    public var delegate: PlayerViewControllerDelegate?
+    public var delegate: PlayerViewDelegate?
     fileprivate let player = Dependencies.sharedInstance().resolve(serviceType: Player.self)!
     
     init() {
         super.init(frame: .zero)
-        self.backgroundColor = UIColor.white
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.light)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = self.bounds
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.addSubview(blurEffectView)
+        self.backgroundColor = UIColor.gray243.withAlphaComponent(0.9)
         self.addSubview(self.albumCoverImageView)
         self.addSubview(self.titleLabel)
         self.addSubview(self.backgroundButton)
         self.addSubview(self.playButton)
-        self.addSubview(self.borderView)
         self.albumCoverImageView.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(10)
             make.centerY.equalTo(self)
@@ -76,12 +74,6 @@ class PlayerView: UIView {
             make.centerY.equalTo(self)
             make.width.equalTo(44)
             make.height.equalTo(44)
-        }
-        self.borderView.snp.makeConstraints { (make) in
-            make.top.equalTo(self)
-            make.left.equalTo(self)
-            make.right.equalTo(self)
-            make.height.equalTo(UIScreen.scaleWidth)
         }
         
         self.playButton.addTarget(self, action: #selector(playButtonTapped), for: .touchDown)

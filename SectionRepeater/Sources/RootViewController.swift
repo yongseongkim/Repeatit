@@ -9,6 +9,7 @@
 import UIKit
 import MediaPlayer
 import SnapKit
+import URLNavigator
 
 class RootViewController: UITabBarController {
     
@@ -19,6 +20,7 @@ class RootViewController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tabBar.isTranslucent = false
         self.loadTabViews()
         self.loadPlayerView()
         self.registerNotification()
@@ -42,13 +44,7 @@ class RootViewController: UITabBarController {
             make.height.equalTo(PlayerView.height())
         }
         self.playerView.isHidden = true
-        self.playerView.clipsToBounds = false
-        self.playerView.layer.masksToBounds = false
-        self.playerView.layer.shadowColor = UIColor.black.cgColor
-        self.playerView.layer.shadowOpacity = 1
-        self.playerView.layer.shadowOffset = CGSize.zero
-        self.playerView.layer.shadowRadius = 10
-        self.playerView.layer.shadowPath = UIBezierPath(rect: CGRect(x: 0, y: self.view.bounds.height - 49 - PlayerView.height(), width: self.view.bounds.width, height: PlayerView.height())).cgPath
+        self.playerView.delegate = self
     }
     
     func showPlayerView() {
@@ -99,5 +95,13 @@ class RootViewController: UITabBarController {
             return
         }
         self.playerView.setup()
+    }
+}
+
+extension RootViewController: PlayerViewDelegate {
+    func playerViewTapped() {
+        let playerController = PlayerViewController(nibName: PlayerViewController.className(), bundle: nil)
+        playerController.modalPresentationStyle = .custom
+        Navigator.present(playerController)
     }
 }
