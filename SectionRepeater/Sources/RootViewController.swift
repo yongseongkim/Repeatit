@@ -49,6 +49,10 @@ class RootViewController: UITabBarController {
     
     func showPlayerView() {
         self.playerView.isHidden = false
+        self.playerView.alpha = 0
+        UIView.animate(withDuration: 0.4) {
+            self.playerView.alpha = 1
+        }
         for vc in self.fileListNaviController.viewControllers {
             if let fileListViewController = vc as? FileListViewController {
                 fileListViewController.updateContentInset()
@@ -74,6 +78,10 @@ class RootViewController: UITabBarController {
     }
     
     func handlePlayerItemDidSet(object: Notification) {
+        if self.player.currentItem == nil {
+            self.hidePlayerView()
+            return
+        }
         self.playerView.setup()
     }
     
@@ -82,7 +90,6 @@ class RootViewController: UITabBarController {
             self.hidePlayerView()
             return
         }
-        
         if self.player.state.isPlaying {
             self.showPlayerView()
         }

@@ -158,7 +158,11 @@ class PlayerViewController: UIViewController {
     }
     
     func handlePlayerStateUpdatedNotification() {
-        self.setupButtons()
+        if let _ = self.player.currentItem {
+            self.setupButtons()
+            return
+        }
+        self.dismiss(animated: true, completion: nil)
     }
     
     func handlePlayingTimeUpdatedNotification() {
@@ -210,9 +214,9 @@ class PlayerViewController: UIViewController {
     }
     
     @IBAction func showBookmarksButtonTapped(_ sender: Any) {
-        let bookmarksViewController = AudioBookmarksViewController(nibName: AudioBookmarksViewController.className(), bundle: nil)
+        let bookmarksViewController = BookmarksViewController(nibName: BookmarksViewController.className(), bundle: nil)
         bookmarksViewController.modalPresentationStyle = .custom
-        self.present(bookmarksViewController, animated: true, completion: nil)
+        self.present(bookmarksViewController, animated: false, completion: nil)
     }
     
     @IBAction func movePreviousBookmark(_ sender: Any) {

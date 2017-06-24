@@ -17,10 +17,10 @@
 		2E1A3B7F1E8F932300F785D0 /* UIScreen+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1A3B7E1E8F932300F785D0 /* UIScreen+Extension.swift */; };
 		2E1A3B811E8FB38200F785D0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E1A3B801E8FB38200F785D0 /* Images.xcassets */; };
 		2E2E33F11E8770C500AF26DE /* DoubleObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2E33F01E8770C500AF26DE /* DoubleObject.swift */; };
-		2E3DC3FA1ECFF04C00FCBD67 /* AudioBookmarkCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F21ECFF04C00FCBD67 /* AudioBookmarkCollectionViewCell.swift */; };
-		2E3DC3FB1ECFF04C00FCBD67 /* AudioBookmarkCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F31ECFF04C00FCBD67 /* AudioBookmarkCollectionViewCell.xib */; };
-		2E3DC3FC1ECFF04C00FCBD67 /* AudioBookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F41ECFF04C00FCBD67 /* AudioBookmarksViewController.swift */; };
-		2E3DC3FD1ECFF04C00FCBD67 /* AudioBookmarksViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F51ECFF04C00FCBD67 /* AudioBookmarksViewController.xib */; };
+		2E3DC3FA1ECFF04C00FCBD67 /* BookmarkCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F21ECFF04C00FCBD67 /* BookmarkCollectionViewCell.swift */; };
+		2E3DC3FB1ECFF04C00FCBD67 /* BookmarkCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F31ECFF04C00FCBD67 /* BookmarkCollectionViewCell.xib */; };
+		2E3DC3FC1ECFF04C00FCBD67 /* BookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F41ECFF04C00FCBD67 /* BookmarksViewController.swift */; };
+		2E3DC3FD1ECFF04C00FCBD67 /* BookmarksViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F51ECFF04C00FCBD67 /* BookmarksViewController.xib */; };
 		2E3DC3FE1ECFF04C00FCBD67 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F61ECFF04C00FCBD67 /* PlayerView.swift */; };
 		2E3DC4001ECFF04C00FCBD67 /* PlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F81ECFF04C00FCBD67 /* PlayerViewController.xib */; };
 		2E3DC4011ECFF04C00FCBD67 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F91ECFF04C00FCBD67 /* PlayerViewController.swift */; };
@@ -85,10 +85,10 @@
 		2E1A3B801E8FB38200F785D0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		2E243DB71E62896300601200 /* CoreAudioKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudioKit.framework; path = System/Library/Frameworks/CoreAudioKit.framework; sourceTree = SDKROOT; };
 		2E2E33F01E8770C500AF26DE /* DoubleObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoubleObject.swift; sourceTree = "<group>"; };
-		2E3DC3F21ECFF04C00FCBD67 /* AudioBookmarkCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioBookmarkCollectionViewCell.swift; sourceTree = "<group>"; };
-		2E3DC3F31ECFF04C00FCBD67 /* AudioBookmarkCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioBookmarkCollectionViewCell.xib; sourceTree = "<group>"; };
-		2E3DC3F41ECFF04C00FCBD67 /* AudioBookmarksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioBookmarksViewController.swift; sourceTree = "<group>"; };
-		2E3DC3F51ECFF04C00FCBD67 /* AudioBookmarksViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioBookmarksViewController.xib; sourceTree = "<group>"; };
+		2E3DC3F21ECFF04C00FCBD67 /* BookmarkCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarkCollectionViewCell.swift; sourceTree = "<group>"; };
+		2E3DC3F31ECFF04C00FCBD67 /* BookmarkCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookmarkCollectionViewCell.xib; sourceTree = "<group>"; };
+		2E3DC3F41ECFF04C00FCBD67 /* BookmarksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksViewController.swift; sourceTree = "<group>"; };
+		2E3DC3F51ECFF04C00FCBD67 /* BookmarksViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookmarksViewController.xib; sourceTree = "<group>"; };
 		2E3DC3F61ECFF04C00FCBD67 /* PlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		2E3DC3F81ECFF04C00FCBD67 /* PlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayerViewController.xib; sourceTree = "<group>"; };
 		2E3DC3F91ECFF04C00FCBD67 /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
@@ -164,10 +164,10 @@
 			children = (
 				2E3DC3F91ECFF04C00FCBD67 /* PlayerViewController.swift */,
 				2E3DC3F81ECFF04C00FCBD67 /* PlayerViewController.xib */,
-				2E3DC3F21ECFF04C00FCBD67 /* AudioBookmarkCollectionViewCell.swift */,
-				2E3DC3F31ECFF04C00FCBD67 /* AudioBookmarkCollectionViewCell.xib */,
-				2E3DC3F41ECFF04C00FCBD67 /* AudioBookmarksViewController.swift */,
-				2E3DC3F51ECFF04C00FCBD67 /* AudioBookmarksViewController.xib */,
+				2E3DC3F21ECFF04C00FCBD67 /* BookmarkCollectionViewCell.swift */,
+				2E3DC3F31ECFF04C00FCBD67 /* BookmarkCollectionViewCell.xib */,
+				2E3DC3F41ECFF04C00FCBD67 /* BookmarksViewController.swift */,
+				2E3DC3F51ECFF04C00FCBD67 /* BookmarksViewController.xib */,
 				2E3DC3F61ECFF04C00FCBD67 /* PlayerView.swift */,
 			);
 			path = Player;
@@ -392,7 +392,7 @@
 				2E7AC2221E47195700BA03B7 /* LaunchScreen.storyboard in Resources */,
 				2EC3C0231EC86FA200812AA9 /* FileCell.xib in Resources */,
 				2E1A3B811E8FB38200F785D0 /* Images.xcassets in Resources */,
-				2E3DC3FB1ECFF04C00FCBD67 /* AudioBookmarkCollectionViewCell.xib in Resources */,
+				2E3DC3FB1ECFF04C00FCBD67 /* BookmarkCollectionViewCell.xib in Resources */,
 				2E7AC21F1E47195700BA03B7 /* Assets.xcassets in Resources */,
 				2E0E5E3C1EF00C48006C9E7B /* iTunesAlbumDetailSongCell.xib in Resources */,
 				2E0E5E401EF0109C006C9E7B /* iTunesAlbumDetailHeaderView.xib in Resources */,
@@ -400,7 +400,7 @@
 				2E3DC4001ECFF04C00FCBD67 /* PlayerViewController.xib in Resources */,
 				2E3EC49A1EEEA8D7009472FB /* iTunesAlbumCell.xib in Resources */,
 				2E7D70061ED031BD0078BD1B /* iTunesSongCell.xib in Resources */,
-				2E3DC3FD1ECFF04C00FCBD67 /* AudioBookmarksViewController.xib in Resources */,
+				2E3DC3FD1ECFF04C00FCBD67 /* BookmarksViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -490,10 +490,10 @@
 				2EEEF61F1E598AD600D2C279 /* NSObject+Extension.swift in Sources */,
 				2E83A5031EA327000073C258 /* Double+Extension.swift in Sources */,
 				2E8EEC271EE4027F00593FA3 /* WaveformView.swift in Sources */,
-				2E3DC3FA1ECFF04C00FCBD67 /* AudioBookmarkCollectionViewCell.swift in Sources */,
+				2E3DC3FA1ECFF04C00FCBD67 /* BookmarkCollectionViewCell.swift in Sources */,
 				2E3EC4991EEEA8D7009472FB /* iTunesAlbumCell.swift in Sources */,
 				2E1A3B7F1E8F932300F785D0 /* UIScreen+Extension.swift in Sources */,
-				2E3DC3FC1ECFF04C00FCBD67 /* AudioBookmarksViewController.swift in Sources */,
+				2E3DC3FC1ECFF04C00FCBD67 /* BookmarksViewController.swift in Sources */,
 				2EC3C0221EC86FA200812AA9 /* FileCell.swift in Sources */,
 				2E01A8091EE5624500B50F47 /* FileDestinationViewController.swift in Sources */,
 			);

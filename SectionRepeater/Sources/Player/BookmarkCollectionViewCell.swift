@@ -1,5 +1,5 @@
 //
-//  AudioBookmarkCollectionViewCell.swift
+//  BookmarkCollectionViewCell.swift
 //  SectionRepeater
 //
 //  Created by KimYongSeong on 2017. 4. 1..
@@ -8,16 +8,16 @@
 
 import UIKit
 
-protocol AudioBookmarkCollectionViewCellDelegate {
-    func didTapDeleteButton(cell: AudioBookmarkCollectionViewCell)
+protocol BookmarkCollectionViewCellDelegate {
+    func didTapDeleteButton(cell: BookmarkCollectionViewCell)
 }
 
-class AudioBookmarkCollectionViewCell: UICollectionViewCell {
+class BookmarkCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var indexLabel: UILabel!
     @IBOutlet weak var bookmarkTimeLabel: UILabel!
     
-    public var delegate: AudioBookmarkCollectionViewCellDelegate?
+    public var delegate: BookmarkCollectionViewCellDelegate?
     public var index: Int?
     public var time: Double?
     
@@ -33,8 +33,10 @@ class AudioBookmarkCollectionViewCell: UICollectionViewCell {
     
     public func load() {
         if let index = self.index, let time = self.time {
+            let minutes = Int(abs(time/60))
+            let seconds = Int(abs(time.truncatingRemainder(dividingBy: 60)))
             self.indexLabel.text = String(format: "%d", index)
-            self.bookmarkTimeLabel.text = String(format: "%.1f", time)
+            self.bookmarkTimeLabel.text = String(format: "%02d:%02d", minutes, seconds)
         }
     }
     

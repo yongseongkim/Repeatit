@@ -20,7 +20,7 @@ extension Notification.Name {
 }
 
 enum PlayerError: Error {
-    case playlistOutOfRange
+    case invalidArgumentPlayerItem
     case alreadExistBookmarkNearby
     case bookmarkTooCloseFinish
 }
@@ -107,7 +107,7 @@ class Player: NSObject {
     
     func play(items: [PlayerItem], startAt: Int) throws {
         if (items.count <= startAt) {
-            throw PlayerError.playlistOutOfRange
+            throw PlayerError.invalidArgumentPlayerItem
         }
         
         if let currentItem = self.currentItem {
@@ -318,7 +318,12 @@ class Player: NSObject {
         } catch let error as NSError {
             print(error)
         }
-        
+        if !FileManager.default.fileExists(atPath: url.path) {
+            self.player = nil
+            self.currentItem = nil
+//            throw PlayerError.invalidArgumentPlayerItem
+            return
+        }
         self.player = AVPlayer(playerItem: AVPlayerItem(url: url))
         self.player?.rate = self.rate
         self.player?.play()

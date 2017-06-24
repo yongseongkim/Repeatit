@@ -1,17 +1,19 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1217" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AudioBookmarksViewController" customModule="SectionRepeater" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BookmarksViewController" customModule="SectionRepeater" customModuleProvider="target">
             <connections>
+                <outlet property="borderViewHeightConstraint" destination="mYW-8o-fPc" id="zDT-DH-t9L"/>
                 <outlet property="collectionView" destination="fzP-va-C9a" id="D8Y-dn-Mgz"/>
+                <outlet property="contentView" destination="t81-Qu-7qU" id="lrF-bT-VS6"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -24,8 +26,8 @@
                     <rect key="frame" x="20" y="30" width="335" height="607"/>
                     <subviews>
                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="fzP-va-C9a">
-                            <rect key="frame" x="0.0" y="40" width="335" height="567"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <rect key="frame" x="0.0" y="44" width="335" height="563"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="JW6-yx-gE2">
                                 <size key="itemSize" width="50" height="50"/>
                                 <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -38,21 +40,28 @@
                             </connections>
                         </collectionView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L2a-TB-ADZ">
-                            <rect key="frame" x="0.0" y="0.0" width="335" height="40"/>
+                            <rect key="frame" x="0.0" y="0.0" width="335" height="44"/>
                             <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vwt-hf-c6c">
-                                    <rect key="frame" x="295" y="0.0" width="40" height="40"/>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ti4-AC-hBm">
+                                    <rect key="frame" x="30" y="43" width="275" height="1"/>
+                                    <color key="backgroundColor" red="0.56862745098039214" green="0.56862745098039214" blue="0.56862745098039214" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="40" id="NqQ-cl-jOf"/>
-                                        <constraint firstAttribute="width" constant="40" id="gO4-yW-vsk"/>
+                                        <constraint firstAttribute="height" constant="1" id="mYW-8o-fPc"/>
                                     </constraints>
-                                    <state key="normal" title="X"/>
+                                </view>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vwt-hf-c6c">
+                                    <rect key="frame" x="291" y="0.0" width="44" height="44"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="44" id="NqQ-cl-jOf"/>
+                                        <constraint firstAttribute="width" constant="44" id="gO4-yW-vsk"/>
+                                    </constraints>
+                                    <state key="normal" image="btn_common_x_44pt"/>
                                     <connections>
                                         <action selector="closeButton:" destination="-1" eventType="touchUpInside" id="woR-LO-FW8"/>
                                     </connections>
                                 </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bookmarks" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SgR-Kp-Jkf">
-                                    <rect key="frame" x="129.5" y="11" width="76.5" height="18"/>
+                                    <rect key="frame" x="129.5" y="13" width="76.5" height="18"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
@@ -60,12 +69,14 @@
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstAttribute="bottom" secondItem="vwt-hf-c6c" secondAttribute="bottom" id="2Px-mM-gl9"/>
+                                <constraint firstAttribute="trailing" secondItem="Ti4-AC-hBm" secondAttribute="trailing" constant="30" id="7LE-0R-iaO"/>
+                                <constraint firstAttribute="bottom" secondItem="Ti4-AC-hBm" secondAttribute="bottom" id="K4s-zT-P4l"/>
                                 <constraint firstAttribute="trailing" secondItem="vwt-hf-c6c" secondAttribute="trailing" id="LoF-g2-W6U"/>
                                 <constraint firstItem="SgR-Kp-Jkf" firstAttribute="centerY" secondItem="L2a-TB-ADZ" secondAttribute="centerY" id="Rrq-ax-6fp"/>
-                                <constraint firstItem="vwt-hf-c6c" firstAttribute="top" secondItem="L2a-TB-ADZ" secondAttribute="top" id="gmX-tZ-0GK"/>
+                                <constraint firstItem="Ti4-AC-hBm" firstAttribute="leading" secondItem="L2a-TB-ADZ" secondAttribute="leading" constant="30" id="dyu-S7-Iri"/>
                                 <constraint firstItem="SgR-Kp-Jkf" firstAttribute="centerX" secondItem="L2a-TB-ADZ" secondAttribute="centerX" id="sIz-wg-FMr"/>
-                                <constraint firstAttribute="height" constant="40" id="yPi-0o-IOe"/>
+                                <constraint firstAttribute="height" constant="44" id="yPi-0o-IOe"/>
+                                <constraint firstItem="vwt-hf-c6c" firstAttribute="centerY" secondItem="L2a-TB-ADZ" secondAttribute="centerY" id="zR9-6K-idh"/>
                             </constraints>
                         </view>
                     </subviews>
@@ -90,4 +101,7 @@
             </constraints>
         </view>
     </objects>
+    <resources>
+        <image name="btn_common_x_44pt" width="44" height="44"/>
+    </resources>
 </document>

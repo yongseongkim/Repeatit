@@ -1,5 +1,5 @@
 //
-//  AudioBookmarksViewController.swift
+//  BookmarksViewController.swift
 //  SectionRepeater
 //
 //  Created by KimYongSeong on 2017. 4. 1..
@@ -9,17 +9,29 @@
 import UIKit
 import RealmSwift
 
-class AudioBookmarksViewController: UIViewController {
+class BookmarksViewController: UIViewController {
 
+    @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
-            collectionView.register(AudioBookmarkCollectionViewCell.self)
+            collectionView.register(BookmarkCollectionViewCell.self)
         }
     }
+    @IBOutlet weak var borderViewHeightConstraint: NSLayoutConstraint!
 
     fileprivate let player = Dependencies.sharedInstance().resolve(serviceType: Player.self)!
     fileprivate var bookmarkTimes: [Double]?
     public var targetPath: String?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = self.view.bounds
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.view.insertSubview(blurEffectView, belowSubview: self.contentView)
+        self.borderViewHeightConstraint.constant = UIScreen.scaleWidth
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -32,12 +44,12 @@ class AudioBookmarksViewController: UIViewController {
     }
     
     @IBAction func closeButton(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: false, completion: nil)
     }
 
 }
 
-extension AudioBookmarksViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+extension BookmarksViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let numberOfBookmarkTimes = self.bookmarkTimes?.count {
             return numberOfBookmarkTimes
@@ -46,7 +58,7 @@ extension AudioBookmarksViewController: UICollectionViewDataSource, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.deqeueResuableCell(forIndexPath: indexPath) as AudioBookmarkCollectionViewCell
+        let cell = collectionView.deqeueResuableCell(forIndexPath: indexPath) as BookmarkCollectionViewCell
         cell.delegate = self
         cell.index = indexPath.row
         cell.time = self.bookmarkTimes?[indexPath.row]
@@ -55,16 +67,18 @@ extension AudioBookmarksViewController: UICollectionViewDataSource, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // TODO: play the time
+        if let time = self.bookmarkTimes?[indexPath.row] {
+            self.player.move(to: time)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.width, height: AudioBookmarkCollectionViewCell.height())
+        return CGSize(width: collectionView.bounds.width, height: BookmarkCollectionViewCell.height())
     }
 }
 
-extension AudioBookmarksViewController: AudioBookmarkCollectionViewCellDelegate {
-    func didTapDeleteButton(cell: AudioBookmarkCollectionViewCell) {
+extension BookmarksViewController: BookmarkCollectionViewCellDelegate {
+    func didTapDeleteButton(cell: BookmarkCollectionViewCell) {
         guard let removedTime = cell.time else { return }
         self.player.removeBookmark(at: removedTime)
         self.loadBookmark()
