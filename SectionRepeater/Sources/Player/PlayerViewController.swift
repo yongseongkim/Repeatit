@@ -27,6 +27,8 @@ class PlayerViewController: UIViewController {
     @IBOutlet weak var timeSliderDurationLabel: UILabel!
     
     @IBOutlet weak var waveformView: WaveformView!
+    @IBOutlet weak var alertView: UIView!
+    @IBOutlet weak var alertLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var timeSeparateViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var durationLabel: UILabel!
@@ -65,6 +67,7 @@ class PlayerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.waveformView.delegate = self
+        self.alertView.isHidden = true
         self.timeSeparateViewWidthConstraint.constant = UIScreen.scaleWidth
         self.timeSlider.setThumbImage(UIImage.size(width: 3, height: 16).color(UIColor.black).image, for: .normal)
         self.timeSlider.setMinimumTrackImage(UIImage.size(width: self.timeSlider.bounds.width, height: 3).color(UIColor.black).image, for: .normal)
@@ -182,6 +185,25 @@ class PlayerViewController: UIViewController {
         self.waveformView.loadBookmarks()
     }
     
+    func showAlertView() {
+        if (!self.alertView.isHidden) {
+            return
+        }
+        self.alertView.isHidden = false
+        self.alertView.alpha = 0.0
+        UIView.animate(withDuration: 0.3, animations: {
+            self.alertView.alpha = 1.0
+        })
+    }
+    
+    func hideAlertView() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.alertView.alpha = 0
+        }) { (finished) in
+            self.alertView.isHidden = true
+        }
+    }
+    
     // MARK - IB Actions
     @IBAction func closeButtonTapped(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
@@ -283,7 +305,15 @@ class PlayerViewController: UIViewController {
         do {
             try self.player.addBookmark()
         } catch PlayerError.alreadExistBookmarkNearby {
-            print("already exist nearby")
+            NSObject.cancelPreviousPerformRequests(withTarget: self)
+            self.alertLabel.text = "It's too close to another bookmark."
+            self.showAlertView()
+            self.perform(#selector(hideAlertView), with: self, afterDelay: 1.5)
+        } catch PlayerError.bookmarkTooCloseFinish {
+            NSObject.cancelPreviousPerformRequests(withTarget: self)
+            self.alertLabel.text = "It's too close to the finish time."
+            self.showAlertView()
+            self.perform(#selector(hideAlertView), with: self, afterDelay: 1.5)
         } catch let error {
             print(error)
         }

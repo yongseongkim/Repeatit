@@ -41,7 +41,7 @@ struct PlayerState {
 class Player: NSObject {
     //MARK: Constant
     public let notificationCenter = NotificationCenter()
-    fileprivate static let bookmarkNearbyLimitSeconds = 0.3
+    fileprivate static let bookmarkNearbyLimitSeconds = 0.4
     fileprivate static let repeatModes = [RepeatMode.None, RepeatMode.All, RepeatMode.One]
     fileprivate static let defaultRate: Float = 1.0
     fileprivate static let rates: [Float] = [0.5, 0.8, Player.defaultRate, 1.25, 1.5]
@@ -317,12 +317,6 @@ class Player: NSObject {
             
         } catch let error as NSError {
             print(error)
-        }
-        if !FileManager.default.fileExists(atPath: url.path) {
-            self.player = nil
-            self.currentItem = nil
-//            throw PlayerError.invalidArgumentPlayerItem
-            return
         }
         self.player = AVPlayer(playerItem: AVPlayerItem(url: url))
         self.player?.rate = self.rate
