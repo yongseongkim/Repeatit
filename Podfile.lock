@@ -1,9 +1,10 @@
 PODS:
-  - Realm (2.5.1):
-    - Realm/Headers (= 2.5.1)
-  - Realm/Headers (2.5.1)
-  - RealmSwift (2.5.1):
-    - Realm (= 2.5.1)
+  - pop (1.0.9)
+  - Realm (2.8.1):
+    - Realm/Headers (= 2.8.1)
+  - Realm/Headers (2.8.1)
+  - RealmSwift (2.8.1):
+    - Realm (= 2.8.1)
   - SnapKit (3.1.2)
   - SwiftyImage (1.1.0)
   - Swinject (2.0.0)
@@ -11,7 +12,8 @@ PODS:
   - URLNavigator (1.2.0)
 
 DEPENDENCIES:
-  - RealmSwift (~> 2.4)
+  - pop (~> 1.0)
+  - RealmSwift (~> 2.8)
   - SnapKit (~> 3.1.2)
   - SwiftyImage (~> 1.1)
   - Swinject (~> 2.0)
@@ -19,14 +21,15 @@ DEPENDENCIES:
   - URLNavigator (~> 1.2)
 
 SPEC CHECKSUMS:
-  Realm: 32f86104d37c8521f864d4274050b38ba6190733
-  RealmSwift: f719e7511c902b8908593e8f143f59e47931bdb6
+  pop: f667631a5108a2e60d9e8797c9b32ddaf2080bce
+  Realm: 2627602ad6818451f0cb8c2a6e072f7f10a5f360
+  RealmSwift: 4764ca7657f2193c256fb032c0b123926f70dbcd
   SnapKit: 12b24f569cb7c143acc9c22b9d91b23e7b1c84a2
   SwiftyImage: 4d3feb0211beb7217b39ac553e3ee64ceb72d611
   Swinject: 2e964a80d70ab09b3949c99032711f89147bfd60
   Then: 8496793c8fcac95482b943909b440724c7d8d82c
   URLNavigator: 3ff788c985a0aae654e7de4959c4b0ea8a45f022
 
-PODFILE CHECKSUM: ed4e8a6ea52ae4c12a8baeec3e48daf3b33e39d9
+PODFILE CHECKSUM: 4ebe20e163aca5023cb1c507f779430c03427890
 
-COCOAPODS: 1.2.0
+COCOAPODS: 1.2.1

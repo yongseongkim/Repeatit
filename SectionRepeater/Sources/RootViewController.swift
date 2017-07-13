@@ -26,12 +26,18 @@ class RootViewController: UITabBarController {
         self.registerNotification()
     }
     
+    func registerNotification() {
+        self.player.notificationCenter.addObserver(self, selector: #selector(handlePlayerItemDidSet(object:)), name: Notification.Name.playerItemDidSet, object: nil)
+        self.player.notificationCenter.addObserver(self, selector: #selector(handlePlayerStateUpdatedNotification), name: Notification.Name.playerStateUpdated, object: nil)
+        AppDelegate.currentAppDelegate()?.notificationCenter.addObserver(self, selector: #selector(enterForeground), name: .onEnterForeground, object: nil)
+    }
+    
     func loadTabViews() {
         self.tabBar.tintColor = UIColor.black
         self.fileListNaviController.tabBarItem = UITabBarItem(title: "Files", image: UIImage(named: "empty_common_folder_28pt"), selectedImage: UIImage(named: "fill_common_folder_28pt"))
         self.itunesListViewController.tabBarItem = UITabBarItem(title: "iTunes", image: UIImage(named: "empty_music_note_28pt"), selectedImage: UIImage(named: "fill_music_note_28pt"))
         
-        let viewControllers = [fileListNaviController, self.itunesListViewController]
+        let viewControllers = [self.fileListNaviController, self.itunesListViewController]
         self.setViewControllers(viewControllers, animated: false)
     }
     
@@ -39,7 +45,7 @@ class RootViewController: UITabBarController {
         self.view.addSubview(self.playerView)
         self.playerView.snp.makeConstraints { (make) in
             make.left.equalTo(self.view)
-            make.bottom.equalTo(self.view).offset(-49)
+            make.bottom.equalTo(self.view).offset(-UIConstants.TabBarHeight)
             make.right.equalTo(self.view)
             make.height.equalTo(PlayerView.height())
         }
@@ -48,6 +54,9 @@ class RootViewController: UITabBarController {
     }
     
     func showPlayerView() {
+        if (PlayerView.isVisible()) {
+            return
+        }
         self.playerView.isHidden = false
         self.playerView.alpha = 0
         UIView.animate(withDuration: 0.4) {
@@ -71,12 +80,7 @@ class RootViewController: UITabBarController {
         self.itunesListViewController.updateContentInset()
     }
     
-    func registerNotification() {
-        self.player.notificationCenter.addObserver(self, selector: #selector(handlePlayerItemDidSet(object:)), name: Notification.Name.playerItemDidSet, object: nil)
-        self.player.notificationCenter.addObserver(self, selector: #selector(handlePlayerStateUpdatedNotification), name: Notification.Name.playerStateUpdated, object: nil)
-        AppDelegate.currentAppDelegate()?.notificationCenter.addObserver(self, selector: #selector(enterForeground), name: .onEnterForeground, object: nil)
-    }
-    
+    //MARK: Handle Notification
     func handlePlayerItemDidSet(object: Notification) {
         if self.player.currentItem == nil {
             self.hidePlayerView()

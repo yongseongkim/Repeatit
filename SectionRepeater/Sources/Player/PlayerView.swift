@@ -17,7 +17,7 @@ class PlayerView: UIView {
     static let shared = PlayerView()
     
     class func isVisible() -> Bool {
-        return !PlayerView.shared.isHidden
+        return !PlayerView.shared.isHidden && (PlayerView.shared.alpha == 1.0)
     }
     
     class func height() -> CGFloat {
@@ -47,7 +47,7 @@ class PlayerView: UIView {
         blurEffectView.frame = self.bounds
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.addSubview(blurEffectView)
-        self.backgroundColor = UIColor.gray243.withAlphaComponent(0.9)
+        self.backgroundColor = UIColor.gray243.withAlphaComponent(0.5)
         self.addSubview(self.albumCoverImageView)
         self.addSubview(self.titleLabel)
         self.addSubview(self.backgroundButton)
@@ -108,7 +108,7 @@ class PlayerView: UIView {
         if let artwork = item.artwork {
             self.albumCoverImageView.image = artwork
         } else {
-            self.albumCoverImageView.image = UIImage(named: "empty_music_note_120pt")
+            self.albumCoverImageView.image = UIImage(named: "empty_music_note_44pt")
         }
         self.titleLabel.text = item.title ?? item.url?.lastPathComponent
         

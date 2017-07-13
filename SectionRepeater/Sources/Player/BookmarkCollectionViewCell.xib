@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -34,10 +34,10 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qac-hJ-n33">
-                        <rect key="frame" x="276" y="3" width="44" height="44"/>
+                        <rect key="frame" x="273" y="5" width="40" height="40"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="44" id="fKI-LP-PgF"/>
-                            <constraint firstAttribute="height" constant="44" id="zjy-V1-1L0"/>
+                            <constraint firstAttribute="width" constant="40" id="fKI-LP-PgF"/>
+                            <constraint firstAttribute="height" constant="40" id="zjy-V1-1L0"/>
                         </constraints>
                         <state key="normal" image="btn_delete_file_44pt"/>
                         <connections>
@@ -50,7 +50,7 @@
             <constraints>
                 <constraint firstItem="qac-hJ-n33" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="1OJ-oA-ykU"/>
                 <constraint firstItem="gCO-v4-1Sp" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="7xc-gx-E86"/>
-                <constraint firstAttribute="trailing" secondItem="qac-hJ-n33" secondAttribute="trailing" id="FEx-eM-jce"/>
+                <constraint firstAttribute="trailing" secondItem="qac-hJ-n33" secondAttribute="trailing" constant="7" id="FEx-eM-jce"/>
                 <constraint firstItem="gCO-v4-1Sp" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="10" id="Oub-QL-kiC"/>
                 <constraint firstItem="MYS-KL-V85" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="QTy-q8-Vad"/>
                 <constraint firstItem="MYS-KL-V85" firstAttribute="leading" secondItem="gCO-v4-1Sp" secondAttribute="trailing" constant="20" id="mfM-YJ-YsN"/>

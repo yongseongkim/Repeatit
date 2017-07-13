@@ -14,7 +14,7 @@ class FileDestinationViewController: UINavigationController {
     public var selectedFiles: [File]?
     
     fileprivate let optionView = UIView(frame: .zero).then { (view) in
-        view.backgroundColor = UIColor.greenery
+        view.backgroundColor = UIColor.black
     }
     fileprivate let cancelButton = UIButton(frame: .zero).then { (button) in
         button.setTitle("Cancel", for: .normal)

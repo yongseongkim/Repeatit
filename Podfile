@@ -1,5 +1,5 @@
 # Uncomment this line to define a global platform for your project
-# platform :ios, '9.0'
+platform :ios, '9.0'
 
 target 'SectionRepeater' do
   use_frameworks!
@@ -7,10 +7,11 @@ target 'SectionRepeater' do
   pod 'Swinject', '~> 2.0'
 
   pod 'SnapKit', '~> 3.1.2' 
-  pod 'RealmSwift', '~> 2.4'
+  pod 'RealmSwift', '~> 2.8'
   pod 'Then', '~> 2.1'
   pod 'URLNavigator', '~> 1.2'
   pod 'SwiftyImage', '~> 1.1'  
+  pod 'pop', '~> 1.0'
   # Reactive
 #  pod 'RxSwift',    '~> 3.0'
 #  pod 'RxCocoa',    '~> 3.0'

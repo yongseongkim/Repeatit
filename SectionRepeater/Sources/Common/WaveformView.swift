@@ -59,23 +59,23 @@ class WaveformView: UIView {
         self.scrollView.addSubview(placeholderView)
         // add waveform
         DispatchQueue.global().async { [weak self] in
-            guard let `self` = self else { return }
+            guard let weakSelf = self else { return }
             do {
-                let samples = try self.loadSamples(url: url)
-                let imageSize = CGSize(width: WaveformView.sampleWidth * CGFloat(samples.count) + WaveformView.gapBetweenSamples * CGFloat(samples.count - 1), height: self.bounds.height)
-                if let image = self.graphImage(samples: samples, imageSize: imageSize, color: UIColor.gray220) {
+                let samples = try weakSelf.loadSamples(url: url)
+                let imageSize = CGSize(width: WaveformView.sampleWidth * CGFloat(samples.count) + WaveformView.gapBetweenSamples * CGFloat(samples.count - 1), height: weakSelf.bounds.height)
+                if let image = weakSelf.graphImage(samples: samples, imageSize: imageSize, color: UIColor.gray220) {
                     DispatchQueue.main.async {
-                        if self.url?.absoluteString != url.absoluteString {
+                        if weakSelf.url?.absoluteString != url.absoluteString {
                             return
                         }
                         let backgroundImageView = UIImageView(image: image)
                         backgroundImageView.backgroundColor = UIColor.clear
-                        self.scrollView.addSubview(backgroundImageView)
+                        weakSelf.scrollView.addSubview(backgroundImageView)
                         backgroundImageView.snp.makeConstraints({ (make) in
-                            make.top.equalTo(self.scrollView)
-                            make.left.equalTo(self.scrollView)
-                            make.bottom.equalTo(self.scrollView)
-                            make.right.equalTo(self.scrollView)
+                            make.top.equalTo(weakSelf.scrollView)
+                            make.left.equalTo(weakSelf.scrollView)
+                            make.bottom.equalTo(weakSelf.scrollView)
+                            make.right.equalTo(weakSelf.scrollView)
                             make.width.equalTo(imageSize.width)
                             make.height.equalTo(imageSize.height)
                         })
@@ -94,17 +94,17 @@ class WaveformView: UIView {
                             make.width.equalTo(imageSize.width)
                             make.height.equalTo(imageSize.height)
                         })
-                        self.scrollView.addSubview(progressView)
+                        weakSelf.scrollView.addSubview(progressView)
                         progressView.snp.makeConstraints({ (make) in
-                            make.top.equalTo(self.scrollView)
-                            make.left.equalTo(self.scrollView)
-                            make.bottom.equalTo(self.scrollView)
+                            make.top.equalTo(weakSelf.scrollView)
+                            make.left.equalTo(weakSelf.scrollView)
+                            make.bottom.equalTo(weakSelf.scrollView)
                             make.width.equalTo(0)
                             make.height.equalTo(imageSize.height)
                         })
-                        self.progressView = progressView
-                        self.scrollView.contentSize = imageSize
-                        self.loadBookmarks()
+                        weakSelf.progressView = progressView
+                        weakSelf.scrollView.contentSize = imageSize
+                        weakSelf.loadBookmarks()
                     }
                 }
             } catch let error {

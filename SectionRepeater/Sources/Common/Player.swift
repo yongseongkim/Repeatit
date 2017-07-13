@@ -371,11 +371,11 @@ class Player: NSObject {
         // crash if times is empty
         if times.count > 0 {
             self.boundaryObserver = self.player?.addBoundaryTimeObserver(forTimes: times as [NSValue], queue: nil, using: { [weak self] in
-                guard let `self` = self else { return }
-                guard let time = self.player?.currentTime() else { return }
+                guard let weakSelf = self else { return }
+                guard let time = weakSelf.player?.currentTime() else { return }
                 let seconds = CMTimeGetSeconds(time)
-                if (self.movedTime <= seconds) {
-                    self.handleReachBoundary()
+                if (weakSelf.movedTime <= seconds) {
+                    weakSelf.handleReachBoundary()
                 }
             })
         }
