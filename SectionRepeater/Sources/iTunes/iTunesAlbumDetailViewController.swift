@@ -95,11 +95,8 @@ extension iTunesAlbumDetailViewController: UICollectionViewDataSource, UICollect
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         do {
-            var items = [MPMediaItem]()
-            self.collections.forEach({ (collection) in
-                if let item = collection.representativeItem {
-                    items.append(item)
-                }
+            let items: [MPMediaItem] = self.collections.flatMap({ (collection) -> MPMediaItem? in
+                return collection.representativeItem
             })
             try Player.shared.play(items: PlayerItem.items(mediaItems: items), startAt: indexPath.row)
             let playerController = PlayerViewController(nibName: PlayerViewController.className(), bundle: nil)

@@ -42,6 +42,7 @@ class Player: NSObject {
     //MARK: Constant
     static let shared = Player()
     public let notificationCenter = NotificationCenter()
+    fileprivate var hasLoaded = false
     fileprivate static let bookmarkNearbyLimitSeconds = 0.4
     fileprivate static let repeatModes = [RepeatMode.None, RepeatMode.All, RepeatMode.One]
     fileprivate static let defaultRate: Float = 1.0
@@ -312,12 +313,24 @@ class Player: NSObject {
             self.player = nil
             return
         }
-        do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
-            try AVAudioSession.sharedInstance().setActive(true)
-            
-        } catch let error as NSError {
-            print(error)
+        if (!hasLoaded) {
+            do {
+                try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+                try AVAudioSession.sharedInstance().setActive(true)
+                
+                let commandCenter = MPRemoteCommandCenter.shared()
+                commandCenter.playCommand.isEnabled = true
+                commandCenter.playCommand.addTarget(self, action:#selector(resume))
+                commandCenter.pauseCommand.isEnabled = true
+                commandCenter.pauseCommand.addTarget(self, action:#selector(pause))
+                commandCenter.previousTrackCommand.isEnabled = true
+                commandCenter.previousTrackCommand.addTarget(self, action:#selector(playPrev))
+                commandCenter.nextTrackCommand.isEnabled = true
+                commandCenter.nextTrackCommand.addTarget(self, action:#selector(playNext))
+            } catch let error as NSError {
+                print(error)
+            }
+            self.hasLoaded = true
         }
         self.player = AVPlayer(playerItem: AVPlayerItem(url: url))
         self.player?.rate = self.rate
