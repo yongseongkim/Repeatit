@@ -3,20 +3,19 @@ platform :ios, '9.0'
 
 target 'SectionRepeater' do
   use_frameworks!
-#  pod 'Alamofire', '~> 4.4'
+  
   pod 'Swinject', '~> 2.0'
-
   pod 'SnapKit', '~> 3.1.2' 
   pod 'RealmSwift', '~> 2.8'
   pod 'Then', '~> 2.1'
   pod 'URLNavigator', '~> 1.2'
   pod 'SwiftyImage', '~> 1.1'  
   pod 'pop', '~> 1.0'
-  # Reactive
-#  pod 'RxSwift',    '~> 3.0'
-#  pod 'RxCocoa',    '~> 3.0'
-#  pod 'RxDataSources', '~> 1.0'
-#  pod "RxGesture"
+
+  # Report
+  pod 'Firebase/Core'
+  pod 'Fabric'
+  pod 'Crashlytics'
 end
 
 post_install do |installer|

@@ -1,4 +1,21 @@
 PODS:
+  - Crashlytics (3.8.4):
+    - Fabric (~> 1.6.3)
+  - Fabric (1.6.11)
+  - Firebase/Core (4.0.3):
+    - FirebaseAnalytics (= 4.0.2)
+    - FirebaseCore (= 4.0.3)
+  - FirebaseAnalytics (4.0.2):
+    - FirebaseCore (~> 4.0)
+    - FirebaseInstanceID (~> 2.0)
+    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+  - FirebaseCore (4.0.3):
+    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+  - FirebaseInstanceID (2.0.0):
+    - FirebaseCore (~> 4.0)
+  - GoogleToolboxForMac/Defines (2.1.1)
+  - GoogleToolboxForMac/NSData+zlib (2.1.1):
+    - GoogleToolboxForMac/Defines (= 2.1.1)
   - pop (1.0.9)
   - Realm (2.8.1):
     - Realm/Headers (= 2.8.1)
@@ -12,6 +29,9 @@ PODS:
   - URLNavigator (1.2.0)
 
 DEPENDENCIES:
+  - Crashlytics
+  - Fabric
+  - Firebase/Core
   - pop (~> 1.0)
   - RealmSwift (~> 2.8)
   - SnapKit (~> 3.1.2)
@@ -21,6 +41,13 @@ DEPENDENCIES:
   - URLNavigator (~> 1.2)
 
 SPEC CHECKSUMS:
+  Crashlytics: 79e236942ca1e7fc641df1feb9a275360a78ab6a
+  Fabric: 5911403591946b8228ab1c51d98f1d7137e863c6
+  Firebase: 9e33fdfbca37cab635c693883caa90a4475b842b
+  FirebaseAnalytics: ad41720e3e67fc63fbe3d2948d3e26932a8de311
+  FirebaseCore: c709067051de07bdaffdc4e735cd7299a23c463a
+  FirebaseInstanceID: 9fbf536668f4d3f0880e7438456dabd1376e294b
+  GoogleToolboxForMac: 8e329f1b599f2512c6b10676d45736bcc2cbbeb0
   pop: f667631a5108a2e60d9e8797c9b32ddaf2080bce
   Realm: 2627602ad6818451f0cb8c2a6e072f7f10a5f360
   RealmSwift: 4764ca7657f2193c256fb032c0b123926f70dbcd
@@ -30,6 +57,6 @@ SPEC CHECKSUMS:
   Then: 8496793c8fcac95482b943909b440724c7d8d82c
   URLNavigator: 3ff788c985a0aae654e7de4959c4b0ea8a45f022
 
-PODFILE CHECKSUM: 4ebe20e163aca5023cb1c507f779430c03427890
+PODFILE CHECKSUM: 3af87980374eb3cc7de1ed53e69edd36fb4bad2c
 
 COCOAPODS: 1.2.1

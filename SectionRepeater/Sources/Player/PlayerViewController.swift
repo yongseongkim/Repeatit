@@ -11,8 +11,6 @@ import AVFoundation
 import MediaPlayer
 
 class PlayerViewController: UIViewController {
-    //MARK: Constants
-    static let waveformPlotRatio = 20
     
     //MARK: IB Properties
     @IBOutlet weak var contentViewTopConstraint: NSLayoutConstraint!

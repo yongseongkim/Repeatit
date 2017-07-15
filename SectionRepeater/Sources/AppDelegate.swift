@@ -8,7 +8,9 @@
 
 import UIKit
 import RealmSwift
-import Then
+import Firebase
+import Fabric
+import Crashlytics
 
 extension Notification.Name {
     static let onEnterForeground = Notification.Name("appdelegate.enterforeground")
@@ -28,12 +30,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        // UI
         self.window = UIWindow(frame: CGRect(x: 0, y: 0, width: UIScreen.mainWidth, height: UIScreen.mainHeight))
         self.window?.rootViewController = RootViewController()
         self.window?.makeKeyAndVisible()
-        
         UINavigationBar.appearance().tintColor = UIColor.black
         
+        // Realm
         let defaultRealmURL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
 //        do {
 //            let contents = try FileManager.default.contentsOfDirectory(atPath: defaultRealmURL.path)
@@ -44,6 +47,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         var config = Realm.Configuration()
         config.fileURL = defaultRealmURL.appendingPathComponent("sectionRepeater.realm")
         Realm.Configuration.defaultConfiguration = config
+        
+        // Report
+        FirebaseApp.configure()
+        Fabric.with([Crashlytics.self])
         return true
     }
 
