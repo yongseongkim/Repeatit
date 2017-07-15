@@ -11,6 +11,7 @@ import RealmSwift
 
 class BookmarksViewController: UIViewController {
 
+    //MARK: UI Components
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
@@ -18,8 +19,8 @@ class BookmarksViewController: UIViewController {
         }
     }
     @IBOutlet weak var borderViewHeightConstraint: NSLayoutConstraint!
-
-    fileprivate let player = Dependencies.sharedInstance().resolve(serviceType: Player.self)!
+    
+    //MARK: Properties
     fileprivate var bookmarkTimes: [Double]?
     public var targetPath: String?
     
@@ -39,7 +40,7 @@ class BookmarksViewController: UIViewController {
     }
     
     func loadBookmark() {
-        self.bookmarkTimes = self.player.bookmarkTimes
+        self.bookmarkTimes = Player.shared.bookmarkTimes
         self.collectionView.reloadData()
     }
     
@@ -68,7 +69,7 @@ extension BookmarksViewController: UICollectionViewDataSource, UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let time = self.bookmarkTimes?[indexPath.row] {
-            self.player.move(to: time)
+            Player.shared.move(to: time)
         }
     }
     
@@ -80,7 +81,7 @@ extension BookmarksViewController: UICollectionViewDataSource, UICollectionViewD
 extension BookmarksViewController: BookmarkCollectionViewCellDelegate {
     func didTapDeleteButton(cell: BookmarkCollectionViewCell) {
         guard let removedTime = cell.time else { return }
-        self.player.removeBookmark(at: removedTime)
+        Player.shared.removeBookmark(at: removedTime)
         self.loadBookmark()
     }
 }

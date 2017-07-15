@@ -32,7 +32,6 @@ class WaveformView: UIView {
     }
     fileprivate var progressView: UIView?
     fileprivate var bookmarkViews = [UIView]()
-    fileprivate var player = Dependencies.sharedInstance().resolve(serviceType: Player.self)
     
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
@@ -122,8 +121,7 @@ class WaveformView: UIView {
             return view.removeFromSuperview()
         })
         self.bookmarkViews = [UIView]()
-        guard let bookmarkTimes = self.player?.bookmarkTimes else { return }
-        for time in bookmarkTimes {
+        for time in Player.shared.bookmarkTimes {
             let ratio = CGFloat(time / self.duration)
             let contentSize = self.scrollView.contentSize
             let view = UIView(frame: CGRect(x: contentSize.width * ratio - 1, y: 0, width: 2, height: contentSize.height))

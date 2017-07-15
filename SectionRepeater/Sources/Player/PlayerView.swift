@@ -38,7 +38,6 @@ class PlayerView: UIView {
 
     //MARK: Properties
     public var delegate: PlayerViewDelegate?
-    fileprivate let player = Dependencies.sharedInstance().resolve(serviceType: Player.self)!
     
     init() {
         super.init(frame: .zero)
@@ -85,7 +84,7 @@ class PlayerView: UIView {
     }
     
     deinit {
-        self.player.notificationCenter.removeObserver(self)
+        Player.shared.notificationCenter.removeObserver(self)
         AppDelegate.currentAppDelegate()?.notificationCenter.removeObserver(self)
     }
     
@@ -94,15 +93,15 @@ class PlayerView: UIView {
     }
     
     @objc fileprivate func playButtonTapped() {
-        if self.player.state.isPlaying {
-            self.player.pause()
+        if Player.shared.state.isPlaying {
+            Player.shared.pause()
         } else {
-            self.player.resume()
+            Player.shared.resume()
         }
     }
     
     public func setup() {
-        guard let item = self.player.currentItem else {
+        guard let item = Player.shared.currentItem else {
             return
         }
         if let artwork = item.artwork {
@@ -112,7 +111,7 @@ class PlayerView: UIView {
         }
         self.titleLabel.text = item.title ?? item.url?.lastPathComponent
         
-        if self.player.state.isPlaying {
+        if Player.shared.state.isPlaying {
             self.playButton.setImage(UIImage(named: "btn_pause_44pt"), for: .normal)
         } else {
             self.playButton.setImage(UIImage(named: "btn_play_44pt"), for: .normal)

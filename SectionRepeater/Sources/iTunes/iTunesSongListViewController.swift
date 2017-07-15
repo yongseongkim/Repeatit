@@ -22,7 +22,6 @@ class iTunesSongListViewController: UIViewController {
     }
     
     //MARK: Properties
-    fileprivate let player = Dependencies.sharedInstance().resolve(serviceType: Player.self)!
     var items = [MPMediaItem]() {
         didSet {
             self.collectionView.reloadData()
@@ -108,7 +107,7 @@ extension iTunesSongListViewController: UICollectionViewDataSource, UICollection
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         do {
-            try self.player.play(items: PlayerItem.items(mediaItems: self.items), startAt: indexPath.row)
+            try Player.shared.play(items: PlayerItem.items(mediaItems: self.items), startAt: indexPath.row)
             let playerController = PlayerViewController(nibName: PlayerViewController.className(), bundle: nil)
             playerController.modalPresentationStyle = .custom
             Navigator.present(playerController)

@@ -30,7 +30,6 @@ class FileListViewController: UIViewController {
     //MARK: Properties
     fileprivate var directories = [File]()
     fileprivate var files = [File]()
-    fileprivate let player = Dependencies.sharedInstance().resolve(serviceType: Player.self)!
     fileprivate let currentURL: URL
     
     convenience init() {
@@ -156,7 +155,7 @@ extension FileListViewController: UICollectionViewDataSource, UICollectionViewDe
             return
         case .File:
             do {
-                try self.player.play(items: PlayerItem.items(files: self.files), startAt: indexPath.row)
+                try Player.shared.play(items: PlayerItem.items(files: self.files), startAt: indexPath.row)
                 let playerController = PlayerViewController(nibName: PlayerViewController.className(), bundle: nil)
                 playerController.modalPresentationStyle = .custom
                 Navigator.present(playerController)

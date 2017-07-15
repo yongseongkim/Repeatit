@@ -20,7 +20,6 @@ class iTunesArtistListViewController: UIViewController {
     }
     
     //MARK: Properties
-    fileprivate let player = Dependencies.sharedInstance().resolve(serviceType: Player.self)!
     fileprivate var collections = [MPMediaItemCollection]() {
         didSet {
             self.collectionView.reloadData()

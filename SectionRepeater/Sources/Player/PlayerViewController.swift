@@ -42,7 +42,6 @@ class PlayerViewController: UIViewController {
     @IBOutlet weak var rateButton: UIButton!
 
     // Properties
-    fileprivate let player: Player = Dependencies.sharedInstance().resolve(serviceType: Player.self)!
     fileprivate var timer: Timer?
     fileprivate var scrollViewDragging = false
     fileprivate var playingWhenScrollStart = false
@@ -58,7 +57,7 @@ class PlayerViewController: UIViewController {
     }
     
     deinit {
-        self.player.notificationCenter.removeObserver(self)
+        Player.shared.notificationCenter.removeObserver(self)
         AppDelegate.currentAppDelegate()?.notificationCenter.removeObserver(self)
     }
 
@@ -70,10 +69,10 @@ class PlayerViewController: UIViewController {
         self.timeSlider.setThumbImage(UIImage.size(width: 3, height: 16).color(UIColor.black).image, for: .normal)
         self.timeSlider.setMinimumTrackImage(UIImage.size(width: self.timeSlider.bounds.width, height: 3).color(UIColor.black).image, for: .normal)
         self.timeSlider.setMaximumTrackImage(UIImage.size(width: self.timeSlider.bounds.width, height: 3).color(UIColor.gray220).image, for: .normal)
-        self.player.notificationCenter.addObserver(self, selector: #selector(handlePlayerItemDidSet(object:)), name: Notification.Name.playerItemDidSet, object: nil)
-        self.player.notificationCenter.addObserver(self, selector: #selector(handlePlayerStateUpdatedNotification), name: Notification.Name.playerStateUpdated, object: nil)
-        self.player.notificationCenter.addObserver(self, selector: #selector(handlePlayingTimeUpdatedNotification), name: Notification.Name.playerTimeUpdated, object: nil)
-        self.player.notificationCenter.addObserver(self, selector: #selector(handleBookmarkUpdatedNotification), name: Notification.Name.playerBookmakrUpdated, object: nil)
+        Player.shared.notificationCenter.addObserver(self, selector: #selector(handlePlayerItemDidSet(object:)), name: Notification.Name.playerItemDidSet, object: nil)
+        Player.shared.notificationCenter.addObserver(self, selector: #selector(handlePlayerStateUpdatedNotification), name: Notification.Name.playerStateUpdated, object: nil)
+        Player.shared.notificationCenter.addObserver(self, selector: #selector(handlePlayingTimeUpdatedNotification), name: Notification.Name.playerTimeUpdated, object: nil)
+        Player.shared.notificationCenter.addObserver(self, selector: #selector(handleBookmarkUpdatedNotification), name: Notification.Name.playerBookmakrUpdated, object: nil)
         AppDelegate.currentAppDelegate()?.notificationCenter.addObserver(self, selector: #selector(enterForeground), name: .onEnterForeground, object: nil)
     }
     
@@ -95,7 +94,7 @@ class PlayerViewController: UIViewController {
     }
     
     fileprivate func setup() {
-        guard let item = self.player.currentItem else {
+        guard let item = Player.shared.currentItem else {
             self.dismiss(animated: true, completion: nil)
             return
         }
@@ -115,7 +114,7 @@ class PlayerViewController: UIViewController {
             }
         }
         self.loadWaveformIfNecessary(item: item)
-        let duration = self.player.duration
+        let duration = Player.shared.duration
         let minutes = Int(duration/60)
         let seconds = Int(duration.truncatingRemainder(dividingBy: 60))
         self.timeSliderDurationLabel.text = String(format: "%02d:%02d", minutes, seconds)
@@ -132,7 +131,7 @@ class PlayerViewController: UIViewController {
     }
     
     fileprivate func setupButtons() {
-        let state = self.player.state
+        let state = Player.shared.state
         if state.isPlaying {
             self.playButton.setImage(UIImage(named: "btn_pause_52pt"), for: .normal)
         } else {
@@ -159,7 +158,7 @@ class PlayerViewController: UIViewController {
     }
     
     func handlePlayerStateUpdatedNotification() {
-        if let _ = self.player.currentItem {
+        if let _ = Player.shared.currentItem {
             self.setupButtons()
             return
         }
@@ -171,8 +170,8 @@ class PlayerViewController: UIViewController {
             return
         }
         var progress: Double = 0
-        if self.player.duration != 0 {
-            progress = self.player.currentTime / self.player.duration
+        if Player.shared.duration != 0 {
+            progress = Player.shared.currentTime / Player.shared.duration
         }
         self.waveformView.move(progress: progress)
         self.timeSlider.value = Float(progress)
@@ -208,28 +207,28 @@ class PlayerViewController: UIViewController {
     }
     
     @IBAction func timeSliderValueChanged(_ sender: Any) {
-        let current = Double(self.timeSlider.value) * self.player.duration
+        let current = Double(self.timeSlider.value) * Player.shared.duration
         let minutes = Int(abs(current/60))
         let seconds = Int(abs(current.truncatingRemainder(dividingBy: 60)))
         self.timeSliderTimeLabel.text = String(format: "%02d:%02d", minutes, seconds)
     }
     
     @IBAction func timeSliderTouchDown(_ sender: Any) {
-        self.playingWhenScrollStart = self.player.state.isPlaying
-        self.player.pause()
+        self.playingWhenScrollStart = Player.shared.state.isPlaying
+        Player.shared.pause()
     }
     
     @IBAction func timeSliderTouchUpInside(_ sender: Any) {
-        self.player.move(to: Double(self.timeSlider.value) * self.player.duration)
+        Player.shared.move(to: Double(self.timeSlider.value) * Player.shared.duration)
         if (self.playingWhenScrollStart) {
-            self.player.resume()
+            Player.shared.resume()
         }
     }
     
     @IBAction func timeSliderTouchUpOutside(_ sender: Any) {
-        self.player.move(to: Double(self.timeSlider.value) * self.player.duration)
+        Player.shared.move(to: Double(self.timeSlider.value) * Player.shared.duration)
         if (self.playingWhenScrollStart) {
-            self.player.resume()
+            Player.shared.resume()
         }
     }
     
@@ -240,68 +239,68 @@ class PlayerViewController: UIViewController {
     }
     
     @IBAction func movePreviousBookmark(_ sender: Any) {
-        self.player.movePreviousBookmark()
+        Player.shared.movePreviousBookmark()
     }
     
     @IBAction func moveStartCurrentBookmark(_ sender: Any) {
-        self.player.moveLatestBookmark()
+        Player.shared.moveLatestBookmark()
     }
     
     @IBAction func moveNextBookmark(_ sender: Any) {
-        self.player.moveNextBookmark()
+        Player.shared.moveNextBookmark()
     }
     
     @IBAction func playButtonTapped(_ sender: Any) {
-        if self.player.state.isPlaying {
-            self.player.pause()
+        if Player.shared.state.isPlaying {
+            Player.shared.pause()
         } else {
-            self.player.resume()
+            Player.shared.resume()
         }
     }
     
     @IBAction func moveBefore5SecondsButtonTapped(_ sender: Any) {
-        self.player.moveBackward(seconds: 5)
+        Player.shared.moveBackward(seconds: 5)
     }
     
     @IBAction func moveBefore2SecondsButtonTapped(_ sender: Any) {
-        self.player.moveBackward(seconds: 3)
+        Player.shared.moveBackward(seconds: 3)
     }
     
     @IBAction func moveBefore1SecondsButtonTapped(_ sender: Any) {
-        self.player.moveBackward(seconds: 1)
+        Player.shared.moveBackward(seconds: 1)
     }
     
     @IBAction func moveAtStartButtonTapped(_ sender: Any) {
-        self.player.move(to: 0)
+        Player.shared.move(to: 0)
     }
     
     @IBAction func moveAfter5SecondsButtonTapped(_ sender: Any) {
-        self.player.moveForward(seconds: 5)
+        Player.shared.moveForward(seconds: 5)
     }
     
     @IBAction func moveAfter10SecondsButtonTapped(_ sender: Any) {
-        self.player.moveForward(seconds: 10)
+        Player.shared.moveForward(seconds: 10)
     }
     
     @IBAction func playNextButtonTapped(_ sender: Any) {
-        self.player.playNext()
+        Player.shared.playNext()
     }
     
     @IBAction func playPreviousButtonTapped(_ sender: Any) {
-        self.player.playPrev()
+        Player.shared.playPrev()
     }
     
     @IBAction func repeatModeButtonTapped(_ sender: Any) {
-        self.player.nextRepeatMode()
+        Player.shared.nextRepeatMode()
     }
     
     @IBAction func repeatBookmarkButtonTapped(_ sender: Any) {
-        self.player.switchRepeatBookmark()
+        Player.shared.switchRepeatBookmark()
     }
     
     @IBAction func addBookmarkButtonTapped(_ sender: Any) {
         do {
-            try self.player.addBookmark()
+            try Player.shared.addBookmark()
         } catch PlayerError.alreadExistBookmarkNearby {
             NSObject.cancelPreviousPerformRequests(withTarget: self)
             self.alertLabel.text = "It's too close to another bookmark."
@@ -318,7 +317,7 @@ class PlayerViewController: UIViewController {
     }
     
     @IBAction func rateButtonTapped(_ sender: Any) {
-        self.player.nextRate()
+        Player.shared.nextRate()
     }
     
     @IBAction func lyricsButtonTapped(_ sender: Any) {
@@ -336,7 +335,7 @@ extension PlayerViewController: WaveformViewDelegate {
         if (scrollView.contentSize.width > 0) {
             progress = Double((scrollView.contentOffset.x + scrollView.contentInset.left) / scrollView.contentSize.width)
         }
-        let current = progress * self.player.duration
+        let current = progress * Player.shared.duration
         let minutes = Int(abs(current/60))
         let seconds = Int(abs(current.truncatingRemainder(dividingBy: 60)))
         let millis = Int(abs((current * 10).truncatingRemainder(dividingBy: 10)))
@@ -352,8 +351,8 @@ extension PlayerViewController: WaveformViewDelegate {
         if (self.scrollViewDecelerate) {
             return
         }
-        self.playingWhenScrollStart = self.player.state.isPlaying
-        self.player.pause()
+        self.playingWhenScrollStart = Player.shared.state.isPlaying
+        Player.shared.pause()
     }
     
     func waveformViewDidEndDragging(_ scrollView: UIScrollView, decelerate: Bool) {
@@ -367,9 +366,9 @@ extension PlayerViewController: WaveformViewDelegate {
     func waveformViewDidEndDecelerating(scrollView: UIScrollView) {
         self.scrollViewDecelerate = false
         let progress = Double((scrollView.contentInset.left + scrollView.contentOffset.x) / scrollView.contentSize.width)
-        self.player.move(to: progress * self.player.duration)
+        Player.shared.move(to: progress * Player.shared.duration)
         if (self.playingWhenScrollStart) {
-            self.player.resume()
+            Player.shared.resume()
         }
     }
 }

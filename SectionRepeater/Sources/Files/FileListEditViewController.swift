@@ -29,7 +29,6 @@ class FileListEditViewController: UIViewController {
     //MARK: Properties
     fileprivate var directories = [File]()
     fileprivate var files = [File]()
-    fileprivate let player = Dependencies.sharedInstance().resolve(serviceType: Player.self)!
     fileprivate let currentURL: URL
     
     convenience init() {

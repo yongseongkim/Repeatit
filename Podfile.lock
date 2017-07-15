@@ -24,7 +24,6 @@ PODS:
     - Realm (= 2.8.1)
   - SnapKit (3.1.2)
   - SwiftyImage (1.1.0)
-  - Swinject (2.0.0)
   - Then (2.1.0)
   - URLNavigator (1.2.0)
 
@@ -36,7 +35,6 @@ DEPENDENCIES:
   - RealmSwift (~> 2.8)
   - SnapKit (~> 3.1.2)
   - SwiftyImage (~> 1.1)
-  - Swinject (~> 2.0)
   - Then (~> 2.1)
   - URLNavigator (~> 1.2)
 
@@ -53,10 +51,9 @@ SPEC CHECKSUMS:
   RealmSwift: 4764ca7657f2193c256fb032c0b123926f70dbcd
   SnapKit: 12b24f569cb7c143acc9c22b9d91b23e7b1c84a2
   SwiftyImage: 4d3feb0211beb7217b39ac553e3ee64ceb72d611
-  Swinject: 2e964a80d70ab09b3949c99032711f89147bfd60
   Then: 8496793c8fcac95482b943909b440724c7d8d82c
   URLNavigator: 3ff788c985a0aae654e7de4959c4b0ea8a45f022
 
-PODFILE CHECKSUM: 3af87980374eb3cc7de1ed53e69edd36fb4bad2c
+PODFILE CHECKSUM: 277578d92e5c1a9789a4e4c5b4ef660484d178d9
 
 COCOAPODS: 1.2.1

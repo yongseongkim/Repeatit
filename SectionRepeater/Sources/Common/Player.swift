@@ -40,6 +40,7 @@ struct PlayerState {
 
 class Player: NSObject {
     //MARK: Constant
+    static let shared = Player()
     public let notificationCenter = NotificationCenter()
     fileprivate static let bookmarkNearbyLimitSeconds = 0.4
     fileprivate static let repeatModes = [RepeatMode.None, RepeatMode.All, RepeatMode.One]

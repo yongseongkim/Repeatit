@@ -13,10 +13,9 @@ import URLNavigator
 
 class RootViewController: UITabBarController {
     
-    fileprivate let fileListNaviController = UINavigationController(rootViewController: FileListViewController())
+    fileprivate let fileListNaviController = FileListNavigationController()
     fileprivate let itunesListViewController = iTunesListViewController()
     fileprivate let playerView = PlayerView.shared
-    fileprivate let player: Player = Dependencies.sharedInstance().resolve(serviceType: Player.self)!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,8 +26,8 @@ class RootViewController: UITabBarController {
     }
     
     func registerNotification() {
-        self.player.notificationCenter.addObserver(self, selector: #selector(handlePlayerItemDidSet(object:)), name: Notification.Name.playerItemDidSet, object: nil)
-        self.player.notificationCenter.addObserver(self, selector: #selector(handlePlayerStateUpdatedNotification), name: Notification.Name.playerStateUpdated, object: nil)
+        Player.shared.notificationCenter.addObserver(self, selector: #selector(handlePlayerItemDidSet(object:)), name: Notification.Name.playerItemDidSet, object: nil)
+        Player.shared.notificationCenter.addObserver(self, selector: #selector(handlePlayerStateUpdatedNotification), name: Notification.Name.playerStateUpdated, object: nil)
         AppDelegate.currentAppDelegate()?.notificationCenter.addObserver(self, selector: #selector(enterForeground), name: .onEnterForeground, object: nil)
     }
     
@@ -62,27 +61,19 @@ class RootViewController: UITabBarController {
         UIView.animate(withDuration: 0.4) {
             self.playerView.alpha = 1
         }
-        for vc in self.fileListNaviController.viewControllers {
-            if let fileListViewController = vc as? FileListViewController {
-                fileListViewController.updateContentInset()
-            }
-        }
+        self.fileListNaviController.updateContentInset()
         self.itunesListViewController.updateContentInset()
     }
     
     func hidePlayerView() {
         self.playerView.isHidden = true
-        for vc in self.fileListNaviController.viewControllers {
-            if let fileListViewController = vc as? FileListViewController {
-                fileListViewController.updateContentInset()
-            }
-        }
+        self.fileListNaviController.updateContentInset()
         self.itunesListViewController.updateContentInset()
     }
     
     //MARK: Handle Notification
     func handlePlayerItemDidSet(object: Notification) {
-        if self.player.currentItem == nil {
+        if Player.shared.currentItem == nil {
             self.hidePlayerView()
             return
         }
@@ -90,18 +81,18 @@ class RootViewController: UITabBarController {
     }
     
     func handlePlayerStateUpdatedNotification() {
-        if self.player.currentItem == nil {
+        if Player.shared.currentItem == nil {
             self.hidePlayerView()
             return
         }
-        if self.player.state.isPlaying {
+        if Player.shared.state.isPlaying {
             self.showPlayerView()
         }
         self.playerView.setup()
     }
     
     func enterForeground() {
-        if self.player.currentItem == nil {
+        if Player.shared.currentItem == nil {
             self.hidePlayerView()
             return
         }

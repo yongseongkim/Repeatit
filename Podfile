@@ -4,7 +4,6 @@ platform :ios, '9.0'
 target 'SectionRepeater' do
   use_frameworks!
   
-  pod 'Swinject', '~> 2.0'
   pod 'SnapKit', '~> 3.1.2' 
   pod 'RealmSwift', '~> 2.8'
   pod 'Then', '~> 2.1'

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class iTunesListViewController: UINavigationController {
+class iTunesListViewController : UINavigationController {
     public let songListViewController = iTunesSongListViewController()
     public let albumListViewController = iTunesAlbumListViewController()
     public let artistListViewController = iTunesArtistListViewController()

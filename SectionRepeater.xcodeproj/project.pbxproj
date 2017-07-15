@@ -47,7 +47,6 @@
 		2EC3C0241EC86FA200812AA9 /* FileListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC3C01E1EC86FA200812AA9 /* FileListViewController.swift */; };
 		2EC3C0261EC86FA200812AA9 /* FileDestinationFileListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC3C0201EC86FA200812AA9 /* FileDestinationFileListViewController.swift */; };
 		2ECAA9C51EA6397D0034DEEC /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECAA9C41EA6397D0034DEEC /* UIColor+Extension.swift */; };
-		2ECBA23E1E7E530500F43AF7 /* Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECBA23D1E7E530500F43AF7 /* Dependencies.swift */; };
 		2ECBA2421E7E73B900F43AF7 /* BookmarkObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECBA2411E7E73B900F43AF7 /* BookmarkObject.swift */; };
 		2ECBA2441E84191100F43AF7 /* AVPlayer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECBA2431E84191100F43AF7 /* AVPlayer+Extension.swift */; };
 		2EEEF61E1E598AD600D2C279 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEEF60F1E598AD600D2C279 /* AppDelegate.swift */; };
@@ -59,6 +58,7 @@
 		52149DC31F1A0943003B0A16 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 52149DC21F1A0943003B0A16 /* GoogleService-Info.plist */; };
 		52149DCE1F1A0B0A003B0A16 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52149DCA1F1A0A98003B0A16 /* Assets.xcassets */; };
 		52149DCF1F1A0B0A003B0A16 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52149DCB1F1A0A98003B0A16 /* Images.xcassets */; };
+		52149DD11F1A0DEB003B0A16 /* FileListNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52149DD01F1A0DEB003B0A16 /* FileListNavigationController.swift */; };
 		55D0A8C077940D543DE4CA98 /* Pods_SectionRepeater.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82B5A6D43CFD231275898EC5 /* Pods_SectionRepeater.framework */; };
 /* End PBXBuildFile section */
 
@@ -120,7 +120,6 @@
 		2EC3C01E1EC86FA200812AA9 /* FileListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileListViewController.swift; sourceTree = "<group>"; };
 		2EC3C0201EC86FA200812AA9 /* FileDestinationFileListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDestinationFileListViewController.swift; sourceTree = "<group>"; };
 		2ECAA9C41EA6397D0034DEEC /* UIColor+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
-		2ECBA23D1E7E530500F43AF7 /* Dependencies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dependencies.swift; sourceTree = "<group>"; };
 		2ECBA2411E7E73B900F43AF7 /* BookmarkObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarkObject.swift; sourceTree = "<group>"; };
 		2ECBA2431E84191100F43AF7 /* AVPlayer+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AVPlayer+Extension.swift"; sourceTree = "<group>"; };
 		2EEEF60F1E598AD600D2C279 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -135,6 +134,7 @@
 		52149DC21F1A0943003B0A16 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "SectionRepeater/GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		52149DCA1F1A0A98003B0A16 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		52149DCB1F1A0A98003B0A16 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		52149DD01F1A0DEB003B0A16 /* FileListNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileListNavigationController.swift; sourceTree = "<group>"; };
 		62ECE8A368EA05EB5A269791 /* Pods-SectionRepeaterShareExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SectionRepeaterShareExtension.release.xcconfig"; path = "Pods/Target Support Files/Pods-SectionRepeaterShareExtension/Pods-SectionRepeaterShareExtension.release.xcconfig"; sourceTree = "<group>"; };
 		7D066DCECA8DD050B00ED171 /* Pods-SectionRepeater.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SectionRepeater.release.xcconfig"; path = "Pods/Target Support Files/Pods-SectionRepeater/Pods-SectionRepeater.release.xcconfig"; sourceTree = "<group>"; };
 		7DBEEC5E5CD7496DE33B52BE /* Pods-SectionRepeaterShareExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SectionRepeaterShareExtension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SectionRepeaterShareExtension/Pods-SectionRepeaterShareExtension.debug.xcconfig"; sourceTree = "<group>"; };
@@ -245,6 +245,7 @@
 		2EC3C01A1EC86FA200812AA9 /* Files */ = {
 			isa = PBXGroup;
 			children = (
+				52149DD01F1A0DEB003B0A16 /* FileListNavigationController.swift */,
 				2EC3C01E1EC86FA200812AA9 /* FileListViewController.swift */,
 				2E16CBC61F17961B00A80C60 /* FileListEditViewController.swift */,
 				2E01A8081EE5624500B50F47 /* FileDestinationViewController.swift */,
@@ -275,7 +276,6 @@
 			isa = PBXGroup;
 			children = (
 				2EEEF6111E598AD600D2C279 /* Extension */,
-				2ECBA23D1E7E530500F43AF7 /* Dependencies.swift */,
 				2EFFA3181EC88BF800962FF1 /* Player.swift */,
 				2EA4E68C1EDA764200016638 /* PlayerItem.swift */,
 				2E8EEC261EE4027F00593FA3 /* WaveformView.swift */,
@@ -496,13 +496,13 @@
 				2EC3C0241EC86FA200812AA9 /* FileListViewController.swift in Sources */,
 				2EA4E68F1EDA775400016638 /* URL+Extension.swift in Sources */,
 				2E3EC4A41EEEACBF009472FB /* iTunesListViewController.swift in Sources */,
-				2ECBA23E1E7E530500F43AF7 /* Dependencies.swift in Sources */,
 				2EFFA3191EC88BF800962FF1 /* Player.swift in Sources */,
 				2E1A3EAE1F14EEC3005B3E6E /* FileEditOptionView.swift in Sources */,
 				2E7D70051ED031BD0078BD1B /* iTunesSongCell.swift in Sources */,
 				2ECBA2441E84191100F43AF7 /* AVPlayer+Extension.swift in Sources */,
 				2E01A80B1EE64FF100B50F47 /* FileManager+Extension.swift in Sources */,
 				2E2E33F11E8770C500AF26DE /* DoubleObject.swift in Sources */,
+				52149DD11F1A0DEB003B0A16 /* FileListNavigationController.swift in Sources */,
 				2EEEF6291E598AD600D2C279 /* RootViewController.swift in Sources */,
 				2E7D70071ED031BD0078BD1B /* iTunesSongListViewController.swift in Sources */,
 				2ECAA9C51EA6397D0034DEEC /* UIColor+Extension.swift in Sources */,
