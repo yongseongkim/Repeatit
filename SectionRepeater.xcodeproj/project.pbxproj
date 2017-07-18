@@ -644,7 +644,7 @@
 				CODE_SIGN_ENTITLEMENTS = SectionRepeater/SectionRepeater.entitlements;
 				DEVELOPMENT_TEAM = 4S8J2466NG;
 				INFOPLIST_FILE = SectionRepeater/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = kr.co.yongseongkim.SectionRepeater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -664,7 +664,7 @@
 				CODE_SIGN_ENTITLEMENTS = SectionRepeater/SectionRepeater.entitlements;
 				DEVELOPMENT_TEAM = 4S8J2466NG;
 				INFOPLIST_FILE = SectionRepeater/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = kr.co.yongseongkim.SectionRepeater;
 				PRODUCT_NAME = "$(TARGET_NAME)";

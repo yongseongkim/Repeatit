@@ -71,11 +71,7 @@ class Player: NSObject {
             return state
         }
     }
-    public var currentItem: PlayerItem? {
-        didSet {
-            self.didSetPlayerItem(currentItem: currentItem)
-        }
-    }
+    public var currentItem: PlayerItem?
     fileprivate var player: AVPlayer?
     fileprivate var movedTime: Double = 0
     fileprivate var currentItemIndex: Int? {
@@ -118,7 +114,7 @@ class Player: NSObject {
             }
         }
         self.items = items
-        self.currentItem = items[startAt]
+        self.loadPlayer(item: items[startAt])
     }
     
     func pause() {
@@ -150,7 +146,7 @@ class Player: NSObject {
             }
             break
         }
-        self.currentItem = item
+        self.loadPlayer(item: item)
     }
     
     func playPrev() {
@@ -172,7 +168,7 @@ class Player: NSObject {
             }
             break
         }
-        self.currentItem = item
+        self.loadPlayer(item: item)
     }
     
     func move(to: Double) {
@@ -294,7 +290,17 @@ class Player: NSObject {
     }
     
     //MARK: Private
-    fileprivate func didSetPlayerItem(currentItem: PlayerItem?) {
+    fileprivate func loadPlayer(item: PlayerItem?) {
+        let resetCurrentItem = (item == nil || item?.url == nil)
+        var playingItem = item
+        if resetCurrentItem {
+            playingItem = self.currentItem
+        }
+        
+        guard let url = playingItem?.url else {
+            self.notificationCenter.post(name: .playerItemDidSet, object: currentItem)
+            return
+        }
         // 기존에 있는 observer 제거
         if let periodicObserver = self.periodicObserver {
             self.player?.removeTimeObserver(periodicObserver)
@@ -304,37 +310,12 @@ class Player: NSObject {
             self.player?.removeTimeObserver(boundaryObserver)
             self.boundaryObserver = nil
         }
-        self.loadPlayer(item: currentItem)
-        self.notificationCenter.post(name: .playerItemDidSet, object: currentItem)
-    }
-    
-    fileprivate func loadPlayer(item: PlayerItem?) {
-        guard let url = currentItem?.url else {
-            self.player = nil
-            return
-        }
-        if (!hasLoaded) {
-            do {
-                try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
-                try AVAudioSession.sharedInstance().setActive(true)
-                
-                let commandCenter = MPRemoteCommandCenter.shared()
-                commandCenter.playCommand.isEnabled = true
-                commandCenter.playCommand.addTarget(self, action:#selector(resume))
-                commandCenter.pauseCommand.isEnabled = true
-                commandCenter.pauseCommand.addTarget(self, action:#selector(pause))
-                commandCenter.previousTrackCommand.isEnabled = true
-                commandCenter.previousTrackCommand.addTarget(self, action:#selector(playPrev))
-                commandCenter.nextTrackCommand.isEnabled = true
-                commandCenter.nextTrackCommand.addTarget(self, action:#selector(playNext))
-            } catch let error as NSError {
-                print(error)
-            }
-            self.hasLoaded = true
-        }
+        
+        self.currentItem = playingItem
+        self.notificationCenter.post(name: .playerItemDidSet, object: self.currentItem)
         self.player = AVPlayer(playerItem: AVPlayerItem(url: url))
         self.player?.rate = self.rate
-        self.player?.play()
+        self.player?.pause()
         self.movedTime = 0
         self.periodicObserver = self.player?.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(0.05, Int32(NSEC_PER_SEC)),
                                                                      queue: nil,
@@ -349,18 +330,20 @@ class Player: NSObject {
                                                                         } else {
                                                                             self._currentTime = 0
                                                                         }
-            })
-        
-        self.notificationCenter.post(name: .playerStateUpdated, object: item)
-
+        })
         self._bookmarkTimes = [Double]()
-        if let bookmarkKey = item?.bookmarkKey {
+        if let bookmarkKey = playingItem?.bookmarkKey {
             let realm = try! Realm()
             if let bookmarkObj = realm.objects(BookmarkObject.self).filter("path = '\(bookmarkKey)'").first {
                 self._bookmarkTimes = bookmarkObj.times.map({ (dObj) -> Double in return dObj.value }).sorted()
                 self.addBookmarkBoundary(times: self._bookmarkTimes)
             }
         }
+        
+        if !resetCurrentItem {
+            self.player?.play()
+        }
+        self.notificationCenter.post(name: .playerStateUpdated, object: item)
     }
     
     fileprivate func didUpdatedBookmark(item: PlayerItem, times: [Double]) {
@@ -400,5 +383,52 @@ class Player: NSObject {
             return true
         }
         return false
+    }
+    
+    fileprivate func loadCommandCenterIfNecessary() {
+        if (!hasLoaded) {
+            do {
+                try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+                try AVAudioSession.sharedInstance().setActive(true)
+                
+                let commandCenter = MPRemoteCommandCenter.shared()
+                commandCenter.playCommand.isEnabled = true
+                commandCenter.playCommand.addTarget(self, action:#selector(resume))
+                commandCenter.pauseCommand.isEnabled = true
+                commandCenter.pauseCommand.addTarget(self, action:#selector(pause))
+                commandCenter.previousTrackCommand.isEnabled = true
+                commandCenter.previousTrackCommand.addTarget(self, action:#selector(playPrev))
+                commandCenter.nextTrackCommand.isEnabled = true
+                commandCenter.nextTrackCommand.addTarget(self, action:#selector(playNext))
+            } catch let error as NSError {
+                print(error)
+            }
+            self.hasLoaded = true
+        }
+    }
+    
+    fileprivate func loadPlayingInfo() {
+//        var playingInfo:[String: Any] = [:]
+//        if let title = self.currentItem?.albumTitle {
+//            playingInfo[MPMediaItemPropertyTitle] = title
+//        }
+//        if let artist = self.currentItem?.artist {
+//            playingInfo[MPMediaItemPropertyArtist] = artist
+//        }
+//        if let albumTitle = self.currentItem?.albumTitle {
+//            playingInfo[MPMediaItemPropertyAlbumTitle] = albumTitle
+//        }
+//        // TODO: artwork 없을 때 app image 넣기
+//        if let artwork = self.currentItem?.artwork {
+//            playingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: artwork.size,
+//                                                                         requestHandler: { (size) -> UIImage in
+//                                                                            return artwork
+//            })
+//        }
+//        playingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.currentTime
+//        playingInfo[MPMediaItemPropertyPlaybackDuration] = self.duration
+//        playingInfo[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: self.rate)
+//        playingInfo[MPNowPlayingInfoPropertyMediaType] = NSNumber(value: MPNowPlayingInfoMediaType.audio.rawValue)
+//        MPNowPlayingInfoCenter.default().nowPlayingInfo = playingInfo
     }
 }
