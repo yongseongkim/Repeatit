@@ -310,13 +310,15 @@ class Player: NSObject {
             self.player?.removeTimeObserver(boundaryObserver)
             self.boundaryObserver = nil
         }
-        
         self.currentItem = playingItem
         self.notificationCenter.post(name: .playerItemDidSet, object: self.currentItem)
+        
+        self.loadCommandCenterIfNecessary()
         self.player = AVPlayer(playerItem: AVPlayerItem(url: url))
         self.player?.rate = self.rate
         self.player?.pause()
         self.movedTime = 0
+        self._currentTime = 0
         self.periodicObserver = self.player?.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(0.05, Int32(NSEC_PER_SEC)),
                                                                      queue: nil,
                                                                      using: { [weak self] (time) in
@@ -331,6 +333,8 @@ class Player: NSObject {
                                                                             self._currentTime = 0
                                                                         }
         })
+        
+        // load bookmark
         self._bookmarkTimes = [Double]()
         if let bookmarkKey = playingItem?.bookmarkKey {
             let realm = try! Realm()
@@ -343,7 +347,8 @@ class Player: NSObject {
         if !resetCurrentItem {
             self.player?.play()
         }
-        self.notificationCenter.post(name: .playerStateUpdated, object: item)
+        self.notificationCenter.post(name: .playerStateUpdated, object: nil)
+        self.notificationCenter.post(name: .playerTimeUpdated, object: nil)
     }
     
     fileprivate func didUpdatedBookmark(item: PlayerItem, times: [Double]) {
