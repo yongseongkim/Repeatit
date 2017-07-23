@@ -17,6 +17,7 @@ class iTunesArtistListViewController: UIViewController {
         ).then { (view) in
             view.backgroundColor = UIColor.white
             view.register(iTunesArtistCell.self)
+            view.alwaysBounceVertical = true
     }
     
     //MARK: Properties

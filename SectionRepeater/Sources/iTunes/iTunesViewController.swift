@@ -25,7 +25,7 @@ class iTunesViewController: UIViewController {
         ).then { (view) in
             view.backgroundColor = UIColor.white
             view.register(iTunesMenuCell.self)
-            view.contentInset = UIEdgeInsetsMake(64, 0, 0, 0)
+            view.alwaysBounceVertical = true
     }
     
     //MARK: Properties

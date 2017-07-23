@@ -22,6 +22,7 @@ class FileDestinationFileListViewController: UIViewController {
             view.register(FileCell.self)
             view.allowsMultipleSelection = true
             view.contentInset = UIEdgeInsetsMake(64, 0, FileDestinationViewController.optionViewHeight , 0)
+            view.alwaysBounceVertical = true
     }
     
     //MARK: Properties
