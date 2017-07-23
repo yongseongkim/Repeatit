@@ -34,9 +34,12 @@ class iTunesAlbumDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Songs in Album"
+        self.automaticallyAdjustsScrollViewInsets = false
         self.view.backgroundColor = UIColor.white
         self.view.addSubview(self.collectionView)
+        
         self.updateConstraints()
+        self.updateContentInset()
         self.bind()
     }
     
@@ -51,6 +54,16 @@ class iTunesAlbumDetailViewController: UIViewController {
             make.left.equalTo(self.view)
             make.bottom.equalTo(self.view)
             make.right.equalTo(self.view)
+        }
+    }
+    
+    public func updateContentInset() {
+        if PlayerView.isVisible() {
+            self.collectionView.contentInset = UIEdgeInsetsMake(64, 0, PlayerView.height(), 0)
+            self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(64, 0, PlayerView.height(), 0)
+        } else {
+            self.collectionView.contentInset = UIEdgeInsetsMake(64, 0, 0, 0)
+            self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(64, 0, 0, 0)
         }
     }
     

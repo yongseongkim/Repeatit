@@ -10,6 +10,10 @@ import UIKit
 import MediaPlayer
 
 class iTunesArtistCell: UICollectionViewCell {
+    
+    class func height() -> CGFloat {
+        return 50
+    }
 
     @IBOutlet weak var nameLabel: UILabel! 
     
@@ -21,10 +25,6 @@ class iTunesArtistCell: UICollectionViewCell {
             }
             self.nameLabel.text = item.artist
         }
-    }
-    
-    class func height() -> CGFloat {
-        return 50
     }
     
     override func awakeFromNib() {

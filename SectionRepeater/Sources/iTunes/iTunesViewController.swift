@@ -1,53 +1,46 @@
 //
-//  iTunesAlbumListViewController.swift
+//  iTunesViewController.swift
 //  SectionRepeater
 //
-//  Created by KimYongSeong on 2017. 6. 12..
+//  Created by KimYongSeong on 2017. 7. 23..
 //  Copyright © 2017년 yongseongkim. All rights reserved.
 //
 
-import Foundation
-import MediaPlayer
+import UIKit
 import URLNavigator
 
-class iTunesAlbumListViewController: UIViewController {
+enum iTunesMenuType: Int {
+    case playlist
+    case artist
+    case album
+    case song
+    case numberOfTypes
+}
+
+class iTunesViewController: UIViewController {
+    
     fileprivate let collectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: UICollectionViewFlowLayout()
         ).then { (view) in
             view.backgroundColor = UIColor.white
-            view.register(iTunesAlbumCell.self)
+            view.register(iTunesMenuCell.self)
             view.contentInset = UIEdgeInsetsMake(64, 0, 0, 0)
     }
     
     //MARK: Properties
-    fileprivate var collections = [MPMediaItemCollection]() {
-        didSet {
-            self.collectionView.reloadData()
-        }
-    }
-    public var collection: MPMediaItemCollection? {
-        didSet {
-            self.loadArtistsAlbums()
-        }
-    }
-    
+
     init() {
         super.init(nibName: nil, bundle: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(enterForeground), name: Notification.Name.UIApplicationWillEnterForeground, object: nil)
     }
     
     required convenience init?(coder aDecoder: NSCoder) {
         self.init()
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Albums"
+        self.title = "iTunes"
         self.automaticallyAdjustsScrollViewInsets = false
         self.view.addSubview(self.collectionView)
         
@@ -58,7 +51,6 @@ class iTunesAlbumListViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.loadArtistsAlbums()
     }
     
     func updateConstraints() {
@@ -84,40 +76,56 @@ class iTunesAlbumListViewController: UIViewController {
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
     }
-    
-    func enterForeground() {
-        self.loadArtistsAlbums()
-    }
-    
-    func loadArtistsAlbums() {
-        let query = MPMediaQuery.albums()
-        if let artistName = self.collection?.representativeItem?.artist {
-            query.addFilterPredicate(MPMediaPropertyPredicate(value: artistName, forProperty: MPMediaItemPropertyArtist, comparisonType: .equalTo))
-        }
-        if let collections = query.collections {
-            self.collections = collections
-        }
-    }
 }
 
-extension iTunesAlbumListViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
+extension iTunesViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.collections.count
+        return iTunesMenuType.numberOfTypes.rawValue
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.deqeueResuableCell(forIndexPath: indexPath) as iTunesAlbumCell
-        cell.collection = collections[indexPath.row]
+        let cell = collectionView.deqeueResuableCell(forIndexPath: indexPath) as iTunesMenuCell
+        guard let type = iTunesMenuType(rawValue: indexPath.row) else { return UICollectionViewCell() }
+        switch type {
+        case .playlist:
+            cell.menuName = "Playlists"
+            break
+        case .artist:
+            cell.menuName = "Artists"
+            break
+        case .album:
+            cell.menuName = "Albums"
+            break
+        case .song:
+            cell.menuName = "Songs"
+            break
+        default:
+            break
+        }
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: UIScreen.mainWidth, height: iTunesAlbumCell.height())
+        return CGSize(width: UIScreen.mainWidth, height: iTunesMenuCell.height())
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let detailViewController = iTunesAlbumDetailViewController()
-        detailViewController.collection = self.collections[indexPath.row]
-        Navigator.push(detailViewController)
+        guard let type = iTunesMenuType(rawValue: indexPath.row) else { return }
+        switch type {
+        case .playlist:
+            Navigator.push(iTunesPlaylistViewController())
+            break
+        case .artist:
+            Navigator.push(iTunesArtistListViewController())
+            break
+        case .album:
+            Navigator.push(iTunesAlbumListViewController())
+            break
+        case .song:
+            Navigator.push(iTunesSongListViewController())
+            break
+        default:
+            break
+        }
     }
 }

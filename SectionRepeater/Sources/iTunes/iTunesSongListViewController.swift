@@ -71,18 +71,16 @@ class iTunesSongListViewController: UIViewController {
     public func updateContentInset() {
         if PlayerView.isVisible() {
             self.collectionView.contentInset = UIEdgeInsetsMake(64, 0, PlayerView.height(), 0)
+            self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(64, 0, PlayerView.height(), 0)
         } else {
             self.collectionView.contentInset = UIEdgeInsetsMake(64, 0, 0, 0)
+            self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(64, 0, 0, 0)
         }
     }
     
     func bind() {
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
-    }
-    
-    func closeViewController() {
-        self.dismiss(animated: true, completion: nil)
     }
     
     func enterForeground() {

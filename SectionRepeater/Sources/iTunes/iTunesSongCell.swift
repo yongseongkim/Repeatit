@@ -10,6 +10,10 @@ import UIKit
 import MediaPlayer
 
 class iTunesSongCell: UICollectionViewCell {
+    
+    class func height() -> CGFloat {
+        return 50
+    }
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var artistNameLabel: UILabel!
@@ -28,10 +32,6 @@ class iTunesSongCell: UICollectionViewCell {
                 self.coverImageView.image = nil
             }
         }
-    }
-    
-    class func height() -> CGFloat {
-        return 50
     }
     
     override func awakeFromNib() {

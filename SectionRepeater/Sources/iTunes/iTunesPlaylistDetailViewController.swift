@@ -1,34 +1,35 @@
 //
-//  iTunesAlbumListViewController.swift
+//  iTunesPlaylistDetailViewController.swift
 //  SectionRepeater
 //
-//  Created by KimYongSeong on 2017. 6. 12..
+//  Created by KimYongSeong on 2017. 7. 23..
 //  Copyright © 2017년 yongseongkim. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import MediaPlayer
 import URLNavigator
 
-class iTunesAlbumListViewController: UIViewController {
+class iTunesPlaylistDetailViewController: UIViewController {
+    //MARK: UI Components
     fileprivate let collectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: UICollectionViewFlowLayout()
         ).then { (view) in
             view.backgroundColor = UIColor.white
-            view.register(iTunesAlbumCell.self)
-            view.contentInset = UIEdgeInsetsMake(64, 0, 0, 0)
+            view.register(iTunesSongCell.self)
     }
     
     //MARK: Properties
-    fileprivate var collections = [MPMediaItemCollection]() {
+    public var collection: MPMediaItemCollection? {
         didSet {
             self.collectionView.reloadData()
         }
     }
-    public var collection: MPMediaItemCollection? {
-        didSet {
-            self.loadArtistsAlbums()
+    fileprivate var items: [MPMediaItem] {
+        get {
+            guard let collectionItems = self.collection?.items else { return [MPMediaItem]() }
+            return collectionItems
         }
     }
     
@@ -47,7 +48,7 @@ class iTunesAlbumListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Albums"
+        self.title = "Songs in Playlist"
         self.automaticallyAdjustsScrollViewInsets = false
         self.view.addSubview(self.collectionView)
         
@@ -58,7 +59,7 @@ class iTunesAlbumListViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.loadArtistsAlbums()
+        self.collectionView.reloadData()
     }
     
     func updateConstraints() {
@@ -86,38 +87,33 @@ class iTunesAlbumListViewController: UIViewController {
     }
     
     func enterForeground() {
-        self.loadArtistsAlbums()
-    }
-    
-    func loadArtistsAlbums() {
-        let query = MPMediaQuery.albums()
-        if let artistName = self.collection?.representativeItem?.artist {
-            query.addFilterPredicate(MPMediaPropertyPredicate(value: artistName, forProperty: MPMediaItemPropertyArtist, comparisonType: .equalTo))
-        }
-        if let collections = query.collections {
-            self.collections = collections
-        }
+        self.collectionView.reloadData()
     }
 }
 
-extension iTunesAlbumListViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
+extension iTunesPlaylistDetailViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.collections.count
+        return self.items.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.deqeueResuableCell(forIndexPath: indexPath) as iTunesAlbumCell
-        cell.collection = collections[indexPath.row]
+        let cell = collectionView.deqeueResuableCell(forIndexPath: indexPath) as iTunesSongCell
+        cell.item = items[indexPath.row]
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: UIScreen.mainWidth, height: iTunesAlbumCell.height())
+        return CGSize(width: UIScreen.mainWidth, height: iTunesSongCell.height())
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let detailViewController = iTunesAlbumDetailViewController()
-        detailViewController.collection = self.collections[indexPath.row]
-        Navigator.push(detailViewController)
+        do {
+            try Player.shared.play(items: PlayerItem.items(mediaItems: self.items), startAt: indexPath.row)
+            let playerController = PlayerViewController(nibName: PlayerViewController.className(), bundle: nil)
+            playerController.modalPresentationStyle = .custom
+            Navigator.present(playerController)
+        } catch let error {
+            print(error)
+        }
     }
 }

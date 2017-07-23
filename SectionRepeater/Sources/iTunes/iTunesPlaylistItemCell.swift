@@ -11,6 +11,10 @@ import MediaPlayer
 
 class iTunesPlaylistItemCell: UICollectionViewCell {
     
+    class func height() -> CGFloat {
+        return 50
+    }
+    
     let nameLabel = UILabel()
     let borderView = UIView().then { (view) in
         view.backgroundColor = UIColor.gray220
@@ -24,10 +28,6 @@ class iTunesPlaylistItemCell: UICollectionViewCell {
                 self.nameLabel.text = ""
             }
         }
-    }
-    
-    class func height() -> CGFloat {
-        return 50
     }
     
     override func didMoveToSuperview() {
