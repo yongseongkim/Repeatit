@@ -103,7 +103,7 @@ class Player: NSObject {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func play(items: [PlayerItem], startAt: Int) throws {
+    public func play(items: [PlayerItem], startAt: Int) throws {
         if (items.count <= startAt) {
             throw PlayerError.invalidArgumentPlayerItem
         }
@@ -117,17 +117,17 @@ class Player: NSObject {
         self.loadPlayer(item: items[startAt])
     }
     
-    func pause() {
+    public func pause() {
         self.player?.pause()
         self.notificationCenter.post(name: .playerStateUpdated, object: self.currentItem)
     }
     
-    func resume() {
+    public func resume() {
         self.player?.play()
         self.notificationCenter.post(name: .playerStateUpdated, object: self.currentItem)
     }
     
-    func playNext() {
+    public func playNext() {
         var item: PlayerItem? = nil
         switch self.repeatMode {
         case .One:
@@ -149,7 +149,7 @@ class Player: NSObject {
         self.loadPlayer(item: item)
     }
     
-    func playPrev() {
+    public func playPrev() {
         var item: PlayerItem? = nil
         switch self.repeatMode {
         case .One:
@@ -171,7 +171,7 @@ class Player: NSObject {
         self.loadPlayer(item: item)
     }
     
-    func move(to: Double) {
+    public func move(to: Double) {
         // 모든 move는 이 method를 call해야 한다. movedTime 관리를 위해
         var time = to
         if (time < 0) {
@@ -185,7 +185,7 @@ class Player: NSObject {
         self.player?.seek(to: time)
     }
     
-    func moveForward(seconds: Double) {
+    public func moveForward(seconds: Double) {
         var time = self._currentTime + seconds
         if (time >= duration) {
             time = duration.leftSide()
@@ -193,7 +193,7 @@ class Player: NSObject {
         self.move(to: time)
     }
     
-    func moveBackward(seconds: Double) {
+    public func moveBackward(seconds: Double) {
         var time = self._currentTime - seconds
         if (time < 0) {
             time = 0
@@ -201,7 +201,7 @@ class Player: NSObject {
         self.move(to: time)
     }
     
-    func moveLatestBookmark() {
+    public func moveLatestBookmark() {
         var time: Double = 0
         if let currentBookmark = (self._bookmarkTimes.filter { return $0 < self._currentTime }.last) {
             time = currentBookmark
@@ -209,7 +209,7 @@ class Player: NSObject {
         self.move(to: time.rightSide())
     }
     
-    func movePreviousBookmark() {
+    public func movePreviousBookmark() {
         var time: Double = 0
         let filtered = self._bookmarkTimes.filter { return $0 <= self._currentTime }
         if filtered.count > 1 {
@@ -218,7 +218,7 @@ class Player: NSObject {
         self.move(to: time.rightSide())
     }
     
-    func moveNextBookmark() {
+    public func moveNextBookmark() {
         if let nextBookmark = (self._bookmarkTimes.filter { return $0 > self._currentTime }).first {
             self.move(to: nextBookmark.rightSide())
             return
@@ -226,7 +226,7 @@ class Player: NSObject {
         self.moveLatestBookmark()
     }
     
-    func addBookmark() throws {
+    public func addBookmark() throws {
         guard let item = self.currentItem else { return }
         // 둘째 자리까지 기록
         let current = self._currentTime.roundTo(place: 2)
@@ -242,13 +242,21 @@ class Player: NSObject {
         self.didUpdatedBookmark(item:item, times: self._bookmarkTimes)
     }
     
-    func removeBookmark(at: Double) {
+    public func removeBookmark(at: Double) {
         guard let item = self.currentItem else { return }
         self._bookmarkTimes = self._bookmarkTimes.filter { return $0 != at }.sorted()
         self.didUpdatedBookmark(item:item, times: self._bookmarkTimes)
     }
     
-    func nextRepeatMode() {
+    public func removeAllBookmarks() {
+        let realm = try! Realm()
+        let bookmarkObjs = realm.objects(BookmarkObject.self)
+        try? realm.write {
+            realm.delete(bookmarkObjs)
+        }
+    }
+    
+    public func nextRepeatMode() {
         if let index = Player.repeatModes.index(of: self.repeatMode) {
             let nextMode = Player.repeatModes[((index + 1) % Player.repeatModes.count)]
             self.repeatMode = nextMode
@@ -256,12 +264,12 @@ class Player: NSObject {
         }
     }
     
-    func switchRepeatBookmark() {
+    public func switchRepeatBookmark() {
         self.repeatBookmark = !self.repeatBookmark
         self.notificationCenter.post(name: .playerStateUpdated, object: nil)
     }
     
-    func nextRate() {
+    public func nextRate() {
         if let index = Player.rates.index(of: self.rate) {
             let nextRate = Player.rates[((index + 1) % Player.rates.count)]
             self.rate = nextRate
@@ -311,6 +319,7 @@ class Player: NSObject {
             self.boundaryObserver = nil
         }
         
+        self.loadCommandCenterIfNecessary()
         self.currentItem = playingItem
         self.notificationCenter.post(name: .playerItemDidSet, object: self.currentItem)
         self.player = AVPlayer(playerItem: AVPlayerItem(url: url))

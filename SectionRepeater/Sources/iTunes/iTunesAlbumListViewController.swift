@@ -34,7 +34,7 @@ class iTunesAlbumListViewController: UIViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        AppDelegate.currentAppDelegate()?.notificationCenter.addObserver(self, selector: #selector(enterForeground), name: .onEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(enterForeground), name: Notification.Name.UIApplicationWillEnterForeground, object: nil)
     }
     
     required convenience init?(coder aDecoder: NSCoder) {
@@ -42,7 +42,7 @@ class iTunesAlbumListViewController: UIViewController {
     }
     
     deinit {
-        AppDelegate.currentAppDelegate()?.notificationCenter.addObserver(self, selector: #selector(enterForeground), name: .onEnterForeground, object: nil)
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewDidLoad() {

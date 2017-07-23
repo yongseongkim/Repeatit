@@ -12,6 +12,7 @@ class iTunesListViewController : UINavigationController {
     public let songListViewController = iTunesSongListViewController()
     public let albumListViewController = iTunesAlbumListViewController()
     public let artistListViewController = iTunesArtistListViewController()
+    public let playlistViewController = iTunesPlaylistViewController()
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -19,6 +20,7 @@ class iTunesListViewController : UINavigationController {
         self.songListViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Switch", style: .plain, target: self, action: #selector(switchViewController))
         self.albumListViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Switch", style: .plain, target: self, action: #selector(switchViewController))
         self.artistListViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Switch", style: .plain, target: self, action: #selector(switchViewController))
+        self.playlistViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Switch", style: .plain, target: self, action: #selector(switchViewController))
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -27,7 +29,7 @@ class iTunesListViewController : UINavigationController {
     
     func switchViewController() {
         guard let visibleViewController = self.visibleViewController else { return }
-        let orders = [songListViewController, albumListViewController, artistListViewController]
+        let orders = [songListViewController, albumListViewController, artistListViewController, playlistViewController]
         if let index = orders.index(of: visibleViewController) {
             self.setViewControllers([orders[(index + 1) % orders.count]], animated: false)
         }
@@ -43,6 +45,9 @@ class iTunesListViewController : UINavigationController {
             }
             if let artistList = vc as? iTunesSongListViewController {
                 artistList.updateContentInset()
+            }
+            if let playlist = vc as? iTunesPlaylistViewController {
+                playlist.updateContentInset()
             }
         }
     }

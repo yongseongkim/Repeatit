@@ -12,16 +12,11 @@ import Firebase
 import Fabric
 import Crashlytics
 
-extension Notification.Name {
-    static let onEnterForeground = Notification.Name("appdelegate.enterforeground")
-}
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    public let notificationCenter = NotificationCenter()
-    
+
     public class func currentAppDelegate() -> AppDelegate? {
         if let delegate = UIApplication.shared.delegate as? AppDelegate {
             return delegate
@@ -64,7 +59,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         print("applicationWillEnterForeground")
-        self.notificationCenter.post(name: .onEnterForeground, object: nil)
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {

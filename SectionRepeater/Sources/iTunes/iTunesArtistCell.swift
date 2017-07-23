@@ -11,7 +11,7 @@ import MediaPlayer
 
 class iTunesArtistCell: UICollectionViewCell {
 
-    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var nameLabel: UILabel! 
     
     var collection: MPMediaItemCollection? {
         didSet {

@@ -24,6 +24,7 @@ extension UICollectionView {
         if let _ = Bundle.main.path(forResource: nibName, ofType: "nib") {
             let nib = UINib(nibName: nibName, bundle: nil)
             register(nib, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: nibName)
+            return
         }
         register(T.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: nibName)
     }
