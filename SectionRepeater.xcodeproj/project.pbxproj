@@ -18,7 +18,6 @@
 		2E1A3EB21F14F2BF005B3E6E /* UIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1A3EB11F14F2BF005B3E6E /* UIConstants.swift */; };
 		2E2E33F11E8770C500AF26DE /* DoubleObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2E33F01E8770C500AF26DE /* DoubleObject.swift */; };
 		2E3DC3FA1ECFF04C00FCBD67 /* BookmarkCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F21ECFF04C00FCBD67 /* BookmarkCollectionViewCell.swift */; };
-		2E3DC3FB1ECFF04C00FCBD67 /* BookmarkCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F31ECFF04C00FCBD67 /* BookmarkCollectionViewCell.xib */; };
 		2E3DC3FC1ECFF04C00FCBD67 /* BookmarkListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F41ECFF04C00FCBD67 /* BookmarkListViewController.swift */; };
 		2E3DC3FD1ECFF04C00FCBD67 /* BookmarkListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F51ECFF04C00FCBD67 /* BookmarkListViewController.xib */; };
 		2E3DC3FE1ECFF04C00FCBD67 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F61ECFF04C00FCBD67 /* PlayerView.swift */; };
@@ -38,7 +37,6 @@
 		2EA4E68D1EDA764200016638 /* PlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA4E68C1EDA764200016638 /* PlayerItem.swift */; };
 		2EA4E68F1EDA775400016638 /* URL+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA4E68E1EDA775400016638 /* URL+Extension.swift */; };
 		2EC3C0221EC86FA200812AA9 /* FileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC3C01C1EC86FA200812AA9 /* FileCell.swift */; };
-		2EC3C0231EC86FA200812AA9 /* FileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2EC3C01D1EC86FA200812AA9 /* FileCell.xib */; };
 		2EC3C0241EC86FA200812AA9 /* FileListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC3C01E1EC86FA200812AA9 /* FileListViewController.swift */; };
 		2EC3C0261EC86FA200812AA9 /* FileDestinationFileListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC3C0201EC86FA200812AA9 /* FileDestinationFileListViewController.swift */; };
 		2EC936161F2460FE008761EB /* iTunesPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC936151F2460FE008761EB /* iTunesPlaylistViewController.swift */; };
@@ -92,7 +90,6 @@
 		2E243DB71E62896300601200 /* CoreAudioKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudioKit.framework; path = System/Library/Frameworks/CoreAudioKit.framework; sourceTree = SDKROOT; };
 		2E2E33F01E8770C500AF26DE /* DoubleObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoubleObject.swift; sourceTree = "<group>"; };
 		2E3DC3F21ECFF04C00FCBD67 /* BookmarkCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarkCollectionViewCell.swift; sourceTree = "<group>"; };
-		2E3DC3F31ECFF04C00FCBD67 /* BookmarkCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookmarkCollectionViewCell.xib; sourceTree = "<group>"; };
 		2E3DC3F41ECFF04C00FCBD67 /* BookmarkListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarkListViewController.swift; sourceTree = "<group>"; };
 		2E3DC3F51ECFF04C00FCBD67 /* BookmarkListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookmarkListViewController.xib; sourceTree = "<group>"; };
 		2E3DC3F61ECFF04C00FCBD67 /* PlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
@@ -114,7 +111,6 @@
 		2EA4E68C1EDA764200016638 /* PlayerItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerItem.swift; sourceTree = "<group>"; };
 		2EA4E68E1EDA775400016638 /* URL+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URL+Extension.swift"; sourceTree = "<group>"; };
 		2EC3C01C1EC86FA200812AA9 /* FileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileCell.swift; sourceTree = "<group>"; };
-		2EC3C01D1EC86FA200812AA9 /* FileCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileCell.xib; sourceTree = "<group>"; };
 		2EC3C01E1EC86FA200812AA9 /* FileListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileListViewController.swift; sourceTree = "<group>"; };
 		2EC3C0201EC86FA200812AA9 /* FileDestinationFileListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDestinationFileListViewController.swift; sourceTree = "<group>"; };
 		2EC936151F2460FE008761EB /* iTunesPlaylistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesPlaylistViewController.swift; sourceTree = "<group>"; };
@@ -177,7 +173,6 @@
 				2E3DC3F91ECFF04C00FCBD67 /* PlayerViewController.swift */,
 				2E3DC3F81ECFF04C00FCBD67 /* PlayerViewController.xib */,
 				2E3DC3F21ECFF04C00FCBD67 /* BookmarkCollectionViewCell.swift */,
-				2E3DC3F31ECFF04C00FCBD67 /* BookmarkCollectionViewCell.xib */,
 				2E3DC3F41ECFF04C00FCBD67 /* BookmarkListViewController.swift */,
 				2E3DC3F51ECFF04C00FCBD67 /* BookmarkListViewController.xib */,
 				2E3DC3F61ECFF04C00FCBD67 /* PlayerView.swift */,
@@ -258,7 +253,6 @@
 				2EC3C0201EC86FA200812AA9 /* FileDestinationFileListViewController.swift */,
 				2E1A3EAD1F14EEC3005B3E6E /* FileEditOptionView.swift */,
 				2EC3C01C1EC86FA200812AA9 /* FileCell.swift */,
-				2EC3C01D1EC86FA200812AA9 /* FileCell.xib */,
 			);
 			name = Files;
 			path = SectionRepeater/Sources/Files;
@@ -422,8 +416,6 @@
 				52149DCF1F1A0B0A003B0A16 /* Images.xcassets in Resources */,
 				52149DC31F1A0943003B0A16 /* GoogleService-Info.plist in Resources */,
 				2E7AC2221E47195700BA03B7 /* LaunchScreen.storyboard in Resources */,
-				2EC3C0231EC86FA200812AA9 /* FileCell.xib in Resources */,
-				2E3DC3FB1ECFF04C00FCBD67 /* BookmarkCollectionViewCell.xib in Resources */,
 				2E3DC4001ECFF04C00FCBD67 /* PlayerViewController.xib in Resources */,
 				2E3DC3FD1ECFF04C00FCBD67 /* BookmarkListViewController.xib in Resources */,
 			);

@@ -16,6 +16,7 @@ class BookmarkListViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
             collectionView.register(BookmarkCollectionViewCell.self)
+            collectionView.alwaysBounceVertical = true
         }
     }
     @IBOutlet weak var borderViewHeightConstraint: NSLayoutConstraint!
@@ -63,7 +64,6 @@ extension BookmarkListViewController: UICollectionViewDataSource, UICollectionVi
         cell.delegate = self
         cell.index = indexPath.row
         cell.time = self.bookmarkTimes?[indexPath.row]
-        cell.load()
         return cell
     }
     
