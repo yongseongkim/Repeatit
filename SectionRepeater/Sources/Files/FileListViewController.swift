@@ -44,7 +44,7 @@ class FileListViewController: UIViewController {
             button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
         }
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: optionButton)
-        AppDelegate.currentAppDelegate()?.notificationCenter.addObserver(self, selector: #selector(enterForeground), name: .onEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(enterForeground), name: Notification.Name.UIApplicationWillEnterForeground, object: nil)
     }
     
     required convenience init?(coder aDecoder: NSCoder) {
@@ -52,7 +52,7 @@ class FileListViewController: UIViewController {
     }
     
     deinit {
-        AppDelegate.currentAppDelegate()?.notificationCenter.addObserver(self, selector: #selector(enterForeground), name: .onEnterForeground, object: nil)
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewDidLoad() {
@@ -171,6 +171,10 @@ extension FileListViewController: UICollectionViewDataSource, UICollectionViewDe
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
 }

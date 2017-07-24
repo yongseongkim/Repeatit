@@ -14,9 +14,14 @@ import URLNavigator
 class RootViewController: UITabBarController {
     
     fileprivate let fileListNaviController = FileListNavigationController()
-    fileprivate let itunesListViewController = iTunesListViewController()
+    fileprivate let itunesNaviController = iTunesNavigationController()
+    fileprivate let moreNaviController = UINavigationController(rootViewController: MoreViewController())
     fileprivate let playerView = PlayerView.shared
-
+    
+    deinit {
+        self.removeNotification()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tabBar.isTranslucent = false
@@ -28,15 +33,21 @@ class RootViewController: UITabBarController {
     func registerNotification() {
         Player.shared.notificationCenter.addObserver(self, selector: #selector(handlePlayerItemDidSet(object:)), name: Notification.Name.playerItemDidSet, object: nil)
         Player.shared.notificationCenter.addObserver(self, selector: #selector(handlePlayerStateUpdatedNotification), name: Notification.Name.playerStateUpdated, object: nil)
-        AppDelegate.currentAppDelegate()?.notificationCenter.addObserver(self, selector: #selector(enterForeground), name: .onEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(enterForeground), name: Notification.Name.UIApplicationWillEnterForeground, object: nil)
+    }
+    
+    func removeNotification() {
+        Player.shared.notificationCenter.removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     func loadTabViews() {
         self.tabBar.tintColor = UIColor.black
         self.fileListNaviController.tabBarItem = UITabBarItem(title: "Files", image: UIImage(named: "empty_common_folder_28pt"), selectedImage: UIImage(named: "fill_common_folder_28pt"))
-        self.itunesListViewController.tabBarItem = UITabBarItem(title: "iTunes", image: UIImage(named: "empty_music_note_28pt"), selectedImage: UIImage(named: "fill_music_note_28pt"))
+        self.itunesNaviController.tabBarItem = UITabBarItem(title: "iTunes", image: UIImage(named: "empty_music_note_28pt"), selectedImage: UIImage(named: "fill_music_note_28pt"))
+        self.moreNaviController.tabBarItem = UITabBarItem(title: "More", image: UIImage(named: "btn_common_option_44pt"), selectedImage: UIImage(named: "btn_common_option_44pt"))
         
-        let viewControllers = [self.fileListNaviController, self.itunesListViewController]
+        let viewControllers = [self.fileListNaviController, self.itunesNaviController, self.moreNaviController]
         self.setViewControllers(viewControllers, animated: false)
     }
     
@@ -62,13 +73,13 @@ class RootViewController: UITabBarController {
             self.playerView.alpha = 1
         }
         self.fileListNaviController.updateContentInset()
-        self.itunesListViewController.updateContentInset()
+        self.itunesNaviController.updateContentInset()
     }
     
     func hidePlayerView() {
         self.playerView.isHidden = true
         self.fileListNaviController.updateContentInset()
-        self.itunesListViewController.updateContentInset()
+        self.itunesNaviController.updateContentInset()
     }
     
     //MARK: Handle Notification

@@ -83,11 +83,6 @@ class PlayerView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        Player.shared.notificationCenter.removeObserver(self)
-        AppDelegate.currentAppDelegate()?.notificationCenter.removeObserver(self)
-    }
-    
     @objc fileprivate func backgroundButtonTapped() {
         self.delegate?.playerViewTapped()
     }

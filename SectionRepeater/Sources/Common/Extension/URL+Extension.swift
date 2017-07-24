@@ -20,9 +20,7 @@ extension URL {
     }
     
     func bookmarkKey() -> String {
-        guard let range = self.path.range(of: URL.documentsURL.path) else { return self.path }
-        var result = self.path
-        result.removeSubrange(range)
-        return result
+        guard let relativePath = self.path.components(separatedBy: URL.documentsURL.path).last else { return self.path }
+        return relativePath
     }
 }

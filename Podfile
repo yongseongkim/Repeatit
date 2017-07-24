@@ -10,6 +10,7 @@ target 'SectionRepeater' do
   pod 'URLNavigator', '~> 1.2'
   pod 'SwiftyImage', '~> 1.1'  
   pod 'pop', '~> 1.0'
+  pod 'Carte'
 
   # Report
   pod 'Firebase/Core'
@@ -23,4 +24,7 @@ post_install do |installer|
             config.build_settings['SWIFT_VERSION'] = '3.0'
         end
     end
+    
+    pods_dir = File.dirname(installer.pods_project.path)
+    at_exit { `ruby #{pods_dir}/Carte/Sources/Carte/carte.rb configure` }
 end

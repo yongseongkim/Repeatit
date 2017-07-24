@@ -1,4 +1,5 @@
 PODS:
+  - Carte (2.0.1)
   - Crashlytics (3.8.4):
     - Fabric (~> 1.6.3)
   - Fabric (1.6.11)
@@ -28,6 +29,7 @@ PODS:
   - URLNavigator (1.2.0)
 
 DEPENDENCIES:
+  - Carte
   - Crashlytics
   - Fabric
   - Firebase/Core
@@ -39,6 +41,7 @@ DEPENDENCIES:
   - URLNavigator (~> 1.2)
 
 SPEC CHECKSUMS:
+  Carte: 0308b3bf4f3fd9fc3712f63545ed4af858c12f11
   Crashlytics: 79e236942ca1e7fc641df1feb9a275360a78ab6a
   Fabric: 5911403591946b8228ab1c51d98f1d7137e863c6
   Firebase: 9e33fdfbca37cab635c693883caa90a4475b842b
@@ -54,6 +57,6 @@ SPEC CHECKSUMS:
   Then: 8496793c8fcac95482b943909b440724c7d8d82c
   URLNavigator: 3ff788c985a0aae654e7de4959c4b0ea8a45f022
 
-PODFILE CHECKSUM: 277578d92e5c1a9789a4e4c5b4ef660484d178d9
+PODFILE CHECKSUM: c102a2014084c5287fd04073189591a48f383524
 
 COCOAPODS: 1.2.1

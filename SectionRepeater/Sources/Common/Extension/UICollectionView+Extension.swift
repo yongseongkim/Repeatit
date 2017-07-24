@@ -10,13 +10,23 @@ import UIKit
 
 extension UICollectionView {
     func register<T: UICollectionViewCell>(_: T.Type) {
-        let nib = UINib(nibName: String(describing: T.self), bundle: nil)
-        register(nib, forCellWithReuseIdentifier: String(describing: T.self))
+        let nibName = String(describing: T.self)
+        if let _ = Bundle.main.path(forResource: nibName, ofType: "nib") {
+            let nib = UINib(nibName: nibName, bundle: nil)
+            register(nib, forCellWithReuseIdentifier: nibName)
+            return
+        }
+        register(T.self, forCellWithReuseIdentifier: nibName)
     }
     
     func registerHeader<T: UICollectionReusableView>(_: T.Type) {
-        let nib = UINib(nibName: String(describing: T.self), bundle: nil)
-        register(nib, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: String(describing: T.self))
+        let nibName = String(describing: T.self)
+        if let _ = Bundle.main.path(forResource: nibName, ofType: "nib") {
+            let nib = UINib(nibName: nibName, bundle: nil)
+            register(nib, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: nibName)
+            return
+        }
+        register(T.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: nibName)
     }
     
     func deqeueResuableCell<T: UICollectionViewCell>(forIndexPath indexPath: IndexPath) -> T {

@@ -19,6 +19,7 @@ class iTunesSongListViewController: UIViewController {
         ).then { (view) in
             view.backgroundColor = UIColor.white
             view.register(iTunesSongCell.self)
+            view.alwaysBounceVertical = true
     }
     
     //MARK: Properties
@@ -30,7 +31,7 @@ class iTunesSongListViewController: UIViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        AppDelegate.currentAppDelegate()?.notificationCenter.addObserver(self, selector: #selector(enterForeground), name: .onEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(enterForeground), name: Notification.Name.UIApplicationWillEnterForeground, object: nil)
     }
     
     required convenience init?(coder aDecoder: NSCoder) {
@@ -38,7 +39,7 @@ class iTunesSongListViewController: UIViewController {
     }
     
     deinit {
-        AppDelegate.currentAppDelegate()?.notificationCenter.addObserver(self, selector: #selector(enterForeground), name: .onEnterForeground, object: nil)
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewDidLoad() {
@@ -71,18 +72,16 @@ class iTunesSongListViewController: UIViewController {
     public func updateContentInset() {
         if PlayerView.isVisible() {
             self.collectionView.contentInset = UIEdgeInsetsMake(64, 0, PlayerView.height(), 0)
+            self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(64, 0, PlayerView.height(), 0)
         } else {
             self.collectionView.contentInset = UIEdgeInsetsMake(64, 0, 0, 0)
+            self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(64, 0, 0, 0)
         }
     }
     
     func bind() {
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
-    }
-    
-    func closeViewController() {
-        self.dismiss(animated: true, completion: nil)
     }
     
     func enterForeground() {

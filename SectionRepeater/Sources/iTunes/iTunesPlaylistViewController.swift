@@ -1,22 +1,24 @@
 //
-//  iTunesArtistListViewController.swift
+//  iTunesPlaylistViewController.swift
 //  SectionRepeater
 //
-//  Created by KimYongSeong on 2017. 6. 12..
+//  Created by KimYongSeong on 2017. 7. 23..
 //  Copyright © 2017년 yongseongkim. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import MediaPlayer
 import URLNavigator
 
-class iTunesArtistListViewController: UIViewController {
+class iTunesPlaylistViewController: UIViewController {
+
+    //MARK: UI Components
     fileprivate let collectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: UICollectionViewFlowLayout()
         ).then { (view) in
             view.backgroundColor = UIColor.white
-            view.register(iTunesArtistCell.self)
+            view.register(iTunesPlaylistItemCell.self)
             view.alwaysBounceVertical = true
     }
     
@@ -41,8 +43,8 @@ class iTunesArtistListViewController: UIViewController {
     }
     
     override func viewDidLoad() {
-        self.title = "Artists"
         super.viewDidLoad()
+        self.title = "Playlist"
         self.automaticallyAdjustsScrollViewInsets = false
         self.view.addSubview(self.collectionView)
         
@@ -53,9 +55,7 @@ class iTunesArtistListViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if let collections = MPMediaQuery.artists().collections {
-            self.collections = collections
-        }
+        self.loadPlaylist()
     }
     
     func updateConstraints() {
@@ -85,26 +85,34 @@ class iTunesArtistListViewController: UIViewController {
     func enterForeground() {
         self.collectionView.reloadData()
     }
+    
+    func loadPlaylist() {
+        let query = MPMediaQuery.playlists()
+        if let collections = query.collections {
+            self.collections = collections
+        }
+    }
 }
 
-extension iTunesArtistListViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
+extension iTunesPlaylistViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.collections.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.deqeueResuableCell(forIndexPath: indexPath) as iTunesArtistCell
-        cell.collection = self.collections[indexPath.row]
+        let cell = collectionView.deqeueResuableCell(forIndexPath: indexPath) as iTunesPlaylistItemCell
+        cell.collection = collections[indexPath.row]
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: UIScreen.mainWidth, height: iTunesArtistCell.height())
+        return CGSize(width: UIScreen.mainWidth, height: iTunesSongCell.height())
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let albumListViewController = iTunesAlbumListViewController()
-        albumListViewController.collection = self.collections[indexPath.row]
-        Navigator.push(albumListViewController)
+        let detailViewController = iTunesPlaylistDetailViewController()
+        detailViewController.collection = collections[indexPath.row]
+        Navigator.push(detailViewController)
     }
 }
+
