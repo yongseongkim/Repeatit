@@ -101,8 +101,8 @@ extension iTunesAlbumDetailViewController: UICollectionViewDataSource, UICollect
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.deqeueResuableCell(forIndexPath: indexPath) as iTunesAlbumDetailSongCell
-        cell.indexLabel.text = String(indexPath.row)
-        cell.nameLabel.text = self.collections[indexPath.row].representativeItem?.title
+        cell.index = indexPath.row
+        cell.item = self.collections[indexPath.row].representativeItem
         return cell
     }
     
@@ -130,18 +130,8 @@ extension iTunesAlbumDetailViewController: UICollectionViewDataSource, UICollect
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let view = collectionView.deqeueResuableHeader(forIndexPath: indexPath) as iTunesAlbumDetailHeaderView
-        if let item = self.collection?.representativeItem {
-            view.coverImageView.image = item.artwork?.image(at: UIScreen.mainSize)
-            view.nameLabel.text = item.albumTitle
-            view.artistNameLabel.text = item.artist
-            view.numberOfSongsLabel.text = String(format: "%d songs", collectionView.numberOfItems(inSection: 0))
-        } else {
-            view.coverImageView.image = nil
-            view.nameLabel.text = "album Title"
-            view.artistNameLabel.text = "artist Name"
-            view.numberOfSongsLabel.text = "0 songs"
-
-        }
+        view.collection = self.collection
+        view.numberOfSongs = self.collections.count
         return view
     }
 }

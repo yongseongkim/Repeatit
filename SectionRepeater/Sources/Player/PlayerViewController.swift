@@ -233,9 +233,9 @@ class PlayerViewController: UIViewController {
     }
     
     @IBAction func showBookmarksButtonTapped(_ sender: Any) {
-        let bookmarksViewController = BookmarksViewController(nibName: BookmarksViewController.className(), bundle: nil)
-        bookmarksViewController.modalPresentationStyle = .custom
-        self.present(bookmarksViewController, animated: false, completion: nil)
+        let bookmarkListViewController = BookmarkListViewController(nibName: BookmarkListViewController.className(), bundle: nil)
+        bookmarkListViewController.modalPresentationStyle = .custom
+        self.present(bookmarkListViewController, animated: false, completion: nil)
     }
     
     @IBAction func movePreviousBookmark(_ sender: Any) {

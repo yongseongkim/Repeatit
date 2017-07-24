@@ -86,6 +86,14 @@ extension FileDestinationFileListViewController: UICollectionViewDataSource, UIC
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.deqeueResuableCell(forIndexPath: indexPath) as FileCell
+        cell.isSelected = false
+        let destinationViewController = FileDestinationFileListViewController()
+        destinationViewController.currentURL = self.currentURL.appendingPathComponent(self.directories[indexPath.row].url.lastPathComponent)
+        Navigator.push(destinationViewController)
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: UIScreen.mainWidth, height: FileCell.height())
     }
@@ -94,11 +102,7 @@ extension FileDestinationFileListViewController: UICollectionViewDataSource, UIC
         return 0
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.deqeueResuableCell(forIndexPath: indexPath) as FileCell
-        cell.isSelected = false
-        let destinationViewController = FileDestinationFileListViewController()
-        destinationViewController.currentURL = self.currentURL.appendingPathComponent(self.directories[indexPath.row].url.lastPathComponent)
-        Navigator.push(destinationViewController)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
     }
 }

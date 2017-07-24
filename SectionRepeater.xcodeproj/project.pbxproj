@@ -11,9 +11,7 @@
 		2E01A80B1EE64FF100B50F47 /* FileManager+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E01A80A1EE64FF100B50F47 /* FileManager+Extension.swift */; };
 		2E0E5E381EEFFA88006C9E7B /* iTunesAlbumDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E5E371EEFFA88006C9E7B /* iTunesAlbumDetailViewController.swift */; };
 		2E0E5E3B1EF00C48006C9E7B /* iTunesAlbumDetailSongCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E5E391EF00C48006C9E7B /* iTunesAlbumDetailSongCell.swift */; };
-		2E0E5E3C1EF00C48006C9E7B /* iTunesAlbumDetailSongCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E0E5E3A1EF00C48006C9E7B /* iTunesAlbumDetailSongCell.xib */; };
 		2E0E5E3F1EF0109C006C9E7B /* iTunesAlbumDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E5E3D1EF0109C006C9E7B /* iTunesAlbumDetailHeaderView.swift */; };
-		2E0E5E401EF0109C006C9E7B /* iTunesAlbumDetailHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E0E5E3E1EF0109C006C9E7B /* iTunesAlbumDetailHeaderView.xib */; };
 		2E16CBC71F17961B00A80C60 /* FileListEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E16CBC61F17961B00A80C60 /* FileListEditViewController.swift */; };
 		2E1A3B7F1E8F932300F785D0 /* UIScreen+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1A3B7E1E8F932300F785D0 /* UIScreen+Extension.swift */; };
 		2E1A3EAE1F14EEC3005B3E6E /* FileEditOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1A3EAD1F14EEC3005B3E6E /* FileEditOptionView.swift */; };
@@ -21,22 +19,19 @@
 		2E2E33F11E8770C500AF26DE /* DoubleObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2E33F01E8770C500AF26DE /* DoubleObject.swift */; };
 		2E3DC3FA1ECFF04C00FCBD67 /* BookmarkCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F21ECFF04C00FCBD67 /* BookmarkCollectionViewCell.swift */; };
 		2E3DC3FB1ECFF04C00FCBD67 /* BookmarkCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F31ECFF04C00FCBD67 /* BookmarkCollectionViewCell.xib */; };
-		2E3DC3FC1ECFF04C00FCBD67 /* BookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F41ECFF04C00FCBD67 /* BookmarksViewController.swift */; };
-		2E3DC3FD1ECFF04C00FCBD67 /* BookmarksViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F51ECFF04C00FCBD67 /* BookmarksViewController.xib */; };
+		2E3DC3FC1ECFF04C00FCBD67 /* BookmarkListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F41ECFF04C00FCBD67 /* BookmarkListViewController.swift */; };
+		2E3DC3FD1ECFF04C00FCBD67 /* BookmarkListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F51ECFF04C00FCBD67 /* BookmarkListViewController.xib */; };
 		2E3DC3FE1ECFF04C00FCBD67 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F61ECFF04C00FCBD67 /* PlayerView.swift */; };
 		2E3DC4001ECFF04C00FCBD67 /* PlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F81ECFF04C00FCBD67 /* PlayerViewController.xib */; };
 		2E3DC4011ECFF04C00FCBD67 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3DC3F91ECFF04C00FCBD67 /* PlayerViewController.swift */; };
 		2E3EC4991EEEA8D7009472FB /* iTunesAlbumCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3EC4971EEEA8D7009472FB /* iTunesAlbumCell.swift */; };
-		2E3EC49A1EEEA8D7009472FB /* iTunesAlbumCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3EC4981EEEA8D7009472FB /* iTunesAlbumCell.xib */; };
 		2E3EC49D1EEEA8E9009472FB /* iTunesArtistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3EC49B1EEEA8E9009472FB /* iTunesArtistCell.swift */; };
-		2E3EC49E1EEEA8E9009472FB /* iTunesArtistCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3EC49C1EEEA8E9009472FB /* iTunesArtistCell.xib */; };
 		2E3EC4A01EEEAB10009472FB /* iTunesAlbumListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3EC49F1EEEAB10009472FB /* iTunesAlbumListViewController.swift */; };
 		2E3EC4A21EEEAB1F009472FB /* iTunesArtistListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3EC4A11EEEAB1F009472FB /* iTunesArtistListViewController.swift */; };
 		2E3EC4A41EEEACBF009472FB /* iTunesNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3EC4A31EEEACBF009472FB /* iTunesNavigationController.swift */; };
 		2E7101561EC8573100A80C25 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7101551EC8573100A80C25 /* File.swift */; };
 		2E7AC2221E47195700BA03B7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E7AC2201E47195700BA03B7 /* LaunchScreen.storyboard */; };
 		2E7D70051ED031BD0078BD1B /* iTunesSongCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D70021ED031BD0078BD1B /* iTunesSongCell.swift */; };
-		2E7D70061ED031BD0078BD1B /* iTunesSongCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E7D70031ED031BD0078BD1B /* iTunesSongCell.xib */; };
 		2E7D70071ED031BD0078BD1B /* iTunesSongListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D70041ED031BD0078BD1B /* iTunesSongListViewController.swift */; };
 		2E83A5031EA327000073C258 /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E83A5021EA327000073C258 /* Double+Extension.swift */; };
 		2E8EEC271EE4027F00593FA3 /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8EEC261EE4027F00593FA3 /* WaveformView.swift */; };
@@ -89,9 +84,7 @@
 		2E01A80A1EE64FF100B50F47 /* FileManager+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FileManager+Extension.swift"; sourceTree = "<group>"; };
 		2E0E5E371EEFFA88006C9E7B /* iTunesAlbumDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesAlbumDetailViewController.swift; sourceTree = "<group>"; };
 		2E0E5E391EF00C48006C9E7B /* iTunesAlbumDetailSongCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesAlbumDetailSongCell.swift; sourceTree = "<group>"; };
-		2E0E5E3A1EF00C48006C9E7B /* iTunesAlbumDetailSongCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iTunesAlbumDetailSongCell.xib; sourceTree = "<group>"; };
 		2E0E5E3D1EF0109C006C9E7B /* iTunesAlbumDetailHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesAlbumDetailHeaderView.swift; sourceTree = "<group>"; };
-		2E0E5E3E1EF0109C006C9E7B /* iTunesAlbumDetailHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iTunesAlbumDetailHeaderView.xib; sourceTree = "<group>"; };
 		2E16CBC61F17961B00A80C60 /* FileListEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileListEditViewController.swift; sourceTree = "<group>"; };
 		2E1A3B7E1E8F932300F785D0 /* UIScreen+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIScreen+Extension.swift"; sourceTree = "<group>"; };
 		2E1A3EAD1F14EEC3005B3E6E /* FileEditOptionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileEditOptionView.swift; sourceTree = "<group>"; };
@@ -100,15 +93,13 @@
 		2E2E33F01E8770C500AF26DE /* DoubleObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoubleObject.swift; sourceTree = "<group>"; };
 		2E3DC3F21ECFF04C00FCBD67 /* BookmarkCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarkCollectionViewCell.swift; sourceTree = "<group>"; };
 		2E3DC3F31ECFF04C00FCBD67 /* BookmarkCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookmarkCollectionViewCell.xib; sourceTree = "<group>"; };
-		2E3DC3F41ECFF04C00FCBD67 /* BookmarksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksViewController.swift; sourceTree = "<group>"; };
-		2E3DC3F51ECFF04C00FCBD67 /* BookmarksViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookmarksViewController.xib; sourceTree = "<group>"; };
+		2E3DC3F41ECFF04C00FCBD67 /* BookmarkListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarkListViewController.swift; sourceTree = "<group>"; };
+		2E3DC3F51ECFF04C00FCBD67 /* BookmarkListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookmarkListViewController.xib; sourceTree = "<group>"; };
 		2E3DC3F61ECFF04C00FCBD67 /* PlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		2E3DC3F81ECFF04C00FCBD67 /* PlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayerViewController.xib; sourceTree = "<group>"; };
 		2E3DC3F91ECFF04C00FCBD67 /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		2E3EC4971EEEA8D7009472FB /* iTunesAlbumCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesAlbumCell.swift; sourceTree = "<group>"; };
-		2E3EC4981EEEA8D7009472FB /* iTunesAlbumCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iTunesAlbumCell.xib; sourceTree = "<group>"; };
 		2E3EC49B1EEEA8E9009472FB /* iTunesArtistCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesArtistCell.swift; sourceTree = "<group>"; };
-		2E3EC49C1EEEA8E9009472FB /* iTunesArtistCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iTunesArtistCell.xib; sourceTree = "<group>"; };
 		2E3EC49F1EEEAB10009472FB /* iTunesAlbumListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesAlbumListViewController.swift; sourceTree = "<group>"; };
 		2E3EC4A11EEEAB1F009472FB /* iTunesArtistListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesArtistListViewController.swift; sourceTree = "<group>"; };
 		2E3EC4A31EEEACBF009472FB /* iTunesNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesNavigationController.swift; sourceTree = "<group>"; };
@@ -117,7 +108,6 @@
 		2E7AC2211E47195700BA03B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2E7AC2231E47195700BA03B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2E7D70021ED031BD0078BD1B /* iTunesSongCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesSongCell.swift; sourceTree = "<group>"; };
-		2E7D70031ED031BD0078BD1B /* iTunesSongCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iTunesSongCell.xib; sourceTree = "<group>"; };
 		2E7D70041ED031BD0078BD1B /* iTunesSongListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesSongListViewController.swift; sourceTree = "<group>"; };
 		2E83A5021EA327000073C258 /* Double+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
 		2E8EEC261EE4027F00593FA3 /* WaveformView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
@@ -188,8 +178,8 @@
 				2E3DC3F81ECFF04C00FCBD67 /* PlayerViewController.xib */,
 				2E3DC3F21ECFF04C00FCBD67 /* BookmarkCollectionViewCell.swift */,
 				2E3DC3F31ECFF04C00FCBD67 /* BookmarkCollectionViewCell.xib */,
-				2E3DC3F41ECFF04C00FCBD67 /* BookmarksViewController.swift */,
-				2E3DC3F51ECFF04C00FCBD67 /* BookmarksViewController.xib */,
+				2E3DC3F41ECFF04C00FCBD67 /* BookmarkListViewController.swift */,
+				2E3DC3F51ECFF04C00FCBD67 /* BookmarkListViewController.xib */,
 				2E3DC3F61ECFF04C00FCBD67 /* PlayerView.swift */,
 			);
 			path = Player;
@@ -244,18 +234,13 @@
 				2EC9361D1F24E927008761EB /* iTunesMenuCell.swift */,
 				2E7D70041ED031BD0078BD1B /* iTunesSongListViewController.swift */,
 				2E7D70021ED031BD0078BD1B /* iTunesSongCell.swift */,
-				2E7D70031ED031BD0078BD1B /* iTunesSongCell.xib */,
 				2E3EC49F1EEEAB10009472FB /* iTunesAlbumListViewController.swift */,
 				2E3EC4971EEEA8D7009472FB /* iTunesAlbumCell.swift */,
-				2E3EC4981EEEA8D7009472FB /* iTunesAlbumCell.xib */,
 				2E0E5E371EEFFA88006C9E7B /* iTunesAlbumDetailViewController.swift */,
 				2E0E5E3D1EF0109C006C9E7B /* iTunesAlbumDetailHeaderView.swift */,
-				2E0E5E3E1EF0109C006C9E7B /* iTunesAlbumDetailHeaderView.xib */,
 				2E0E5E391EF00C48006C9E7B /* iTunesAlbumDetailSongCell.swift */,
-				2E0E5E3A1EF00C48006C9E7B /* iTunesAlbumDetailSongCell.xib */,
 				2E3EC4A11EEEAB1F009472FB /* iTunesArtistListViewController.swift */,
 				2E3EC49B1EEEA8E9009472FB /* iTunesArtistCell.swift */,
-				2E3EC49C1EEEA8E9009472FB /* iTunesArtistCell.xib */,
 				2EC936151F2460FE008761EB /* iTunesPlaylistViewController.swift */,
 				2EC936171F2466B2008761EB /* iTunesPlaylistItemCell.swift */,
 				2EC936191F24E53C008761EB /* iTunesPlaylistDetailViewController.swift */,
@@ -439,13 +424,8 @@
 				2E7AC2221E47195700BA03B7 /* LaunchScreen.storyboard in Resources */,
 				2EC3C0231EC86FA200812AA9 /* FileCell.xib in Resources */,
 				2E3DC3FB1ECFF04C00FCBD67 /* BookmarkCollectionViewCell.xib in Resources */,
-				2E0E5E3C1EF00C48006C9E7B /* iTunesAlbumDetailSongCell.xib in Resources */,
-				2E0E5E401EF0109C006C9E7B /* iTunesAlbumDetailHeaderView.xib in Resources */,
-				2E3EC49E1EEEA8E9009472FB /* iTunesArtistCell.xib in Resources */,
 				2E3DC4001ECFF04C00FCBD67 /* PlayerViewController.xib in Resources */,
-				2E3EC49A1EEEA8D7009472FB /* iTunesAlbumCell.xib in Resources */,
-				2E7D70061ED031BD0078BD1B /* iTunesSongCell.xib in Resources */,
-				2E3DC3FD1ECFF04C00FCBD67 /* BookmarksViewController.xib in Resources */,
+				2E3DC3FD1ECFF04C00FCBD67 /* BookmarkListViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -588,7 +568,7 @@
 				2E3DC3FA1ECFF04C00FCBD67 /* BookmarkCollectionViewCell.swift in Sources */,
 				2E3EC4991EEEA8D7009472FB /* iTunesAlbumCell.swift in Sources */,
 				2E1A3B7F1E8F932300F785D0 /* UIScreen+Extension.swift in Sources */,
-				2E3DC3FC1ECFF04C00FCBD67 /* BookmarksViewController.swift in Sources */,
+				2E3DC3FC1ECFF04C00FCBD67 /* BookmarkListViewController.swift in Sources */,
 				2EC3C0221EC86FA200812AA9 /* FileCell.swift in Sources */,
 				2E01A8091EE5624500B50F47 /* FileDestinationViewController.swift in Sources */,
 				2EF78C7A1F2343B2009778D4 /* MoreItemCell.swift in Sources */,

@@ -15,7 +15,10 @@ class iTunesMenuCell: UICollectionViewCell {
     }
     
     //MARK: UI Components
-    fileprivate let nameLabel = UILabel()
+    fileprivate let nameLabel = UILabel().then { (label) in
+        label.font = label.font.withSize(17)
+        label.textColor = UIColor.black
+    }
     fileprivate let borderView = UIView().then { (view) in
         view.backgroundColor = UIColor.gray220
     }
@@ -36,7 +39,7 @@ class iTunesMenuCell: UICollectionViewCell {
         }
         self.addSubview(self.borderView)
         self.borderView.snp.makeConstraints { (make) in
-            make.left.equalTo(self).offset(45)
+            make.left.equalTo(self).offset(44)
             make.bottom.equalTo(self)
             make.right.equalTo(self).offset(-20)
             make.height.equalTo(UIScreen.scaleWidth)

@@ -12,33 +12,67 @@ import MediaPlayer
 class iTunesSongCell: UICollectionViewCell {
     
     class func height() -> CGFloat {
-        return 50
+        return 56
     }
-
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var artistNameLabel: UILabel!
-    @IBOutlet weak var coverImageView: UIImageView!
-    @IBOutlet weak var seperateViewHeightConstraint: NSLayoutConstraint!
     
+    //MARK: UI Components
+    fileprivate let titleLabel = UILabel().then { (label) in
+        label.font = label.font.withSize(14)
+        label.textColor = UIColor.black
+    }
+    fileprivate let artistLabel = UILabel().then { (label) in
+        label.font = label.font.withSize(11)
+        label.textColor = UIColor.gray145
+    }
+    fileprivate let albumCoverImageView = UIImageView().then { (view) in
+        view.layer.borderColor = UIColor.gray220.cgColor
+        view.layer.borderWidth = UIScreen.scaleWidth
+    }
+    fileprivate let borderView = UIView().then { (view) in
+        view.backgroundColor = UIColor.gray220
+    }
+    
+    //MARK: Properties
     var item: MPMediaItem? {
         didSet {
             if let item = item {
                 self.titleLabel.text = item.title
-                self.artistNameLabel.text = item.artist
-                self.coverImageView.image = item.artwork?.image(at: coverImageView.frame.size)
+                self.artistLabel.text = item.artist
+                self.albumCoverImageView.image = item.artwork?.image(at: albumCoverImageView.frame.size)
             } else {
                 self.titleLabel.text = ""
-                self.artistNameLabel.text = ""
-                self.coverImageView.image = nil
+                self.artistLabel.text = ""
+                self.albumCoverImageView.image = nil
             }
         }
     }
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        self.coverImageView.layer.borderColor = UIColor.gray220.cgColor
-        self.coverImageView.layer.borderWidth = UIScreen.scaleWidth
-        self.seperateViewHeightConstraint.constant = UIScreen.scaleWidth
+    override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        self.addSubview(self.albumCoverImageView)
+        self.albumCoverImageView.snp.makeConstraints { (make) in
+            make.left.equalTo(self).offset(10)
+            make.centerY.equalTo(self)
+            make.width.height.equalTo(44)
+        }
+        self.addSubview(self.titleLabel)
+        self.titleLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(self).offset(5)
+            make.left.equalTo(self.albumCoverImageView.snp.right).offset(10)
+            make.right.equalTo(self).offset(-20)
+        }
+        self.addSubview(self.artistLabel)
+        self.artistLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(self.titleLabel.snp.bottom).offset(5)
+            make.left.equalTo(self.albumCoverImageView.snp.right).offset(10)
+            make.right.equalTo(self).offset(-20)
+        }
+        self.addSubview(self.borderView)
+        self.borderView.snp.makeConstraints { (make) in
+            make.left.equalTo(self).offset(44)
+            make.bottom.equalTo(self)
+            make.right.equalTo(self).offset(-20)
+            make.height.equalTo(UIScreen.scaleWidth)
+        }
     }
-
 }

@@ -1,5 +1,5 @@
 //
-//  BookmarksViewController.swift
+//  BookmarkListViewController.swift
 //  SectionRepeater
 //
 //  Created by KimYongSeong on 2017. 4. 1..
@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class BookmarksViewController: UIViewController {
+class BookmarkListViewController: UIViewController {
 
     //MARK: UI Components
     @IBOutlet weak var contentView: UIView!
@@ -50,7 +50,7 @@ class BookmarksViewController: UIViewController {
 
 }
 
-extension BookmarksViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+extension BookmarkListViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let numberOfBookmarkTimes = self.bookmarkTimes?.count {
             return numberOfBookmarkTimes
@@ -78,7 +78,7 @@ extension BookmarksViewController: UICollectionViewDataSource, UICollectionViewD
     }
 }
 
-extension BookmarksViewController: BookmarkCollectionViewCellDelegate {
+extension BookmarkListViewController: BookmarkCollectionViewCellDelegate {
     func didTapDeleteButton(cell: BookmarkCollectionViewCell) {
         guard let removedTime = cell.time else { return }
         Player.shared.removeBookmark(at: removedTime)
