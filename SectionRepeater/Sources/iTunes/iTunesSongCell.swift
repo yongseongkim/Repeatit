@@ -21,7 +21,7 @@ class iTunesSongCell: UICollectionViewCell {
         label.textColor = UIColor.black
     }
     fileprivate let artistLabel = UILabel().then { (label) in
-        label.font = label.font.withSize(11)
+        label.font = label.font.withSize(12)
         label.textColor = UIColor.gray145
     }
     fileprivate let albumCoverImageView = UIImageView().then { (view) in

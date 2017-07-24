@@ -278,10 +278,6 @@ class PlayerViewController: UIViewController {
         Player.shared.moveForward(seconds: 5)
     }
     
-    @IBAction func moveAfter10SecondsButtonTapped(_ sender: Any) {
-        Player.shared.moveForward(seconds: 10)
-    }
-    
     @IBAction func playNextButtonTapped(_ sender: Any) {
         Player.shared.playNext()
     }
