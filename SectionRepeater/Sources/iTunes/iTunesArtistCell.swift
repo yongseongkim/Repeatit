@@ -16,13 +16,14 @@ class iTunesArtistCell: UICollectionViewCell {
     }
     
     //MARK: UI Components
-    let nameLabel = UILabel().then { (label) in
+    fileprivate let nameLabel = UILabel().then { (label) in
         label.font = label.font.withSize(17)
         label.textColor = UIColor.black
     }
-    let borderView = UIView().then { (view) in
+    fileprivate let borderView = UIView().then { (view) in
         view.backgroundColor = UIColor.gray220
     }
+    fileprivate let arrowView = UIImageView(image: UIImage(named: "arrow_44pt"))
     
     //MARK: Properties
     var collection: MPMediaItemCollection? {
@@ -37,10 +38,16 @@ class iTunesArtistCell: UICollectionViewCell {
     
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
+        self.addSubview(self.arrowView)
+        self.arrowView.snp.makeConstraints { (make) in
+            make.right.equalTo(self).offset(-10)
+            make.width.height.equalTo(44)
+            make.centerY.equalTo(self)
+        }
         self.addSubview(self.nameLabel)
         self.nameLabel.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(20)
-            make.right.equalTo(self).offset(-20)
+            make.right.equalTo(self.arrowView.snp.left).offset(-10)
             make.centerY.equalTo(self)
         }
         self.addSubview(self.borderView)
@@ -51,5 +58,4 @@ class iTunesArtistCell: UICollectionViewCell {
             make.height.equalTo(UIScreen.scaleWidth)
         }
     }
-
 }

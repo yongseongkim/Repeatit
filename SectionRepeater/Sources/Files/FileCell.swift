@@ -34,7 +34,7 @@ class FileCell: UICollectionViewCell {
             var filename: String = ""
             if let file = file {
                 if file.isDirectory {
-                    image = UIImage(named: "empty_common_folder_44pt")
+                    image = UIImage(named: "folder_44pt")
                 } else {
                     image = file.audioInformation?.artwork
                 }
@@ -42,7 +42,7 @@ class FileCell: UICollectionViewCell {
             } else {
                 image = nil
             }
-            self.albumCoverImageView.image = image ?? UIImage(named: "empty_music_note_44pt")
+            self.albumCoverImageView.image = image ?? UIImage(named: "music_note_empty_44pt")
             self.nameLabel.text = filename
         }
     }

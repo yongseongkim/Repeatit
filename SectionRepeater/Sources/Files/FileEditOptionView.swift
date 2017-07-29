@@ -25,7 +25,7 @@ class FileEditOptionView : UIView {
     
     //MARK: UI Components
     fileprivate let addButton = UIButton().then { (button) in
-        button.setImage(UIImage(named: "btn_common_plus_44pt"), for: .normal)
+        button.setImage(UIImage(named: "btn_add_folder_44pt"), for: .normal)
         button.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
     }
     fileprivate let editButton = UIButton().then { (button) in
@@ -33,7 +33,7 @@ class FileEditOptionView : UIView {
         button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
     }
     fileprivate let moveButton = UIButton().then { (button) in
-        button.setImage(UIImage(named: "btn_move_file_44pt"), for: .normal)
+        button.setImage(UIImage(named: "btn_move_files_44pt"), for: .normal)
         button.addTarget(self, action: #selector(moveButtonTapped), for: .touchUpInside)
     }
     fileprivate let deleteButton = UIButton().then { (button) in

@@ -11,7 +11,7 @@ import UIKit
 class MoreLogoCell: UICollectionViewCell {
     
     let logoView = UIView()
-    let logoImageView = UIImageView(image: UIImage(named: "btn_common_circle_check_44pt"))
+    let logoImageView = UIImageView(image: UIImage(named: "more_logo_100pt"))
     let logoLabel = UILabel(frame: .zero).then { (label) in
         label.text = "SectionRepeater"
     }

@@ -103,7 +103,7 @@ class PlayerViewController: UIViewController {
         if let artwork = item.artwork {
             self.albumCoverImageView.image = artwork
         } else {
-            self.albumCoverImageView.image = UIImage(named: "empty_music_note_120pt")
+            self.albumCoverImageView.image = UIImage(named: "music_note_fill_120pt")
         }
         self.lyricsTextView.text = item.lyrics
         if (item.lyrics ?? "").isEmpty {
@@ -133,9 +133,9 @@ class PlayerViewController: UIViewController {
     fileprivate func setupButtons() {
         let state = Player.shared.state
         if state.isPlaying {
-            self.playButton.setImage(UIImage(named: "btn_pause_52pt"), for: .normal)
+            self.playButton.setImage(UIImage(named: "btn_pause_72pt"), for: .normal)
         } else {
-            self.playButton.setImage(UIImage(named: "btn_play_52pt"), for: .normal)
+            self.playButton.setImage(UIImage(named: "btn_play_72pt"), for: .normal)
         }
         self.rateButton.setTitle(String(format: "x%.1f", state.rate), for: .normal)
         switch state.repeatMode {

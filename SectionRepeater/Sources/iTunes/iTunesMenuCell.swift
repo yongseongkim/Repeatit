@@ -22,6 +22,7 @@ class iTunesMenuCell: UICollectionViewCell {
     fileprivate let borderView = UIView().then { (view) in
         view.backgroundColor = UIColor.gray220
     }
+    fileprivate let arrowView = UIImageView(image: UIImage(named: "arrow_44pt"))
     //MARK: Properties
     public var menuName: String? {
         didSet {
@@ -31,10 +32,16 @@ class iTunesMenuCell: UICollectionViewCell {
     
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
+        self.addSubview(self.arrowView)
+        self.arrowView.snp.makeConstraints { (make) in
+            make.right.equalTo(self).offset(-10)
+            make.width.height.equalTo(44)
+            make.centerY.equalTo(self)
+        }
         self.addSubview(self.nameLabel)
         self.nameLabel.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(20)
-            make.right.equalTo(self).offset(-20)
+            make.right.equalTo(self.arrowView.snp.left).offset(-10)
             make.centerY.equalTo(self)
         }
         self.addSubview(self.borderView)
@@ -46,5 +53,4 @@ class iTunesMenuCell: UICollectionViewCell {
         }
     }
 
-    
 }

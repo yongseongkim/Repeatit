@@ -43,9 +43,9 @@ class RootViewController: UITabBarController {
     
     func loadTabViews() {
         self.tabBar.tintColor = UIColor.black
-        self.fileListNaviController.tabBarItem = UITabBarItem(title: "Files", image: UIImage(named: "empty_common_folder_28pt"), selectedImage: UIImage(named: "fill_common_folder_28pt"))
-        self.itunesNaviController.tabBarItem = UITabBarItem(title: "iTunes", image: UIImage(named: "empty_music_note_28pt"), selectedImage: UIImage(named: "fill_music_note_28pt"))
-        self.moreNaviController.tabBarItem = UITabBarItem(title: "More", image: UIImage(named: "btn_common_option_44pt"), selectedImage: UIImage(named: "btn_common_option_44pt"))
+        self.fileListNaviController.tabBarItem = UITabBarItem(title: "Files", image: UIImage(named: "menu_documents_28pt"), selectedImage: UIImage(named: "menu_documents_selected_28pt"))
+        self.itunesNaviController.tabBarItem = UITabBarItem(title: "iTunes", image: UIImage(named: "menu_itunes_28pt"), selectedImage: UIImage(named: "menu_itunes_selected_28pt"))
+        self.moreNaviController.tabBarItem = UITabBarItem(title: "More", image: UIImage(named: "menu_more_28pt"), selectedImage: UIImage(named: "menu_more_selected_28pt"))
         
         let viewControllers = [self.fileListNaviController, self.itunesNaviController, self.moreNaviController]
         self.setViewControllers(viewControllers, animated: false)

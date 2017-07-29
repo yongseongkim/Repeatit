@@ -40,7 +40,7 @@ class FileListViewController: UIViewController {
         self.currentURL = url
         super.init(nibName: nil, bundle: nil)
         let optionButton = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44)).then { (button) in
-            button.setImage(UIImage(named: "btn_common_option_44pt"), for: .normal)
+            button.setImage(UIImage(named: "btn_file_options_44pt"), for: .normal)
             button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
         }
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: optionButton)
