@@ -39,11 +39,17 @@ class FileListViewController: UIViewController {
     init(url: URL) {
         self.currentURL = url
         super.init(nibName: nil, bundle: nil)
+
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        spaceButton.width = -12
+        if (UIScreen.mainWidth >= 414) {
+            spaceButton.width = -16
+        }
         let optionButton = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44)).then { (button) in
             button.setImage(UIImage(named: "btn_file_options_44pt"), for: .normal)
             button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
         }
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: optionButton)
+        self.navigationItem.rightBarButtonItems = [spaceButton, UIBarButtonItem(customView: optionButton)]
         NotificationCenter.default.addObserver(self, selector: #selector(enterForeground), name: Notification.Name.UIApplicationWillEnterForeground, object: nil)
     }
     
