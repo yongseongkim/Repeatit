@@ -33,7 +33,7 @@ class iTunesAlbumDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Songs in Album"
+        self.title = "Tracks(Album)"
         self.automaticallyAdjustsScrollViewInsets = false
         self.view.backgroundColor = UIColor.white
         self.view.addSubview(self.collectionView)

@@ -49,7 +49,7 @@ class iTunesPlaylistDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Songs in Playlist"
+        self.title = "Songs(Playlist)"
         self.automaticallyAdjustsScrollViewInsets = false
         self.view.addSubview(self.collectionView)
         

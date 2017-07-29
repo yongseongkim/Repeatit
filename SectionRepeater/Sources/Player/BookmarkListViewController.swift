@@ -20,10 +20,10 @@ class BookmarkListViewController: UIViewController {
         }
     }
     @IBOutlet weak var borderViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var bottomBorderViewHeightConstraint: NSLayoutConstraint!
     
     //MARK: Properties
     fileprivate var bookmarkTimes: [Double]?
-    public var targetPath: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +33,8 @@ class BookmarkListViewController: UIViewController {
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.view.insertSubview(blurEffectView, belowSubview: self.contentView)
         self.borderViewHeightConstraint.constant = UIScreen.scaleWidth
+        self.bottomBorderViewHeightConstraint.constant = UIScreen.scaleWidth
+        Player.shared.notificationCenter.addObserver(self, selector: #selector(handleBookmarkUpdatedNotification), name: Notification.Name.playerBookmakrUpdated, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -45,10 +47,22 @@ class BookmarkListViewController: UIViewController {
         self.collectionView.reloadData()
     }
     
+    func handleBookmarkUpdatedNotification() {
+        self.loadBookmark()
+    }
+    
     @IBAction func closeButton(_ sender: Any) {
         self.dismiss(animated: false, completion: nil)
     }
 
+    @IBAction func removeAllBookmarksButtonTapped(_ sender: Any) {
+        let alert = UIAlertController(title: "Remove Bookmarks", message: "Do you want to remove playing item's bookmarks?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Confirm", style: .default) { (action) in
+            Player.shared.removeCurrentPlayingItemAllBookmarks()
+        })
+        self.present(alert, animated: true, completion: nil)
+    }
 }
 
 extension BookmarkListViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
@@ -64,6 +78,7 @@ extension BookmarkListViewController: UICollectionViewDataSource, UICollectionVi
         cell.delegate = self
         cell.index = indexPath.row
         cell.time = self.bookmarkTimes?[indexPath.row]
+        cell.hideBorderView = (indexPath.row == collectionView.numberOfItems(inSection: indexPath.section) - 1)
         return cell
     }
     

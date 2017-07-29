@@ -103,7 +103,7 @@ class PlayerViewController: UIViewController {
         if let artwork = item.artwork {
             self.albumCoverImageView.image = artwork
         } else {
-            self.albumCoverImageView.image = UIImage(named: "music_note_fill_120pt")
+            self.albumCoverImageView.image = UIImage(named: "music_note_empty_120pt")
         }
         self.lyricsTextView.text = item.lyrics
         if (item.lyrics ?? "").isEmpty {

@@ -12,6 +12,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BookmarkListViewController" customModule="SectionRepeater" customModuleProvider="target">
             <connections>
                 <outlet property="borderViewHeightConstraint" destination="mYW-8o-fPc" id="zDT-DH-t9L"/>
+                <outlet property="bottomBorderViewHeightConstraint" destination="iNu-1f-jh8" id="iGc-MV-MjF"/>
                 <outlet property="collectionView" destination="fzP-va-C9a" id="D8Y-dn-Mgz"/>
                 <outlet property="contentView" destination="t81-Qu-7qU" id="lrF-bT-VS6"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -26,7 +27,7 @@
                     <rect key="frame" x="20" y="30" width="335" height="607"/>
                     <subviews>
                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="fzP-va-C9a">
-                            <rect key="frame" x="0.0" y="50" width="335" height="557"/>
+                            <rect key="frame" x="0.0" y="50" width="335" height="507"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="JW6-yx-gE2">
                                 <size key="itemSize" width="50" height="50"/>
@@ -39,6 +40,47 @@
                                 <outlet property="delegate" destination="-1" id="46U-Rn-IJI"/>
                             </connections>
                         </collectionView>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rsH-yY-XO9">
+                            <rect key="frame" x="0.0" y="557" width="335" height="50"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r6s-Ua-Jka">
+                                    <rect key="frame" x="20" y="0.0" width="295" height="1"/>
+                                    <color key="backgroundColor" red="0.56862745100000001" green="0.56862745100000001" blue="0.56862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="1" id="iNu-1f-jh8"/>
+                                    </constraints>
+                                </view>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remove All Bookmarks" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rjA-jm-Z76">
+                                    <rect key="frame" x="20" y="16.5" width="241" height="18"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <color key="textColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JdD-8Q-kcc">
+                                    <rect key="frame" x="281" y="3" width="44" height="44"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="44" id="Xek-X5-fdD"/>
+                                        <constraint firstAttribute="height" constant="44" id="Y8A-4S-2F0"/>
+                                    </constraints>
+                                    <state key="normal" image="btn_delete_file_44pt"/>
+                                    <connections>
+                                        <action selector="removeAllBookmarksButtonTapped:" destination="-1" eventType="touchUpInside" id="5eD-Wx-rgY"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="rjA-jm-Z76" firstAttribute="leading" secondItem="rsH-yY-XO9" secondAttribute="leading" constant="20" id="6AQ-ny-Nu3"/>
+                                <constraint firstItem="r6s-Ua-Jka" firstAttribute="leading" secondItem="rsH-yY-XO9" secondAttribute="leading" constant="20" id="6jp-e0-lKS"/>
+                                <constraint firstAttribute="trailing" secondItem="JdD-8Q-kcc" secondAttribute="trailing" constant="10" id="I5r-Ek-I1Q"/>
+                                <constraint firstItem="JdD-8Q-kcc" firstAttribute="leading" secondItem="rjA-jm-Z76" secondAttribute="trailing" constant="20" id="JVy-qX-0hm"/>
+                                <constraint firstAttribute="height" constant="50" id="Lbu-tz-PMg"/>
+                                <constraint firstAttribute="trailing" secondItem="r6s-Ua-Jka" secondAttribute="trailing" constant="20" id="aDp-vK-Xjx"/>
+                                <constraint firstItem="rjA-jm-Z76" firstAttribute="centerY" secondItem="rsH-yY-XO9" secondAttribute="centerY" id="pMV-TI-1xZ"/>
+                                <constraint firstItem="r6s-Ua-Jka" firstAttribute="top" secondItem="rsH-yY-XO9" secondAttribute="top" id="v8Z-Qa-48L"/>
+                                <constraint firstItem="JdD-8Q-kcc" firstAttribute="centerY" secondItem="rsH-yY-XO9" secondAttribute="centerY" id="zbc-Po-WLV"/>
+                            </constraints>
+                        </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L2a-TB-ADZ">
                             <rect key="frame" x="0.0" y="0.0" width="335" height="50"/>
                             <subviews>
@@ -82,10 +124,13 @@
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="bottom" secondItem="fzP-va-C9a" secondAttribute="bottom" id="2vV-lN-AZa"/>
                         <constraint firstItem="fzP-va-C9a" firstAttribute="top" secondItem="L2a-TB-ADZ" secondAttribute="bottom" id="58r-hf-l29"/>
+                        <constraint firstAttribute="trailing" secondItem="rsH-yY-XO9" secondAttribute="trailing" id="F05-3H-krR"/>
+                        <constraint firstItem="rsH-yY-XO9" firstAttribute="leading" secondItem="t81-Qu-7qU" secondAttribute="leading" id="InO-KO-M1Q"/>
                         <constraint firstItem="L2a-TB-ADZ" firstAttribute="leading" secondItem="t81-Qu-7qU" secondAttribute="leading" id="KvD-Yo-6EX"/>
                         <constraint firstItem="fzP-va-C9a" firstAttribute="leading" secondItem="t81-Qu-7qU" secondAttribute="leading" id="PWU-LE-Fu1"/>
+                        <constraint firstItem="rsH-yY-XO9" firstAttribute="top" secondItem="fzP-va-C9a" secondAttribute="bottom" id="j94-dZ-bxf"/>
+                        <constraint firstAttribute="bottom" secondItem="rsH-yY-XO9" secondAttribute="bottom" id="kl7-H0-VZB"/>
                         <constraint firstAttribute="trailing" secondItem="fzP-va-C9a" secondAttribute="trailing" id="mzl-uJ-HtL"/>
                         <constraint firstItem="L2a-TB-ADZ" firstAttribute="top" secondItem="t81-Qu-7qU" secondAttribute="top" id="vGc-zx-Mec"/>
                         <constraint firstAttribute="trailing" secondItem="L2a-TB-ADZ" secondAttribute="trailing" id="ybC-Ut-mts"/>
@@ -103,5 +148,6 @@
     </objects>
     <resources>
         <image name="btn_common_x_44pt" width="44" height="44"/>
+        <image name="btn_delete_file_44pt" width="44" height="44"/>
     </resources>
 </document>

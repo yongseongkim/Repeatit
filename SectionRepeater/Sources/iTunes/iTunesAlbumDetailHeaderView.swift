@@ -52,7 +52,7 @@ class iTunesAlbumDetailHeaderView: UICollectionReusableView {
     }
     public var numberOfSongs: Int = 0 {
         didSet {
-            self.numberOfSongsLabel.text = String(format: "%d songs", numberOfSongs)
+            self.numberOfSongsLabel.text = String(format: "%d tracks", numberOfSongs)
         }
     }
     

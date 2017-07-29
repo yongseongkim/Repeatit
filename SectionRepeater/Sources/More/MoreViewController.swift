@@ -56,7 +56,7 @@ class MoreViewController: UIViewController {
         let mc = MFMailComposeViewController()
         mc.mailComposeDelegate = self
         mc.setSubject("Feedback")
-        mc.setMessageBody("If you dissatisfy with this application, please tell us about that.", isHTML: false)
+//        mc.setMessageBody("If you dissatisfy with this application, please tell us about that.", isHTML: false)
         mc.setToRecipients(["kys911015@gmail.com"])
         self.present(mc, animated: true, completion: nil)
     }
@@ -65,13 +65,13 @@ class MoreViewController: UIViewController {
         let mc = MFMailComposeViewController()
         mc.mailComposeDelegate = self
         mc.setSubject("BugReport")
-        mc.setMessageBody("If you want us to fix bug, please tell us about that", isHTML: false)
+//        mc.setMessageBody("If you want us to fix bug, please tell us about that", isHTML: false)
         mc.setToRecipients(["kys911015@gmail.com"])
         self.present(mc, animated: true, completion: nil)
     }
 
     func removeAllBookmarks() {
-        let alert = UIAlertController(title: "Remove Bookmarks", message: "do you want to remove all bookmarks?", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Remove Bookmarks", message: "Do you want to remove all bookmarks?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "Confirm", style: .default) { (action) in
             Player.shared.removeAllBookmarks()

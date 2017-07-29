@@ -52,6 +52,11 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
             self.timeLabel.text = String(format: "%02d:%02d", minutes, seconds)
         }
     }
+    public var hideBorderView = false {
+        didSet {
+            self.borderView.isHidden = hideBorderView
+        }
+    }
     
     override func didMoveToSuperview() {
         super.didMoveToSuperview()

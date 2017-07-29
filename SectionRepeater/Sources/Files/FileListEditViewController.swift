@@ -160,9 +160,9 @@ extension FileListEditViewController: UICollectionViewDataSource, UICollectionVi
 
 extension FileListEditViewController: FileEditOptionViewDelegate {
     func optionAddButtonTapped() {
-        let alert = UIAlertController(title: "새폴더", message: nil, preferredStyle: .alert)
+        let alert = UIAlertController(title: "New Folder", message: nil, preferredStyle: .alert)
         alert.addTextField { (textField) in
-            textField.placeholder = "폴더명을 입력해주세요."
+            textField.placeholder = "What is new folder name?"
         }
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "Confirm", style: .default) { [weak self] (action) in
