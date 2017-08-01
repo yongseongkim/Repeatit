@@ -9,7 +9,7 @@
 import UIKit
 
 class WaveformPlaceholderView: UIView {
-    static let layerRadius: CGFloat = 22
+    static let layerRadius: CGFloat = 15
     
     fileprivate let loadingLayer = CAShapeLayer().then { (layer) in
         layer.contentsScale = UIScreen.main.scale
