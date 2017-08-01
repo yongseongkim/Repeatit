@@ -22,6 +22,8 @@ class WaveformView: UIView {
     static let sampleWidth: CGFloat = 2.0
     static let gapBetweenSamples: CGFloat = 1.0
     static let samplesPerPixel: Int = 3000  // 14.7 samples per second
+    static let progressBackgroundColor = UIColor.gray220
+    static let progressColor = UIColor.black
     
     public var delegate: WaveformViewDelegate?
     public var url: URL?
@@ -29,20 +31,54 @@ class WaveformView: UIView {
     fileprivate let scrollView = UIScrollView(frame: .zero).then { (scrollView) in
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
+        scrollView.backgroundColor = UIColor.white
     }
-    fileprivate var progressView: UIView?
+    fileprivate let progressBackgroundView = UIImageView().then { (imageView) in
+        imageView.backgroundColor = UIColor.clear
+    }
+    fileprivate let progressView = UIView().then { (view) in
+        view.backgroundColor = UIColor.clear
+        view.clipsToBounds = true
+    }
+    fileprivate let progressImageView: UIImageView = UIImageView().then { (imageView) in
+        imageView.backgroundColor = UIColor.clear
+    }
+    fileprivate let placeholderView = WaveformPlaceholderView()
     fileprivate var bookmarkViews = [UIView]()
     
-    override func didMoveToSuperview() {
-        super.didMoveToSuperview()
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.setup()
+    }
+    
+    func setup() {
+        self.addSubview(self.placeholderView)
+        self.placeholderView.snp.makeConstraints { (make) in
+            make.top.left.bottom.right.equalTo(self)
+        }
         self.addSubview(self.scrollView)
         self.scrollView.snp.makeConstraints { (make) in
-            make.top.equalTo(self)
-            make.left.equalTo(self)
-            make.bottom.equalTo(self)
-            make.right.equalTo(self)
+            make.top.left.bottom.right.equalTo(self)
         }
         self.scrollView.delegate = self
+        self.scrollView.addSubview(self.progressBackgroundView)
+        self.progressBackgroundView.snp.makeConstraints { (make) in
+            make.top.left.bottom.right.equalTo(self.scrollView)
+            make.width.equalTo(UIScreen.mainWidth)
+            make.height.equalTo(self.scrollView.snp.height)
+        }
+        self.progressView.addSubview(self.progressImageView)
+        self.progressImageView.snp.makeConstraints { (make) in
+            make.top.left.bottom.equalTo(self.progressView)
+            make.width.equalTo(0)
+            make.height.equalTo(self.progressView.snp.height)
+        }
+        self.scrollView.addSubview(self.progressView)
+        self.progressView.snp.makeConstraints { (make) in
+            make.top.left.bottom.equalTo(self.scrollView)
+            make.width.equalTo(0)
+            make.height.equalTo(self.scrollView.snp.height)
+        }
     }
     
     public func loadWaveform(url: URL) {
@@ -50,59 +86,35 @@ class WaveformView: UIView {
         self.url = url
         self.duration = CMTimeGetSeconds(AVURLAsset(url: url).duration)
         self.scrollView.contentInset = UIEdgeInsets(top: 0, left: self.bounds.width / 2, bottom: 0, right: self.bounds.width / 2)
-        for subview in self.scrollView.subviews {
-            subview.removeFromSuperview()
-        }
-        let placeholderView = UIView(frame: CGRect(x: CGFloat(0), y: CGFloat(0), width: CGFloat(duration * 14.7), height: self.bounds.height))
-        placeholderView.backgroundColor = UIColor.clear
-        self.scrollView.addSubview(placeholderView)
+        
+        let preContentWidth = CGFloat(duration * 44.08)
+        self.scrollView.isHidden = true
+        self.scrollView.contentSize = CGSize(width: preContentWidth, height: self.bounds.height)
+        self.progressBackgroundView.snp.updateConstraints({ (make) in
+            make.width.equalTo(preContentWidth)
+        })
+        
         // add waveform
         DispatchQueue.global().async { [weak self] in
             guard let weakSelf = self else { return }
             do {
                 let samples = try weakSelf.loadSamples(url: url)
                 let imageSize = CGSize(width: WaveformView.sampleWidth * CGFloat(samples.count) + WaveformView.gapBetweenSamples * CGFloat(samples.count - 1), height: weakSelf.bounds.height)
-                if let image = weakSelf.graphImage(samples: samples, imageSize: imageSize, color: UIColor.gray220) {
+                if let image = weakSelf.graphImage(samples: samples, imageSize: imageSize, color: WaveformView.progressBackgroundColor) {
                     DispatchQueue.main.async {
                         if weakSelf.url?.absoluteString != url.absoluteString {
                             return
                         }
-                        let backgroundImageView = UIImageView(image: image)
-                        backgroundImageView.backgroundColor = UIColor.clear
-                        weakSelf.scrollView.addSubview(backgroundImageView)
-                        backgroundImageView.snp.makeConstraints({ (make) in
-                            make.top.equalTo(weakSelf.scrollView)
-                            make.left.equalTo(weakSelf.scrollView)
-                            make.bottom.equalTo(weakSelf.scrollView)
-                            make.right.equalTo(weakSelf.scrollView)
+                        weakSelf.progressBackgroundView.image = image
+                        weakSelf.progressBackgroundView.snp.updateConstraints({ (make) in
                             make.width.equalTo(imageSize.width)
-                            make.height.equalTo(imageSize.height)
                         })
-
-                        let progressImageView = UIImageView(image: image.with(color: UIColor.black))
-                        progressImageView.backgroundColor = UIColor.clear
-                        
-                        let progressView = UIView(frame: .zero)
-                        progressView.backgroundColor = UIColor.clear
-                        progressView.clipsToBounds = true
-                        progressView.addSubview(progressImageView)
-                        progressImageView.snp.makeConstraints({ (make) in
-                            make.top.equalTo(progressView)
-                            make.left.equalTo(progressView)
-                            make.bottom.equalTo(progressView)
+                        weakSelf.progressImageView.image = image.with(color: WaveformView.progressColor)
+                        weakSelf.progressImageView.snp.updateConstraints({ (make) in
                             make.width.equalTo(imageSize.width)
-                            make.height.equalTo(imageSize.height)
                         })
-                        weakSelf.scrollView.addSubview(progressView)
-                        progressView.snp.makeConstraints({ (make) in
-                            make.top.equalTo(weakSelf.scrollView)
-                            make.left.equalTo(weakSelf.scrollView)
-                            make.bottom.equalTo(weakSelf.scrollView)
-                            make.width.equalTo(0)
-                            make.height.equalTo(imageSize.height)
-                        })
-                        weakSelf.progressView = progressView
-                        weakSelf.scrollView.contentSize = imageSize
+                        weakSelf.scrollView.contentSize = CGSize(width: imageSize.width, height: weakSelf.bounds.height)
+                        weakSelf.scrollView.isHidden = false
                         weakSelf.loadBookmarks()
                     }
                 }
@@ -191,7 +203,7 @@ class WaveformView: UIView {
 
 extension WaveformView: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        self.progressView?.snp.updateConstraints({ (make) in
+        self.progressView.snp.updateConstraints({ (make) in
             make.width.equalTo(scrollView.contentOffset.x + self.scrollView.contentInset.left)
         })
         self.scrollView.layoutIfNeeded()
