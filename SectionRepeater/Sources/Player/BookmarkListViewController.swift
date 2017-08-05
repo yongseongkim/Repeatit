@@ -21,16 +21,16 @@ class BookmarkListViewController: UIViewController {
     }
     @IBOutlet weak var borderViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var bottomBorderViewHeightConstraint: NSLayoutConstraint!
+    fileprivate let blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.dark)).then { (effectView) in
+        effectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    }
     
     //MARK: Properties
     fileprivate var bookmarkTimes: [Double]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.dark)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = self.view.bounds
-        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.blurEffectView.frame = self.view.bounds
         self.view.insertSubview(blurEffectView, belowSubview: self.contentView)
         self.borderViewHeightConstraint.constant = UIScreen.scaleWidth
         self.bottomBorderViewHeightConstraint.constant = UIScreen.scaleWidth
@@ -40,6 +40,14 @@ class BookmarkListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.loadBookmark()
+        self.blurEffectView.alpha = 0
+        UIView.animate(withDuration: 0.3) { [weak self] in
+            self?.blurEffectView.alpha = 1.0
+        }
+        let scaleAnim = CAKeyframeAnimation(keyPath: "transform.scale")
+        scaleAnim.values = [0.9, 1.05, 0.98, 1]
+        scaleAnim.duration = 0.3
+        self.contentView.layer.add(scaleAnim, forKey: nil)
     }
     
     func loadBookmark() {

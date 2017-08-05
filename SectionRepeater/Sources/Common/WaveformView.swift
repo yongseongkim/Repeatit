@@ -124,6 +124,50 @@ class WaveformView: UIView {
         }
     }
     
+    public func loadWaveform(url: URL, completion: ((_ loadURL: URL) -> ())?) {
+        // clean
+        self.url = url
+        self.duration = CMTimeGetSeconds(AVURLAsset(url: url).duration)
+        self.scrollView.contentInset = UIEdgeInsets(top: 0, left: self.bounds.width / 2, bottom: 0, right: self.bounds.width / 2)
+        
+        let preContentWidth = CGFloat(duration * 44.08)
+        self.scrollView.isHidden = true
+        self.scrollView.contentSize = CGSize(width: preContentWidth, height: self.bounds.height)
+        self.progressBackgroundView.snp.updateConstraints({ (make) in
+            make.width.equalTo(preContentWidth)
+        })
+        
+        // add waveform
+        DispatchQueue.global().async { [weak self] in
+            guard let weakSelf = self else { return }
+            do {
+                let samples = try weakSelf.loadSamples(url: url)
+                let imageSize = CGSize(width: WaveformView.sampleWidth * CGFloat(samples.count) + WaveformView.gapBetweenSamples * CGFloat(samples.count - 1), height: weakSelf.bounds.height)
+                if let image = weakSelf.graphImage(samples: samples, imageSize: imageSize, color: WaveformView.progressBackgroundColor) {
+                    DispatchQueue.main.async {
+                        if weakSelf.url?.absoluteString != url.absoluteString {
+                            return
+                        }
+                        weakSelf.progressBackgroundView.image = image
+                        weakSelf.progressBackgroundView.snp.updateConstraints({ (make) in
+                            make.width.equalTo(imageSize.width)
+                        })
+                        weakSelf.progressImageView.image = image.with(color: WaveformView.progressColor)
+                        weakSelf.progressImageView.snp.updateConstraints({ (make) in
+                            make.width.equalTo(imageSize.width)
+                        })
+                        weakSelf.scrollView.contentSize = CGSize(width: imageSize.width, height: weakSelf.bounds.height)
+                        weakSelf.scrollView.isHidden = false
+                        weakSelf.loadBookmarks()
+                        completion?(url)
+                    }
+                }
+            } catch let error {
+                print(error)
+            }
+        }
+    }
+    
     public func move(progress: Double) {
         self.scrollView.contentOffset = CGPoint(x: (CGFloat(progress) * self.scrollView.contentSize.width) - self.scrollView.contentInset.left, y: 0)
     }

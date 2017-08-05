@@ -35,6 +35,14 @@
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="volumeView" destination="7uq-yQ-F2W" id="9H0-ga-NQp"/>
                 <outlet property="waveformView" destination="5iX-JF-gLp" id="9Iy-gh-dBN"/>
+                <outletCollection property="bookmarkButtons" destination="qfF-2B-Uca" collectionClass="NSMutableArray" id="PI2-tj-5cD"/>
+                <outletCollection property="bookmarkButtons" destination="dXK-dp-BMa" collectionClass="NSMutableArray" id="czh-m3-To0"/>
+                <outletCollection property="bookmarkButtons" destination="jFM-f9-IUG" collectionClass="NSMutableArray" id="gjF-xa-imp"/>
+                <outletCollection property="bookmarkButtons" destination="7RL-IB-4Xu" collectionClass="NSMutableArray" id="NPm-9P-Wqb"/>
+                <outletCollection property="timeButtons" destination="RRk-O9-Wr2" collectionClass="NSMutableArray" id="syL-cX-9Bq"/>
+                <outletCollection property="timeButtons" destination="IBO-5x-vNr" collectionClass="NSMutableArray" id="FxU-qO-jvv"/>
+                <outletCollection property="timeButtons" destination="2ZZ-Is-1hm" collectionClass="NSMutableArray" id="BCI-dm-9C4"/>
+                <outletCollection property="timeButtons" destination="mQv-i0-Csn" collectionClass="NSMutableArray" id="m4c-kU-Pfe"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -45,30 +53,6 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gzn-5v-bmn">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                     <subviews>
-                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s0c-LN-jAy">
-                            <rect key="frame" x="0.0" y="0.0" width="320" height="180"/>
-                            <subviews>
-                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="TdK-8a-kyO">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="180"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                </textView>
-                            </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <gestureRecognizers/>
-                            <constraints>
-                                <constraint firstAttribute="bottom" secondItem="TdK-8a-kyO" secondAttribute="bottom" id="H2E-jA-fJS"/>
-                                <constraint firstItem="TdK-8a-kyO" firstAttribute="leading" secondItem="s0c-LN-jAy" secondAttribute="leading" id="MYK-Dj-Tgg"/>
-                                <constraint firstAttribute="height" constant="180" id="dCH-SX-Y9g"/>
-                                <constraint firstAttribute="trailing" secondItem="TdK-8a-kyO" secondAttribute="trailing" id="hQC-z5-3tb"/>
-                                <constraint firstItem="TdK-8a-kyO" firstAttribute="top" secondItem="s0c-LN-jAy" secondAttribute="top" id="zu7-gW-lsB"/>
-                            </constraints>
-                            <connections>
-                                <outletCollection property="gestureRecognizers" destination="7jr-1z-pOW" appends="YES" id="MNu-wX-Tbf"/>
-                            </connections>
-                        </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8SY-hL-koG" userLabel="Description View">
                             <rect key="frame" x="0.0" y="0.0" width="320" height="180"/>
                             <subviews>
@@ -237,6 +221,30 @@
                                 <constraint firstAttribute="trailing" secondItem="hES-1x-a1b" secondAttribute="trailing" id="qIy-qV-brg"/>
                                 <constraint firstItem="hES-1x-a1b" firstAttribute="top" secondItem="8SY-hL-koG" secondAttribute="top" id="rkN-zj-m3b"/>
                             </constraints>
+                        </view>
+                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s0c-LN-jAy">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="180"/>
+                            <subviews>
+                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="TdK-8a-kyO">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="180"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                </textView>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <gestureRecognizers/>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="TdK-8a-kyO" secondAttribute="bottom" id="H2E-jA-fJS"/>
+                                <constraint firstItem="TdK-8a-kyO" firstAttribute="leading" secondItem="s0c-LN-jAy" secondAttribute="leading" id="MYK-Dj-Tgg"/>
+                                <constraint firstAttribute="height" constant="180" id="dCH-SX-Y9g"/>
+                                <constraint firstAttribute="trailing" secondItem="TdK-8a-kyO" secondAttribute="trailing" id="hQC-z5-3tb"/>
+                                <constraint firstItem="TdK-8a-kyO" firstAttribute="top" secondItem="s0c-LN-jAy" secondAttribute="top" id="zu7-gW-lsB"/>
+                            </constraints>
+                            <connections>
+                                <outletCollection property="gestureRecognizers" destination="7jr-1z-pOW" appends="YES" id="MNu-wX-Tbf"/>
+                            </connections>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5iX-JF-gLp" customClass="WaveformView" customModule="SectionRepeater" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="180" width="320" height="140"/>

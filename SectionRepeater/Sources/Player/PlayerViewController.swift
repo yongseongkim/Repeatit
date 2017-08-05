@@ -39,6 +39,8 @@ class PlayerViewController: UIViewController {
     @IBOutlet weak var repeatModeButton: UIButton!
     @IBOutlet weak var repeatBookmarkButton: UIButton!
     @IBOutlet weak var repeatBookmarkButtonBackgroundView: UIView!
+    @IBOutlet var bookmarkButtons: [UIButton]!
+    @IBOutlet var timeButtons: [UIButton]!
     
     @IBOutlet weak var volumeView: AudioVolumeView!
     @IBOutlet weak var rateButton: UIButton!
@@ -129,7 +131,13 @@ class PlayerViewController: UIViewController {
         if url.absoluteString == self.waveformView.url?.absoluteString {
             return
         }
-        self.waveformView.loadWaveform(url: url)
+        weak var weakSelf = self
+        self.waveformView.loadWaveform(url: url) { (loadURL) in
+            if url.absoluteString == loadURL.absoluteString {
+                return
+            }
+            weakSelf?.handlePlayingTimeUpdatedNotification()
+        }
     }
     
     fileprivate func setupButtons() {
@@ -356,6 +364,12 @@ extension PlayerViewController: WaveformViewDelegate {
         }
         self.playingWhenScrollStart = Player.shared.state.isPlaying
         Player.shared.pause()
+        self.bookmarkButtons.forEach { (button) in
+            button.isEnabled = false
+        }
+        self.timeButtons.forEach { (button) in
+            button.isEnabled = false
+        }
     }
     
     func waveformViewDidEndDragging(_ scrollView: UIScrollView, decelerate: Bool) {
@@ -372,6 +386,12 @@ extension PlayerViewController: WaveformViewDelegate {
         Player.shared.move(to: progress * Player.shared.duration)
         if (self.playingWhenScrollStart) {
             Player.shared.resume()
+        }
+        self.bookmarkButtons.forEach { (button) in
+            button.isEnabled = true
+        }
+        self.timeButtons.forEach { (button) in
+            button.isEnabled = true
         }
     }
 }
