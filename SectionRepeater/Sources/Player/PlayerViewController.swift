@@ -38,6 +38,8 @@ class PlayerViewController: UIViewController {
     @IBOutlet weak var prevButton: UIButton!
     @IBOutlet weak var repeatModeButton: UIButton!
     @IBOutlet weak var repeatBookmarkButton: UIButton!
+    @IBOutlet weak var repeatBookmarkButtonBackgroundView: UIView!
+    
     @IBOutlet weak var volumeView: AudioVolumeView!
     @IBOutlet weak var rateButton: UIButton!
 
@@ -140,16 +142,21 @@ class PlayerViewController: UIViewController {
         self.rateButton.setTitle(String(format: "x%.1f", state.rate), for: .normal)
         switch state.repeatMode {
         case .All:
-            self.repeatModeButton.setTitle("Repeat All", for: .normal)
+            self.repeatModeButton.setImage(UIImage(named: "btn_repeat_40pt")?.with(color: UIColor.white), for: .normal)
+            self.repeatModeButton.backgroundColor = UIColor.black
             break
         case .One:
-            self.repeatModeButton.setTitle("Repeat One", for: .normal)
+            self.repeatModeButton.setImage(UIImage(named: "btn_repeat_one_40pt")?.with(color: UIColor.white), for: .normal)
+            self.repeatModeButton.backgroundColor = UIColor.black
             break
         case .None:
-            self.repeatModeButton.setTitle("None", for: .normal)
+            self.repeatModeButton.setImage(UIImage(named: "btn_repeat_40pt"), for: .normal)
+            self.repeatModeButton.backgroundColor = UIColor.clear
             break
         }
-        self.repeatBookmarkButton.setTitle(state.repeatBookmark ? "On" : "Off", for: .normal)
+        
+        self.repeatBookmarkButton.setImage(state.repeatBookmark ? UIImage(named: "btn_repeat_bookmark_64pt")?.with(color: UIColor.white) : UIImage(named: "btn_repeat_bookmark_64pt"), for: .normal)
+        self.repeatBookmarkButtonBackgroundView.backgroundColor = state.repeatBookmark ? UIColor.black : UIColor.clear
     }
     
     // MARK - Notification Handling

@@ -24,6 +24,7 @@
                 <outlet property="prevButton" destination="4N2-6w-WOz" id="xi7-It-NhW"/>
                 <outlet property="rateButton" destination="KGG-11-IqT" id="9B2-t3-FOC"/>
                 <outlet property="repeatBookmarkButton" destination="aTg-Rc-FQU" id="t4h-Bm-yxZ"/>
+                <outlet property="repeatBookmarkButtonBackgroundView" destination="QIl-yZ-Veq" id="gDb-5K-C5s"/>
                 <outlet property="repeatModeButton" destination="Ctr-XC-JSy" id="6ua-w8-O0k"/>
                 <outlet property="timeLabel" destination="R3P-5d-cBj" id="nPC-j5-hLE"/>
                 <outlet property="timeSeparateViewWidthConstraint" destination="Ow3-bZ-ZQc" id="ckP-i6-8Wj"/>
@@ -238,11 +239,11 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5iX-JF-gLp" customClass="WaveformView" customModule="SectionRepeater" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="180" width="320" height="145"/>
+                            <rect key="frame" x="0.0" y="180" width="320" height="140"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
                         <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="YAG-gR-YPG" userLabel="Time View">
-                            <rect key="frame" x="104" y="295" width="104" height="20"/>
+                            <rect key="frame" x="104" y="290" width="104" height="20"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="00:10:3" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R3P-5d-cBj">
                                     <rect key="frame" x="5" y="2" width="46" height="16"/>
@@ -309,7 +310,7 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pg2-I6-xfi" userLabel="Tools View">
-                            <rect key="frame" x="0.0" y="325" width="320" height="243"/>
+                            <rect key="frame" x="0.0" y="320" width="320" height="248"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rAM-O6-lxn" userLabel="Bookmark Tool View">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
@@ -317,13 +318,23 @@
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zDO-fQ-I3K">
                                             <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aTg-Rc-FQU">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QIl-yZ-Veq">
+                                                    <rect key="frame" x="6" y="6" width="52" height="52"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                            <integer key="value" value="6"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </view>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aTg-Rc-FQU">
                                                     <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="64" id="gGF-ri-Qzs"/>
                                                         <constraint firstAttribute="width" constant="64" id="wR2-BB-Whh"/>
                                                     </constraints>
-                                                    <state key="normal" title="On">
+                                                    <state key="normal" image="btn_repeat_bookmark_64pt">
                                                         <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
@@ -334,7 +345,11 @@
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstItem="aTg-Rc-FQU" firstAttribute="centerX" secondItem="zDO-fQ-I3K" secondAttribute="centerX" id="Ffe-6k-xUw"/>
+                                                <constraint firstAttribute="bottom" secondItem="QIl-yZ-Veq" secondAttribute="bottom" constant="6" id="LpA-UL-drG"/>
+                                                <constraint firstAttribute="trailing" secondItem="QIl-yZ-Veq" secondAttribute="trailing" constant="6" id="fsT-bY-4uU"/>
+                                                <constraint firstItem="QIl-yZ-Veq" firstAttribute="top" secondItem="zDO-fQ-I3K" secondAttribute="top" constant="6" id="mr6-1D-knP"/>
                                                 <constraint firstItem="aTg-Rc-FQU" firstAttribute="centerY" secondItem="zDO-fQ-I3K" secondAttribute="centerY" id="rQl-ju-3Za"/>
+                                                <constraint firstItem="QIl-yZ-Veq" firstAttribute="leading" secondItem="zDO-fQ-I3K" secondAttribute="leading" constant="6" id="uiH-cu-SE1"/>
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dDj-Km-uxu">
@@ -701,14 +716,19 @@
                                                 <constraint firstItem="KGG-11-IqT" firstAttribute="top" secondItem="ekv-fe-tp1" secondAttribute="top" id="qcB-8z-NId"/>
                                             </constraints>
                                         </view>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ctr-XC-JSy">
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ctr-XC-JSy">
                                             <rect key="frame" x="50" y="0.0" width="40" height="40"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="40" id="eN8-iY-xVS"/>
                                             </constraints>
-                                            <state key="normal" title="onlyOne">
+                                            <state key="normal" image="btn_repeat_40pt">
                                                 <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                    <integer key="value" value="4"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
                                             <connections>
                                                 <action selector="repeatModeButtonTapped:" destination="-1" eventType="touchUpInside" id="71n-Gy-BqQ"/>
                                             </connections>
@@ -765,7 +785,7 @@
                                 <constraint firstItem="rAM-O6-lxn" firstAttribute="top" secondItem="Pg2-I6-xfi" secondAttribute="top" id="TQ3-19-dP5"/>
                                 <constraint firstAttribute="trailing" secondItem="jZo-Hi-zAo" secondAttribute="trailing" id="Twb-6q-j5g"/>
                                 <constraint firstItem="bmC-Fd-ANM" firstAttribute="leading" secondItem="Pg2-I6-xfi" secondAttribute="leading" id="hCs-1x-v7I"/>
-                                <constraint firstAttribute="bottom" secondItem="Eja-XN-XM9" secondAttribute="bottom" id="l59-2G-l5H"/>
+                                <constraint firstAttribute="bottom" secondItem="Eja-XN-XM9" secondAttribute="bottom" constant="5" id="l59-2G-l5H"/>
                                 <constraint firstItem="rAM-O6-lxn" firstAttribute="leading" secondItem="Pg2-I6-xfi" secondAttribute="leading" id="qEm-E0-jed"/>
                             </constraints>
                         </view>
@@ -823,6 +843,8 @@
         <image name="btn_play_72pt" width="72" height="72"/>
         <image name="btn_prev_72pt" width="72" height="72"/>
         <image name="btn_prev_bookmark_64pt" width="64" height="64"/>
+        <image name="btn_repeat_40pt" width="40" height="40"/>
+        <image name="btn_repeat_bookmark_64pt" width="64" height="64"/>
         <image name="music_note_empty_120pt" width="120" height="120"/>
         <image name="volume_max_28pt" width="28" height="28"/>
         <image name="volume_min_28pt" width="28" height="28"/>
