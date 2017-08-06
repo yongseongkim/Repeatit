@@ -1,7 +1,7 @@
 # Uncomment this line to define a global platform for your project
 platform :ios, '9.0'
 
-target 'SectionRepeater' do
+target 'ListenNRepeat' do
   use_frameworks!
   
   pod 'SnapKit', '~> 3.1.2' 
