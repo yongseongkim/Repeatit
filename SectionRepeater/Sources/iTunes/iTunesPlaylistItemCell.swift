@@ -12,7 +12,7 @@ import MediaPlayer
 class iTunesPlaylistItemCell: UICollectionViewCell {
     
     class func height() -> CGFloat {
-        return 50
+        return 44
     }
     
     //MARK: UI Components
@@ -35,21 +35,26 @@ class iTunesPlaylistItemCell: UICollectionViewCell {
         }
     }
     
-    override func didMoveToSuperview() {
-        super.didMoveToSuperview()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         self.addSubview(self.nameLabel)
+        self.addSubview(self.borderView)
+        
         self.nameLabel.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(20)
             make.right.equalTo(self).offset(-20)
             make.centerY.equalTo(self)
         }
-        self.addSubview(self.borderView)
         self.borderView.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(44)
             make.bottom.equalTo(self)
             make.right.equalTo(self).offset(-20)
             make.height.equalTo(UIScreen.scaleWidth)
         }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
 }

@@ -118,12 +118,13 @@ class PlayerViewController: UIViewController {
             }
         }
         self.loadWaveformIfNecessary(item: item)
+        self.setupButtons()
         let duration = Player.shared.duration
         let minutes = Int(duration/60)
         let seconds = Int(duration.truncatingRemainder(dividingBy: 60))
         self.timeSliderDurationLabel.text = String(format: "%02d:%02d", minutes, seconds)
         self.durationLabel.text = String(format: "%02d:%02d", minutes, seconds)
-        self.setupButtons()
+        self.handlePlayingTimeUpdatedNotification()
     }
     
     fileprivate func loadWaveformIfNecessary(item: PlayerItem) {
@@ -133,9 +134,6 @@ class PlayerViewController: UIViewController {
         }
         weak var weakSelf = self
         self.waveformView.loadWaveform(url: url) { (loadURL) in
-            if url.absoluteString == loadURL.absoluteString {
-                return
-            }
             weakSelf?.handlePlayingTimeUpdatedNotification()
         }
     }

@@ -11,7 +11,7 @@ import UIKit
 class iTunesMenuCell: UICollectionViewCell {
     
     class func height() -> CGFloat {
-        return 50
+        return 52
     }
     
     //MARK: UI Components
@@ -30,27 +30,32 @@ class iTunesMenuCell: UICollectionViewCell {
         }
     }
     
-    override func didMoveToSuperview() {
-        super.didMoveToSuperview()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         self.addSubview(self.arrowView)
+        self.addSubview(self.nameLabel)
+        self.addSubview(self.borderView)
+        
         self.arrowView.snp.makeConstraints { (make) in
             make.right.equalTo(self).offset(-10)
             make.width.height.equalTo(44)
             make.centerY.equalTo(self)
         }
-        self.addSubview(self.nameLabel)
         self.nameLabel.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(20)
             make.right.equalTo(self.arrowView.snp.left).offset(-10)
             make.centerY.equalTo(self)
         }
-        self.addSubview(self.borderView)
         self.borderView.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(44)
             make.bottom.equalTo(self)
             make.right.equalTo(self).offset(-20)
             make.height.equalTo(UIScreen.scaleWidth)
         }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
 }

@@ -45,21 +45,22 @@ class iTunesAlbumDetailSongCell: UICollectionViewCell {
         }
     }
     
-    override func didMoveToSuperview() {
-        super.didMoveToSuperview()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         self.addSubview(self.indexLabel)
+        self.addSubview(self.nameLabel)
+        self.addSubview(self.borderView)
+        
         self.indexLabel.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(10)
             make.width.equalTo(30)
             make.centerY.equalTo(self)
         }
-        self.addSubview(self.nameLabel)
         self.nameLabel.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(50)
             make.right.equalTo(self).offset(-20)
             make.centerY.equalTo(self)
         }
-        self.addSubview(self.borderView)
         self.borderView.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(44)
             make.bottom.equalTo(self)
@@ -67,4 +68,9 @@ class iTunesAlbumDetailSongCell: UICollectionViewCell {
             make.height.equalTo(UIScreen.scaleWidth)
         }
     }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
+

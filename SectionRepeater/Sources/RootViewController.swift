@@ -74,12 +74,18 @@ class RootViewController: UITabBarController {
         }
         self.fileListNaviController.updateContentInset()
         self.itunesNaviController.updateContentInset()
+        if let moreView = self.moreNaviController.viewControllers.first as? MoreViewController {
+            moreView.updateContentInset()
+        }
     }
     
     func hidePlayerView() {
         self.playerView.isHidden = true
         self.fileListNaviController.updateContentInset()
         self.itunesNaviController.updateContentInset()
+        if let moreView = self.moreNaviController.viewControllers.first as? MoreViewController {
+            moreView.updateContentInset()
+        }
     }
     
     //MARK: Handle Notification

@@ -22,6 +22,8 @@ class iTunesAlbumCell: UICollectionViewCell {
     }
     fileprivate let textContainerView = UIView().then { (view) in
         view.backgroundColor = UIColor.clear
+        view.setContentHuggingPriority(UILayoutPriorityRequired, for: .vertical)
+        view.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .vertical)
     }
     fileprivate let titleLabel = UILabel().then { (label) in
         label.font = label.font.withSize(17)
@@ -52,16 +54,19 @@ class iTunesAlbumCell: UICollectionViewCell {
         }
     }
     
-    override func didMoveToSuperview() {
-        super.didMoveToSuperview()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         self.addSubview(self.albumCoverImageView)
+        self.textContainerView.addSubview(self.titleLabel)
+        self.textContainerView.addSubview(self.artistLabel)
+        self.addSubview(self.textContainerView)
+        self.addSubview(self.borderView)
+        
         self.albumCoverImageView.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(10)
             make.centerY.equalTo(self)
             make.width.height.equalTo(80)
         }
-        self.textContainerView.addSubview(self.titleLabel)
-        self.textContainerView.addSubview(self.artistLabel)
         self.titleLabel.snp.makeConstraints { (make) in
             make.top.left.right.equalTo(self.textContainerView)
             make.height.equalTo(21)
@@ -71,15 +76,11 @@ class iTunesAlbumCell: UICollectionViewCell {
             make.left.right.bottom.equalTo(self.textContainerView)
             make.height.equalTo(17)
         }
-        self.addSubview(self.textContainerView)
         self.textContainerView.snp.makeConstraints { (make) in
             make.left.equalTo(self.albumCoverImageView.snp.right).offset(10)
             make.right.equalTo(self).offset(-20)
             make.centerY.equalTo(self)
         }
-        self.textContainerView.setContentHuggingPriority(UILayoutPriorityRequired, for: .vertical)
-        self.textContainerView.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .vertical)
-        self.addSubview(self.borderView)
         self.borderView.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(80)
             make.bottom.equalTo(self)
@@ -87,5 +88,9 @@ class iTunesAlbumCell: UICollectionViewCell {
             make.height.equalTo(UIScreen.scaleWidth)
         }
     }
-
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 }

@@ -95,8 +95,10 @@ class FileListViewController: UIViewController {
         let topOffset = navigationBarHeight + UIApplication.shared.statusBarFrame.height
         if PlayerView.isVisible() {
             self.collectionView.contentInset = UIEdgeInsetsMake(topOffset, 0, PlayerView.height(), 0)
+            self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(topOffset, 0, PlayerView.height(), 0)
         } else {
             self.collectionView.contentInset = UIEdgeInsetsMake(topOffset, 0, 0, 0)
+            self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(topOffset, 0, PlayerView.height(), 0)
         }
     }
     

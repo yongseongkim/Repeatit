@@ -102,7 +102,7 @@ class PlayerView: UIView {
         if let artwork = item.artwork {
             self.albumCoverImageView.image = artwork
         } else {
-            self.albumCoverImageView.image = UIImage(named: "empty_music_note_44pt")
+            self.albumCoverImageView.image = UIImage(named: "music_note_empty_120pt")
         }
         self.titleLabel.text = item.title ?? item.url?.lastPathComponent
         

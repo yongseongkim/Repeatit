@@ -28,6 +28,7 @@
 		2E3EC4A01EEEAB10009472FB /* iTunesAlbumListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3EC49F1EEEAB10009472FB /* iTunesAlbumListViewController.swift */; };
 		2E3EC4A21EEEAB1F009472FB /* iTunesArtistListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3EC4A11EEEAB1F009472FB /* iTunesArtistListViewController.swift */; };
 		2E3EC4A41EEEACBF009472FB /* iTunesNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3EC4A31EEEACBF009472FB /* iTunesNavigationController.swift */; };
+		2E656EE51F36EE5E000F9D3E /* MoreSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E656EE41F36EE5E000F9D3E /* MoreSectionHeaderView.swift */; };
 		2E7101561EC8573100A80C25 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7101551EC8573100A80C25 /* File.swift */; };
 		2E784F6C1F2DC0E400FAC759 /* WaveformPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E784F6B1F2DC0E400FAC759 /* WaveformPlaceholderView.swift */; };
 		2E7AC2221E47195700BA03B7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E7AC2201E47195700BA03B7 /* LaunchScreen.storyboard */; };
@@ -101,6 +102,7 @@
 		2E3EC49F1EEEAB10009472FB /* iTunesAlbumListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesAlbumListViewController.swift; sourceTree = "<group>"; };
 		2E3EC4A11EEEAB1F009472FB /* iTunesArtistListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesArtistListViewController.swift; sourceTree = "<group>"; };
 		2E3EC4A31EEEACBF009472FB /* iTunesNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesNavigationController.swift; sourceTree = "<group>"; };
+		2E656EE41F36EE5E000F9D3E /* MoreSectionHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoreSectionHeaderView.swift; sourceTree = "<group>"; };
 		2E7101551EC8573100A80C25 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		2E784F6B1F2DC0E400FAC759 /* WaveformPlaceholderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaveformPlaceholderView.swift; sourceTree = "<group>"; };
 		2E7AC2141E47195700BA03B7 /* SectionRepeater.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SectionRepeater.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -310,6 +312,7 @@
 				2EF78C751F234396009778D4 /* MoreViewController.swift */,
 				2EF78C771F2343A6009778D4 /* MoreLogoCell.swift */,
 				2EF78C791F2343B2009778D4 /* MoreItemCell.swift */,
+				2E656EE41F36EE5E000F9D3E /* MoreSectionHeaderView.swift */,
 			);
 			path = More;
 			sourceTree = "<group>";
@@ -556,6 +559,7 @@
 				2E3EC4A01EEEAB10009472FB /* iTunesAlbumListViewController.swift in Sources */,
 				2EEEF61E1E598AD600D2C279 /* AppDelegate.swift in Sources */,
 				2E3DC4011ECFF04C00FCBD67 /* PlayerViewController.swift in Sources */,
+				2E656EE51F36EE5E000F9D3E /* MoreSectionHeaderView.swift in Sources */,
 				2E7101561EC8573100A80C25 /* File.swift in Sources */,
 				2EEEF61F1E598AD600D2C279 /* NSObject+Extension.swift in Sources */,
 				2EC9361C1F24E741008761EB /* iTunesViewController.swift in Sources */,

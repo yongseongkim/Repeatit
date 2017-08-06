@@ -47,28 +47,36 @@ class FileCell: UICollectionViewCell {
         }
     }
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.addSubview(self.selectedImageView)
+        self.addSubview(self.albumCoverImageView)
+        self.addSubview(self.nameLabel)
+        self.addSubview(self.borderView)
+        self.selectedImageView.isHidden = true
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
-        self.addSubview(self.selectedImageView)
         self.selectedImageView.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(10)
             make.centerY.equalTo(self)
             make.width.height.equalTo(36)
         }
-        self.selectedImageView.isHidden = true
-        self.addSubview(self.albumCoverImageView)
         self.albumCoverImageView.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(10)
             make.centerY.equalTo(self)
             make.width.height.equalTo(36)
         }
-        self.addSubview(self.nameLabel)
         self.nameLabel.snp.makeConstraints { (make) in
             make.left.equalTo(self.albumCoverImageView.snp.right).offset(10)
             make.right.equalTo(self).offset(-20)
             make.centerY.equalTo(self)
         }
-        self.addSubview(self.borderView)
         self.borderView.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(32)
             make.bottom.equalTo(self)

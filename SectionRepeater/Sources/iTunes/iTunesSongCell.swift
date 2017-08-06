@@ -47,27 +47,28 @@ class iTunesSongCell: UICollectionViewCell {
         }
     }
     
-    override func didMoveToSuperview() {
-        super.didMoveToSuperview()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         self.addSubview(self.albumCoverImageView)
+        self.addSubview(self.titleLabel)
+        self.addSubview(self.artistLabel)
+        self.addSubview(self.borderView)
+        
         self.albumCoverImageView.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(10)
             make.centerY.equalTo(self)
             make.width.height.equalTo(44)
         }
-        self.addSubview(self.titleLabel)
         self.titleLabel.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(5)
             make.left.equalTo(self.albumCoverImageView.snp.right).offset(10)
             make.right.equalTo(self).offset(-20)
         }
-        self.addSubview(self.artistLabel)
         self.artistLabel.snp.makeConstraints { (make) in
             make.top.equalTo(self.titleLabel.snp.bottom).offset(5)
             make.left.equalTo(self.albumCoverImageView.snp.right).offset(10)
             make.right.equalTo(self).offset(-20)
         }
-        self.addSubview(self.borderView)
         self.borderView.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(44)
             make.bottom.equalTo(self)
@@ -75,4 +76,9 @@ class iTunesSongCell: UICollectionViewCell {
             make.height.equalTo(UIScreen.scaleWidth)
         }
     }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 }

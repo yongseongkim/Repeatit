@@ -20,11 +20,12 @@ class MoreLogoCell: UICollectionViewCell {
         return 150
     }
     
-    override func didMoveToSuperview() {
-        super.didMoveToSuperview()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         self.logoView.addSubview(self.logoImageView)
         self.logoView.addSubview(self.logoLabel)
         self.addSubview(self.logoView)
+        
         self.logoImageView.snp.makeConstraints { (make) in
             make.top.equalTo(self.logoView)
             make.centerX.equalTo(self.logoView)
@@ -40,5 +41,9 @@ class MoreLogoCell: UICollectionViewCell {
             make.left.right.equalTo(self)
             make.height.equalTo(121)
         }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
