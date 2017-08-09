@@ -314,6 +314,15 @@ class Player: NSObject {
             info[MPMediaItemPropertyPlaybackDuration] = NSNumber(value: self.duration)
             MPNowPlayingInfoCenter.default().nowPlayingInfo = playingInfo
         }
+        var albumInfo = Dictionary<String, Any>()
+        albumInfo[MPMediaItemPropertyTitle] = self.currentItem?.title
+        albumInfo[MPMediaItemPropertyArtist] = self.currentItem?.artist
+        albumInfo[MPMediaItemPropertyAlbumTitle] = self.currentItem?.albumTitle
+        albumInfo[MPMediaItemPropertyArtwork] = self.currentItem?.artwork
+        albumInfo[MPMediaItemPropertyPlaybackDuration] = self.duration
+        albumInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.currentTime
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = albumInfo
+        
         self.notificationCenter.post(name: .playerTimeUpdated, object: nil)
     }
     

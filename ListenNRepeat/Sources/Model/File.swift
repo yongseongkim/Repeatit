@@ -46,6 +46,12 @@ struct AudioInformation {
                 }
             }
         }
+        if self.title == nil {
+            self.title = url.lastPathComponent
+        }
+        if self.artist == nil {
+            self.artist = "Unknown Artist"
+        }
     }
     
     func encodingMetadataString(string: String) -> String? {
