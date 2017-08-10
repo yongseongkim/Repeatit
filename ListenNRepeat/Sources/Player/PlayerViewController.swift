@@ -73,6 +73,7 @@ class PlayerViewController: UIViewController {
         self.timeSlider.setThumbImage(UIImage.size(width: 3, height: 16).color(UIColor.black).image, for: .normal)
         self.timeSlider.setMinimumTrackImage(UIImage.size(width: self.timeSlider.bounds.width, height: 3).color(UIColor.black).image, for: .normal)
         self.timeSlider.setMaximumTrackImage(UIImage.size(width: self.timeSlider.bounds.width, height: 3).color(UIColor.gray220).image, for: .normal)
+        self.albumCoverImageView.contentMode = .scaleAspectFit
         Player.shared.notificationCenter.addObserver(self, selector: #selector(handlePlayerItemDidSet(object:)), name: Notification.Name.playerItemDidSet, object: nil)
         Player.shared.notificationCenter.addObserver(self, selector: #selector(handlePlayerStateUpdatedNotification), name: Notification.Name.playerStateUpdated, object: nil)
         Player.shared.notificationCenter.addObserver(self, selector: #selector(handlePlayingTimeUpdatedNotification), name: Notification.Name.playerTimeUpdated, object: nil)

@@ -16,7 +16,9 @@ class FileCell: UICollectionViewCell {
     }
     
     //MARK: UI Components
-    fileprivate let albumCoverImageView = UIImageView()
+    fileprivate let albumCoverImageView = UIImageView().then { (imageView) in
+        imageView.contentMode = .scaleAspectFit
+    }
     fileprivate let selectedImageView = UIImageView(image: UIImage(named: "common_check_44pt"))
     fileprivate let nameLabel = UILabel().then { (label) in
         label.font = label.font.withSize(14)

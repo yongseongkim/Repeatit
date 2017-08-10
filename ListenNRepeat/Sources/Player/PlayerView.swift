@@ -25,7 +25,9 @@ class PlayerView: UIView {
     }
 
     //MARK: UI Components
-    fileprivate let albumCoverImageView = UIImageView()
+    fileprivate let albumCoverImageView = UIImageView().then { (imageView) in
+        imageView.contentMode = .scaleAspectFit
+    }
     fileprivate let titleLabel = UILabel().then { (label) in
         label.textColor = UIColor.black
         label.font = label.font.withSize(15)
