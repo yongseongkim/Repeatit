@@ -314,15 +314,7 @@ class Player: NSObject {
             info[MPMediaItemPropertyPlaybackDuration] = NSNumber(value: self.duration)
             MPNowPlayingInfoCenter.default().nowPlayingInfo = playingInfo
         }
-        var albumInfo = Dictionary<String, Any>()
-        albumInfo[MPMediaItemPropertyTitle] = self.currentItem?.title
-        albumInfo[MPMediaItemPropertyArtist] = self.currentItem?.artist
-        albumInfo[MPMediaItemPropertyAlbumTitle] = self.currentItem?.albumTitle
-        albumInfo[MPMediaItemPropertyArtwork] = self.currentItem?.artwork
-        albumInfo[MPMediaItemPropertyPlaybackDuration] = self.duration
-        albumInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.currentTime
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = albumInfo
-        
+        self.loadPlayingInfo()
         self.notificationCenter.post(name: .playerTimeUpdated, object: nil)
     }
     
@@ -372,6 +364,7 @@ class Player: NSObject {
                                                                             self._currentTime = 0
                                                                         }
         })
+        self.loadPlayingInfo()
         
         // load bookmark
         self._bookmarkTimes = [Double]()
@@ -452,31 +445,13 @@ class Player: NSObject {
     }
     
     fileprivate func loadPlayingInfo() {
-        guard let item = self.currentItem else { return }
-        var playingInfo:[String: Any] = [:]
-        if let title = item.title {
-            playingInfo[MPMediaItemPropertyTitle] = title
-        }
-        if let artist = item.artist {
-            playingInfo[MPMediaItemPropertyArtist] = artist
-        }
-        if let albumTitle = item.albumTitle {
-            playingInfo[MPMediaItemPropertyAlbumTitle] = albumTitle
-        }
-        //        // TODO: artwork 없을 때 app image 넣기
-        if let artwork = item.artwork {
-            playingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: artwork.size,
-                                                                         requestHandler: { (size) -> UIImage in
-                                                                            return artwork
-            })
-        } else if let logoImage = UIImage(named: "more_logo_100pt") {
-            playingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: logoImage.size,
-                                                                         requestHandler: { (size) -> UIImage in
-                                                                            return logoImage
-            })
-        }
-        playingInfo[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: self.rate)
-        playingInfo[MPNowPlayingInfoPropertyMediaType] = NSNumber(value: MPNowPlayingInfoMediaType.audio.rawValue)
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = playingInfo
+        var albumInfo = Dictionary<String, Any>()
+        albumInfo[MPMediaItemPropertyTitle] = self.currentItem?.title
+        albumInfo[MPMediaItemPropertyArtist] = self.currentItem?.artist
+        albumInfo[MPMediaItemPropertyAlbumTitle] = self.currentItem?.albumTitle
+        albumInfo[MPMediaItemPropertyArtwork] = self.currentItem?.artwork
+        albumInfo[MPMediaItemPropertyPlaybackDuration] = self.duration
+        albumInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.currentTime
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = albumInfo
     }
 }

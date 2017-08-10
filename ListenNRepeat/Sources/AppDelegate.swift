@@ -43,6 +43,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         config.fileURL = defaultRealmURL.appendingPathComponent("ListenNRepeat.realm")
         Realm.Configuration.defaultConfiguration = config
         
+        do {
+            let contents = try FileManager.default.contentsOfDirectory(atPath: URL.documentsURL.path)
+            if contents.count == 0 {
+                // sample 노래 넣기
+                if let path = Bundle.main.path(forResource: "sample", ofType: "mp3") {
+                    try FileManager.default.copyItem(atPath: path, toPath: URL.documentsURL.appendingPathComponent("sample.mp3").path)
+                }
+            }
+        } catch let error {
+            print(error)
+        }
+        
         // Report
         FirebaseApp.configure()
         Fabric.with([Crashlytics.self])

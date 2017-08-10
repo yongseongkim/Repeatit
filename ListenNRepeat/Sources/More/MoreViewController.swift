@@ -87,7 +87,7 @@ class MoreViewController: UIViewController {
         let mc = MFMailComposeViewController()
         mc.mailComposeDelegate = self
         mc.setSubject("Feedback")
-        mc.setToRecipients(["kys911015@gmail.com"])
+        mc.setToRecipients(["listennrepeat@gmail.com"])
         Navigator.present(mc)
     }
     
@@ -95,7 +95,7 @@ class MoreViewController: UIViewController {
         let mc = MFMailComposeViewController()
         mc.mailComposeDelegate = self
         mc.setSubject("BugReport")
-        mc.setToRecipients(["kys911015@gmail.com"])
+        mc.setToRecipients(["listennrepeat@gmail.com"])
         Navigator.present(mc)
     }
     
