@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2E656F2E1F3712DC000F9D3E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E656EE81F3712DC000F9D3E /* LaunchScreen.storyboard */; };
-		2E656F2F1F3712DC000F9D3E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2E656EEB1F3712DC000F9D3E /* GoogleService-Info.plist */; };
 		2E656F301F3712DC000F9D3E /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2E656EEC1F3712DC000F9D3E /* Info.plist */; };
 		2E656F311F3712DC000F9D3E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E656EEE1F3712DC000F9D3E /* Assets.xcassets */; };
 		2E656F321F3712DC000F9D3E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E656EEF1F3712DC000F9D3E /* Images.xcassets */; };
@@ -63,6 +62,7 @@
 		2E656F641F3712DC000F9D3E /* PlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E656F2A1F3712DC000F9D3E /* PlayerViewController.xib */; };
 		2E656F651F3712DC000F9D3E /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E656F2B1F3712DC000F9D3E /* RootViewController.swift */; };
 		2E656F681F3714E0000F9D3E /* AudioVolumeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E656F671F3714E0000F9D3E /* AudioVolumeView.swift */; };
+		52C87C441F3BF9E400B717F2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 52C87C431F3BF9E400B717F2 /* GoogleService-Info.plist */; };
 		52DA50E71F3BE5B10026AC56 /* sample.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 52DA50E61F3BE5B10026AC56 /* sample.mp3 */; };
 		7BC48C6E6350F80069663357 /* Pods_ListenNRepeat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 139B35C8B9C14FB59926EA2E /* Pods_ListenNRepeat.framework */; };
 /* End PBXBuildFile section */
@@ -85,7 +85,6 @@
 		159D3F127E4AB7C13B4676AC /* Pods-ListenNRepeat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ListenNRepeat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ListenNRepeat/Pods-ListenNRepeat.debug.xcconfig"; sourceTree = "<group>"; };
 		1AD631199E9D44D763A2EDC1 /* Pods-SectionRepeater.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SectionRepeater.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SectionRepeater/Pods-SectionRepeater.debug.xcconfig"; sourceTree = "<group>"; };
 		2E656EE91F3712DC000F9D3E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		2E656EEB1F3712DC000F9D3E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2E656EEC1F3712DC000F9D3E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2E656EEE1F3712DC000F9D3E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2E656EEF1F3712DC000F9D3E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -142,6 +141,7 @@
 		2E656F661F371300000F9D3E /* ListenNRepeat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = ListenNRepeat.entitlements; path = ListenNRepeat/ListenNRepeat.entitlements; sourceTree = "<group>"; };
 		2E656F671F3714E0000F9D3E /* AudioVolumeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioVolumeView.swift; sourceTree = "<group>"; };
 		2E7AC2141E47195700BA03B7 /* ListenNRepeat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ListenNRepeat.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		52C87C431F3BF9E400B717F2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		52DA50E61F3BE5B10026AC56 /* sample.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sample.mp3; sourceTree = "<group>"; };
 		62ECE8A368EA05EB5A269791 /* Pods-SectionRepeaterShareExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SectionRepeaterShareExtension.release.xcconfig"; path = "Pods/Target Support Files/Pods-SectionRepeaterShareExtension/Pods-SectionRepeaterShareExtension.release.xcconfig"; sourceTree = "<group>"; };
 		7D066DCECA8DD050B00ED171 /* Pods-SectionRepeater.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SectionRepeater.release.xcconfig"; path = "Pods/Target Support Files/Pods-SectionRepeater/Pods-SectionRepeater.release.xcconfig"; sourceTree = "<group>"; };
@@ -182,7 +182,7 @@
 				2E656F2B1F3712DC000F9D3E /* RootViewController.swift */,
 				2E656EF21F3712DC000F9D3E /* AppDelegate.swift */,
 				2E656EE81F3712DC000F9D3E /* LaunchScreen.storyboard */,
-				2E656EEB1F3712DC000F9D3E /* GoogleService-Info.plist */,
+				52C87C431F3BF9E400B717F2 /* GoogleService-Info.plist */,
 				2E656EEC1F3712DC000F9D3E /* Info.plist */,
 			);
 			path = ListenNRepeat;
@@ -425,10 +425,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E656F301F3712DC000F9D3E /* Info.plist in Resources */,
+				52C87C441F3BF9E400B717F2 /* GoogleService-Info.plist in Resources */,
 				2E656F2E1F3712DC000F9D3E /* LaunchScreen.storyboard in Resources */,
 				52DA50E71F3BE5B10026AC56 /* sample.mp3 in Resources */,
 				2E656F321F3712DC000F9D3E /* Images.xcassets in Resources */,
-				2E656F2F1F3712DC000F9D3E /* GoogleService-Info.plist in Resources */,
 				2E656F641F3712DC000F9D3E /* PlayerViewController.xib in Resources */,
 				2E656F311F3712DC000F9D3E /* Assets.xcassets in Resources */,
 				2E656F611F3712DC000F9D3E /* BookmarkListViewController.xib in Resources */,

@@ -7,34 +7,34 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>80945994455-1hld5bva23umj5shm7rt0cq642dekjp1.apps.googleusercontent.com</string>
+	<string>779182975371-ogiubescvcm9l9pma3m8miuidp6eggcg.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.80945994455-1hld5bva23umj5shm7rt0cq642dekjp1</string>
+	<string>com.googleusercontent.apps.779182975371-ogiubescvcm9l9pma3m8miuidp6eggcg</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBThCALAzW-B72CQ_0oz6JSeyBeeL7y2L0</string>
+	<string>AIzaSyB97YAFp7eSvG2MVr5S9VRxdeo8VbjjQvY</string>
 	<key>GCM_SENDER_ID</key>
-	<string>80945994455</string>
+	<string>779182975371</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>kr.co.yongseongkim.ListenNRepeat</string>
 	<key>PROJECT_ID</key>
-	<string>ListenNRepeat</string>
+	<string>listennrepeat-d3f41</string>
 	<key>STORAGE_BUCKET</key>
-	<string>ListenNRepeat.appspot.com</string>
+	<string>listennrepeat-d3f41.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true/>
 	<key>IS_ANALYTICS_ENABLED</key>
 	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<false/>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
 	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
 	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:80945994455:ios:674f51ca37ea75af</string>
+	<string>1:779182975371:ios:8238b8718df0fc57</string>
 	<key>DATABASE_URL</key>
-	<string>https://ListenNRepeat.firebaseio.com</string>
+	<string>https://listennrepeat-d3f41.firebaseio.com</string>
 </dict>
 </plist>
