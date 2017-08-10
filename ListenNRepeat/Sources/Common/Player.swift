@@ -10,6 +10,7 @@ import Foundation
 import AVFoundation
 import MediaPlayer
 import RealmSwift
+import Firebase
 
 extension Notification.Name {
     static let playerItemDidSet = Notification.Name("player.item.set")
@@ -366,6 +367,8 @@ class Player: NSObject {
         })
         self.loadPlayingInfo()
         
+        Logger.loadPlayer(item: self.currentItem, duraton: self.duration)
+        
         // load bookmark
         self._bookmarkTimes = [Double]()
         if let bookmarkKey = playingItem?.bookmarkKey {
@@ -449,7 +452,11 @@ class Player: NSObject {
         albumInfo[MPMediaItemPropertyTitle] = self.currentItem?.title
         albumInfo[MPMediaItemPropertyArtist] = self.currentItem?.artist
         albumInfo[MPMediaItemPropertyAlbumTitle] = self.currentItem?.albumTitle
-        albumInfo[MPMediaItemPropertyArtwork] = self.currentItem?.artwork
+        if let artwork = self.currentItem?.artwork {
+            albumInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: UIScreen.mainSize) { (_) -> UIImage in
+                return artwork
+            }
+        }
         albumInfo[MPMediaItemPropertyPlaybackDuration] = self.duration
         albumInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.currentTime
         MPNowPlayingInfoCenter.default().nowPlayingInfo = albumInfo

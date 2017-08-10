@@ -253,14 +253,17 @@ class PlayerViewController: UIViewController {
     
     @IBAction func movePreviousBookmark(_ sender: Any) {
         Player.shared.movePreviousBookmark()
+        Logger.previousBookmarkButtonTapped()
     }
     
-    @IBAction func moveStartCurrentBookmark(_ sender: Any) {
+    @IBAction func moveLatestBookmark(_ sender: Any) {
         Player.shared.moveLatestBookmark()
+        Logger.latestBookmarkButtonTapped()
     }
     
     @IBAction func moveNextBookmark(_ sender: Any) {
         Player.shared.moveNextBookmark()
+        Logger.nextBookmarkButtonTapped()
     }
     
     @IBAction func playButtonTapped(_ sender: Any) {
@@ -273,22 +276,27 @@ class PlayerViewController: UIViewController {
     
     @IBAction func moveBefore5SecondsButtonTapped(_ sender: Any) {
         Player.shared.moveBackward(seconds: 5)
+        Logger.before5SecondsButtonTapped()
     }
     
     @IBAction func moveBefore2SecondsButtonTapped(_ sender: Any) {
         Player.shared.moveBackward(seconds: 3)
+        Logger.before2SecondsButtonTapped()
     }
     
-    @IBAction func moveBefore1SecondsButtonTapped(_ sender: Any) {
+    @IBAction func moveBefore1SecondButtonTapped(_ sender: Any) {
         Player.shared.moveBackward(seconds: 1)
+        Logger.before1SecondButtonTapped()
     }
     
     @IBAction func moveAtStartButtonTapped(_ sender: Any) {
         Player.shared.move(to: 0)
+        Logger.moveStartButtonTapped()
     }
     
     @IBAction func moveAfter5SecondsButtonTapped(_ sender: Any) {
         Player.shared.moveForward(seconds: 5)
+        Logger.After5SecondsButtonTapped()
     }
     
     @IBAction func playNextButtonTapped(_ sender: Any) {

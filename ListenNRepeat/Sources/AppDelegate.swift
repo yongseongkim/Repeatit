@@ -67,6 +67,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidEnterBackground(_ application: UIApplication) {
         print("applicationDidEnterBackground")
+        Logger.loggingPlayerControlTap()
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -79,6 +80,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         print("applicationWillTerminate")
+        Logger.loggingPlayerControlTap()
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {

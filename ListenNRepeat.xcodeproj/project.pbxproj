@@ -63,6 +63,7 @@
 		2E656F651F3712DC000F9D3E /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E656F2B1F3712DC000F9D3E /* RootViewController.swift */; };
 		2E656F681F3714E0000F9D3E /* AudioVolumeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E656F671F3714E0000F9D3E /* AudioVolumeView.swift */; };
 		52C87C441F3BF9E400B717F2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 52C87C431F3BF9E400B717F2 /* GoogleService-Info.plist */; };
+		52C87C4C1F3C871D00B717F2 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C87C4B1F3C871D00B717F2 /* Logger.swift */; };
 		52DA50E71F3BE5B10026AC56 /* sample.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 52DA50E61F3BE5B10026AC56 /* sample.mp3 */; };
 		7BC48C6E6350F80069663357 /* Pods_ListenNRepeat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 139B35C8B9C14FB59926EA2E /* Pods_ListenNRepeat.framework */; };
 /* End PBXBuildFile section */
@@ -142,6 +143,7 @@
 		2E656F671F3714E0000F9D3E /* AudioVolumeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioVolumeView.swift; sourceTree = "<group>"; };
 		2E7AC2141E47195700BA03B7 /* ListenNRepeat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ListenNRepeat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52C87C431F3BF9E400B717F2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		52C87C4B1F3C871D00B717F2 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		52DA50E61F3BE5B10026AC56 /* sample.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sample.mp3; sourceTree = "<group>"; };
 		62ECE8A368EA05EB5A269791 /* Pods-SectionRepeaterShareExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SectionRepeaterShareExtension.release.xcconfig"; path = "Pods/Target Support Files/Pods-SectionRepeaterShareExtension/Pods-SectionRepeaterShareExtension.release.xcconfig"; sourceTree = "<group>"; };
 		7D066DCECA8DD050B00ED171 /* Pods-SectionRepeater.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SectionRepeater.release.xcconfig"; path = "Pods/Target Support Files/Pods-SectionRepeater/Pods-SectionRepeater.release.xcconfig"; sourceTree = "<group>"; };
@@ -222,6 +224,7 @@
 				2E656F011F3712DC000F9D3E /* WaveformPlaceholderView.swift */,
 				2E656F021F3712DC000F9D3E /* WaveformView.swift */,
 				2E656F671F3714E0000F9D3E /* AudioVolumeView.swift */,
+				52C87C4B1F3C871D00B717F2 /* Logger.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -576,6 +579,7 @@
 				2E656F5E1F3712DC000F9D3E /* MoreViewController.swift in Sources */,
 				2E656F381F3712DC000F9D3E /* NSObject+Extension.swift in Sources */,
 				2E656F541F3712DC000F9D3E /* iTunesPlaylistViewController.swift in Sources */,
+				52C87C4C1F3C871D00B717F2 /* Logger.swift in Sources */,
 				2E656F3A1F3712DC000F9D3E /* UIColor+Extension.swift in Sources */,
 				2E656F5B1F3712DC000F9D3E /* MoreItemCell.swift in Sources */,
 				2E656F3E1F3712DC000F9D3E /* PlayerItem.swift in Sources */,
