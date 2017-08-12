@@ -111,7 +111,7 @@ extension iTunesAlbumDetailViewController: UICollectionViewDataSource, UICollect
             try Player.shared.play(items: PlayerItem.items(mediaItems: items), startAt: indexPath.row)
             let playerController = PlayerViewController(nibName: PlayerViewController.className(), bundle: nil)
             playerController.modalPresentationStyle = .custom
-            Navigator.present(playerController)
+            Navigator.present(playerController, wrap: false, from: RootViewController.current(), animated: false, completion: nil)
         } catch let error {
             print(error)
         }

@@ -13,7 +13,11 @@ import MediaPlayer
 class PlayerViewController: UIViewController {
     
     //MARK: IB Properties
-    @IBOutlet weak var contentViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentViewWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var blurEffectView: UIVisualEffectView!
+    @IBOutlet weak var contentView: UIView!
+    
     @IBOutlet weak var albumCoverImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var artistNameLabel: UILabel!
@@ -44,7 +48,7 @@ class PlayerViewController: UIViewController {
     
     @IBOutlet weak var volumeView: AudioVolumeView!
     @IBOutlet weak var rateButton: UIButton!
-
+    
     // Properties
     fileprivate var timer: Timer?
     fileprivate var scrollViewDragging = false
@@ -79,20 +83,35 @@ class PlayerViewController: UIViewController {
         Player.shared.notificationCenter.addObserver(self, selector: #selector(handlePlayingTimeUpdatedNotification), name: Notification.Name.playerTimeUpdated, object: nil)
         Player.shared.notificationCenter.addObserver(self, selector: #selector(handleBookmarkUpdatedNotification), name: Notification.Name.playerBookmakrUpdated, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(enterForeground), name: Notification.Name.UIApplicationWillEnterForeground, object: nil)
+        
+        if (UIScreen.mainWidth > 320) {
+            // over iPhone 6
+            self.contentViewWidthConstraint.constant = 340
+            self.contentViewHeightConstraint.constant = 600
+        } else if (UIScreen.mainHeight < 568) {
+            // iPhone 4
+            self.contentViewWidthConstraint.constant = 310
+            self.contentViewHeightConstraint.constant = 476
+        } else {
+            // iPhone 5
+            self.contentViewWidthConstraint.constant = 310
+            self.contentViewHeightConstraint.constant = 560
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.setup()
+        self.blurEffectView.alpha = 0
+        UIView.animate(withDuration: 0.3) { [weak self] in
+            self?.blurEffectView.alpha = 1.0
+        }
+        let scaleAnim = CAKeyframeAnimation(keyPath: "transform.scale")
+        scaleAnim.values = [0.9, 1.05, 0.98, 1]
+        scaleAnim.duration = 0.3
+        self.contentView.layer.add(scaleAnim, forKey: nil)
     }
     
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        if self.contentViewTopConstraint.constant != self.topLayoutGuide.length {
-            self.contentViewTopConstraint.constant = self.topLayoutGuide.length
-        }
-    }
-
     // MARK - Private
     func enterForeground() {
         self.setup()
@@ -217,7 +236,7 @@ class PlayerViewController: UIViewController {
     
     // MARK - IB Actions
     @IBAction func closeButtonTapped(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: false, completion: nil)
     }
     
     @IBAction func timeSliderValueChanged(_ sender: Any) {

@@ -31,7 +31,6 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
     fileprivate let deleteButton = UIButton().then { (button) in
         button.backgroundColor = UIColor.clear
         button.setImage(UIImage(named: "btn_delete_file_44pt"), for: .normal)
-        button.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
     }
     fileprivate let borderView = UIView().then { (view) in
         view.backgroundColor = UIColor.gray220
@@ -86,7 +85,7 @@ class BookmarkCollectionViewCell: UICollectionViewCell {
             make.right.equalTo(self).offset(-20)
             make.height.equalTo(UIScreen.scaleWidth)
         }
-
+        self.deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
     }
     
     required init?(coder aDecoder: NSCoder) {

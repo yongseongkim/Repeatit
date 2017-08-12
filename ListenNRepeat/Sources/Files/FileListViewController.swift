@@ -163,7 +163,7 @@ extension FileListViewController: UICollectionViewDataSource, UICollectionViewDe
                 try Player.shared.play(items: PlayerItem.items(files: self.files), startAt: indexPath.row)
                 let playerController = PlayerViewController(nibName: PlayerViewController.className(), bundle: nil)
                 playerController.modalPresentationStyle = .custom
-                Navigator.present(playerController)
+                Navigator.present(playerController, wrap: false, from: RootViewController.current(), animated: false, completion: nil)
             } catch let error {
                 print(error)
             }

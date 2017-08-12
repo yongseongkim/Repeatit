@@ -13,6 +13,11 @@ import URLNavigator
 
 class RootViewController: UITabBarController {
     
+    class func current() -> RootViewController {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        return appDelegate.window!.rootViewController as! RootViewController
+    }
+    
     fileprivate let fileListNaviController = FileListNavigationController()
     fileprivate let itunesNaviController = iTunesNavigationController()
     fileprivate let moreNaviController = UINavigationController(rootViewController: MoreViewController())
@@ -120,6 +125,6 @@ extension RootViewController: PlayerViewDelegate {
     func playerViewTapped() {
         let playerController = PlayerViewController(nibName: PlayerViewController.className(), bundle: nil)
         playerController.modalPresentationStyle = .custom
-        Navigator.present(playerController)
+        Navigator.present(playerController, wrap: false, from: self, animated: false, completion: nil)
     }
 }

@@ -31,7 +31,7 @@ class WaveformView: UIView {
     fileprivate let scrollView = UIScrollView(frame: .zero).then { (scrollView) in
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
-        scrollView.backgroundColor = UIColor.white
+        scrollView.backgroundColor = UIColor.gray243
     }
     fileprivate let progressBackgroundView = UIImageView().then { (imageView) in
         imageView.backgroundColor = UIColor.clear
@@ -43,7 +43,9 @@ class WaveformView: UIView {
     fileprivate let progressImageView: UIImageView = UIImageView().then { (imageView) in
         imageView.backgroundColor = UIColor.clear
     }
-    fileprivate let placeholderView = WaveformPlaceholderView()
+    fileprivate let placeholderView = WaveformPlaceholderView().then { (placeholderView) in
+        placeholderView.backgroundColor = UIColor.gray243
+    }
     fileprivate var bookmarkViews = [UIView]()
     
     required init?(coder aDecoder: NSCoder) {
