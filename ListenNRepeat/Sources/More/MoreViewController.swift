@@ -46,7 +46,7 @@ class MoreViewController: UIViewController {
                     self?.openBugReport()
                 },
                 MoreItem(name: "Write a App Review") {
-                    guard let url = URL(string: "itms-apps://itunes.com/apps/ListenNRepeat") else { return }
+                    guard let url = URL(string: "itms-apps://itunes.apple.com/app/id1269932365") else { return }
                     UIApplication.shared.open(url, options: [String: Any](), completionHandler: nil)
                 }]),
             ("ETC", [

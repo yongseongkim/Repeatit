@@ -91,11 +91,11 @@ class PlayerViewController: UIViewController {
         } else if (UIScreen.mainHeight < 568) {
             // iPhone 4
             self.contentViewWidthConstraint.constant = 310
-            self.contentViewHeightConstraint.constant = 476
+            self.contentViewHeightConstraint.constant = 440
         } else {
             // iPhone 5
             self.contentViewWidthConstraint.constant = 310
-            self.contentViewHeightConstraint.constant = 560
+            self.contentViewHeightConstraint.constant = 528
         }
     }
     
