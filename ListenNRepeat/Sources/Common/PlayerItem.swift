@@ -21,7 +21,7 @@ class PlayerItem: NSObject {
     }()
     lazy var bookmarkKey: String? = { [weak self] in
         guard let targetURL = self?.url else { return nil }
-        guard let range = targetURL.path.range(of: URL.documentsURL.path) else { return nil }
+        guard let range = targetURL.path.range(of: URL.documentsURL.path) else { return targetURL.absoluteString }
         var result = targetURL.path
         result.removeSubrange(range)
         return result
