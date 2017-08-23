@@ -55,9 +55,7 @@ class iTunesSongListViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if let items = MPMediaQuery.songs().items {
-            self.items = items
-        }
+        self.loadSongs()
     }
     
     func updateConstraints() {
@@ -82,7 +80,13 @@ class iTunesSongListViewController: UIViewController {
     }
     
     func enterForeground() {
-        self.collectionView.reloadData()
+        self.loadSongs()
+    }
+    
+    func loadSongs() {
+        if let items = MPMediaQuery.songs().items {
+            self.items = items
+        }
     }
 }
 

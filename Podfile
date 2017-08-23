@@ -9,7 +9,6 @@ target 'ListenNRepeat' do
   pod 'Then', '~> 2.1'
   pod 'URLNavigator', '~> 1.2'
   pod 'SwiftyImage', '~> 1.1'  
-  pod 'pop', '~> 1.0'
   pod 'Carte'
 
   # Report

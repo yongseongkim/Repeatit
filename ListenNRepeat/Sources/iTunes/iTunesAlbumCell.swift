@@ -17,8 +17,7 @@ class iTunesAlbumCell: UICollectionViewCell {
 
     //MARK: UI Components
     fileprivate let albumCoverImageView = UIImageView().then { (view) in
-        view.layer.borderColor = UIColor.gray220.cgColor
-        view.layer.borderWidth = UIScreen.scaleWidth
+        view.contentMode = .scaleAspectFit
     }
     fileprivate let textContainerView = UIView().then { (view) in
         view.backgroundColor = UIColor.clear
@@ -50,7 +49,7 @@ class iTunesAlbumCell: UICollectionViewCell {
             }
             self.titleLabel.text = item.albumTitle
             self.artistLabel.text = item.artist
-            self.albumCoverImageView.image = item.artwork?.image(at: albumCoverImageView.frame.size)
+            self.albumCoverImageView.image = item.artwork?.image(at: albumCoverImageView.frame.size) ?? UIImage(named: "music_note_empty_44pt")
         }
     }
     
