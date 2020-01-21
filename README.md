@@ -1,2 +1,2 @@
-# ListenNRepeat
-영어 학습을 위한 구간 반복 학습기
+# Repeatit
+언어 학습을 위한 구간 반복 학습기

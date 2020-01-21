@@ -1,0 +1,28 @@
+name: Repeatit
+options:
+  bundleIdPrefix: kr.co.yongseongkim
+  postGenCommand:
+    pod install
+settings:
+  DEVELOPMENT_TEAM: 4S8J2466NG
+settingGroups:
+  CODE_SIGN_IDENTITY: "iPhone Developer"
+  CODE_SIGN_STYLE: Automatic
+targets:
+  Repeatit:
+    type: application
+    platform: iOS
+    deploymentTarget: 13.0
+    sources:
+      - Repeatit
+    preBuildScripts:
+      - script: "GOOGLE_SERVICE_INFO_PLIST_FROM=\"${PROJECT_DIR}/Repeatit/Resources/GoogleService-Info.plist\"\nBUILD_APP_DIR=\"${BUILT_PRODUCTS_DIR}/${FULL_PRODUCT_NAME}\"\nGOOGLE_SERVICE_INFO_PLIST_TO=\"${BUILD_APP_DIR}/GoogleService-Info.plist\"\ncp \"${GOOGLE_SERVICE_INFO_PLIST_FROM}\" \"${GOOGLE_SERVICE_INFO_PLIST_TO}\""
+    settings:
+      base:
+        CODE_SIGN_ENTITLEMENTS: Repeatit/Repeatit.entitlements
+      configs:
+        debug:
+          CUSTOM_BUILD_SETTING: my_debug_value
+        release:
+          CUSTOM_BUILD_SETTING: my_release_value
+

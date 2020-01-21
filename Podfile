@@ -1,29 +1,22 @@
 # Uncomment this line to define a global platform for your project
-platform :ios, '9.0'
+platform :ios, '13.0'
 
-target 'ListenNRepeat' do
+target 'Repeatit' do
   use_frameworks!
 
-  pod 'SnapKit', '~> 3.1.2' 
-  pod 'RealmSwift', '~> 2.8'
-  pod 'Then', '~> 2.1'
-  pod 'URLNavigator', '~> 1.2'
-  pod 'SwiftyImage', '~> 1.1'  
-  pod 'Carte'
+  pod 'SnapKit', '~> 5.0.0'
+  pod 'SwiftyImage'
+  pod 'RxCocoa', '~> 5'
+  pod 'RxSwift', '~> 5'
 
   # Report
-  pod 'Firebase/Core'
+  pod 'Firebase/Analytics'
   pod 'Fabric'
   pod 'Crashlytics'
 end
 
 post_install do |installer|
-    installer.pods_project.targets.each do |target|
-        target.build_configurations.each do |config|
-            config.build_settings['SWIFT_VERSION'] = '3.0'
-        end
-    end
-    
-    pods_dir = File.dirname(installer.pods_project.path)
-    at_exit { `ruby #{pods_dir}/Carte/Sources/Carte/carte.rb configure` }
+  installer.pods_project.build_configurations.each do |config|
+    config.build_settings['VALID_ARCHS'] = '$(VALID_ARCHS)'
+  end
 end
