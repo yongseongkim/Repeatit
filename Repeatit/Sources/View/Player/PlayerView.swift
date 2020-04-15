@@ -24,8 +24,8 @@ struct SizeCalculator: View {
 }
 
 struct PlayerView: View {
-    let item: PlayItem
-    let player: Player
+    let item: AudioItem
+    let audioPlayer: AudioPlayer
 
     @State var keyboardHeight: CGFloat = 0
     @State var headerViewSize: CGSize = .zero
@@ -56,16 +56,16 @@ struct PlayerView: View {
                             PlayerHeaderView(model: .init(title: self.item.title, artist: self.item.artist, artwork: self.item.artwork))
                                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
                         }
-                        PlayerWaveformView(url: self.item.url, player: self.player)
+                        PlayerWaveformView(url: self.item.url, audioPlayer: self.audioPlayer)
                             .frame(height: 140)
                         if self.keyboardHeight == 0 {
-                            PlayerControlView(player: self.player)
+                            PlayerControlView(model: .init(audioPlayer: self.audioPlayer))
                                 .padding(EdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 15))
                         }
                     }
                     .background(Color.white)
                     .background(SizeCalculator(size: self.$headerViewSize))
-                    DictationNoteView(player: self.player)
+                    DictationNoteView(audioPlayer: self.audioPlayer)
                         .padding(EdgeInsets(top: 15, leading: 25, bottom: 15, trailing: 25))
                         .frame(height: outerGeometry.size.height - self.keyboardHeight - self.headerViewSize.height)
                     Spacer()
@@ -73,7 +73,7 @@ struct PlayerView: View {
                 .modifier(KeyboardHeightDetector(self.$keyboardHeight))
             }
             .onDisappear {
-                self.player.pause()
+                self.audioPlayer.pause()
             }
         }
     }
@@ -82,8 +82,8 @@ struct PlayerView: View {
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
         PlayerView(
-            item: PlayItem(url: URL.documentsURL),
-            player: BasicPlayer()
+            item: AudioItem(url: URL.documentsURL),
+            audioPlayer: BasicAudioPlayer()
         )
     }
 }

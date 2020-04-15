@@ -5,28 +5,29 @@
 //  Created by yongseongkim on 2020/04/04.
 //
 
+import Combine
 import UIKit
 import SnapKit
 
 class PlayerControlAccessoryView: UIStackView {
     static let height: CGFloat = 40
 
-    private let player: Player
+    private let audioPlayer: AudioPlayer
+    private var cancellables: [AnyCancellable] = []
 
     // MARK: - UI Components
-    private let moveBackward1SecondsButton = PlayerMoveControlButton(direction: .backward, seconds: 1)
     private let moveBackward5SecondsButton = PlayerMoveControlButton(direction: .backward, seconds: 5)
+    private let moveBackward1SecondsButton = PlayerMoveControlButton(direction: .backward, seconds: 1)
     private let moveForward1SecondsButton = PlayerMoveControlButton(direction: .forward, seconds: 1)
     private let moveForward5SecondsButton = PlayerMoveControlButton(direction: .forward, seconds: 5)
-    private let playButton = UIImageView(image: UIImage(systemName: "play.fill"))
-        .apply {
-            $0.contentMode = .scaleAspectFit
-            $0.tintColor = .systemBlack
-        }
+    private let playButton = UIButton(type: .custom).apply {
+        $0.tintColor = .systemBlack
+        $0.setImage(UIImage(systemName: "play.fill"), for: .normal)
+    }
     // MARK: -
 
-    init(player: Player) {
-        self.player = player
+    init(audioPlayer: AudioPlayer) {
+        self.audioPlayer = audioPlayer
         super.init(frame: .zero)
         initialize()
     }
@@ -49,23 +50,41 @@ class PlayerControlAccessoryView: UIStackView {
             $0.layer.shadowOffset = CGSize(width: 0, height: 0)
             $0.layer.shadowOpacity = 0.2
         }
-        snp.addSubview(backgroundView) { make in
-            make.top.leading.bottom.trailing.equalToSuperview()
-        }
-        snp.addArrangedSubview(moveBackward1SecondsButton) { make in
-            make.width.height.equalTo(32)
-        }
-        snp.addArrangedSubview(moveBackward5SecondsButton) { make in
-            make.width.height.equalTo(32)
-        }
-        snp.addArrangedSubview(playButton) { make in
-            make.width.height.equalTo(32)
-        }
-        snp.addArrangedSubview(moveForward1SecondsButton) { make in
-            make.width.height.equalTo(32)
-        }
-        snp.addArrangedSubview(moveForward5SecondsButton) { make in
-            make.width.height.equalTo(32)
-        }
+        snp.addSubview(backgroundView) { $0.top.leading.bottom.trailing.equalToSuperview() }
+        snp.addArrangedSubview(moveBackward5SecondsButton) { $0.width.height.equalTo(32) }
+        snp.addArrangedSubview(moveBackward1SecondsButton) { $0.width.height.equalTo(32) }
+        snp.addArrangedSubview(playButton) { $0.width.height.equalTo(32) }
+        snp.addArrangedSubview(moveForward1SecondsButton) { $0.width.height.equalTo(32) }
+        snp.addArrangedSubview(moveForward5SecondsButton) { $0.width.height.equalTo(32) }
+
+        cancellables += [
+            audioPlayer.isPlayingPublisher
+                .receive(on: RunLoop.main)
+                .sink(receiveValue: { [weak self] isPlaying in
+                    guard let self = self else { return }
+                    self.playButton.setImage(UIImage(systemName: isPlaying ? "pause.fill" : "play.fill"), for: .normal)
+                }),
+            moveBackward5SecondsButton.button.publisher(for: UIControl.Event.touchUpInside)
+                .sink(receiveValue: { [weak self] _ in
+                    self?.audioPlayer.moveBackward(seconds: 5)
+                }),
+            moveBackward1SecondsButton.button.publisher(for: UIControl.Event.touchUpInside)
+                .sink(receiveValue: { [weak self] _ in
+                    self?.audioPlayer.moveBackward(seconds: 1)
+                }),
+            playButton.publisher(for: UIControl.Event.touchUpInside)
+                .sink(receiveValue: { [weak self] _ in
+                    guard let isPlaying = self?.audioPlayer.isPlaying else { return }
+                    isPlaying ? self?.audioPlayer.pause() : self?.audioPlayer.resume()
+                }),
+            moveForward1SecondsButton.button.publisher(for: UIControl.Event.touchUpInside)
+                .sink(receiveValue: { [weak self] _ in
+                    self?.audioPlayer.moveForward(seconds: 1)
+                }),
+            moveForward5SecondsButton.button.publisher(for: UIControl.Event.touchUpInside)
+                .sink(receiveValue: { [weak self] _ in
+                    self?.audioPlayer.moveForward(seconds: 5)
+                })
+        ]
     }
 }

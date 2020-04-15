@@ -11,10 +11,10 @@ import SwiftUI
 struct DictationNoteView: UIViewRepresentable {
     typealias UIViewType = UITextView
 
-    let player: Player
+    let audioPlayer: AudioPlayer
 
     var accessoryView: PlayerControlAccessoryView {
-        return PlayerControlAccessoryView(player: player).apply {
+        return PlayerControlAccessoryView(audioPlayer: audioPlayer).apply {
             $0.frame = CGRect(x: 0, y: 0, width: UIScreen.mainWidth, height: PlayerControlAccessoryView.height)
         }
     }

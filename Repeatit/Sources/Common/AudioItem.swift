@@ -1,5 +1,5 @@
 //
-//  PlayItem.swift
+//  AudioItem.swift
 //  Repeatit
 //
 //  Created by yongseongkim on 2020/01/30.
@@ -9,9 +9,7 @@
 import AVFoundation
 import UIKit
 
-// var mediaItem: MPMediaItem?
-
-struct PlayItem {
+struct AudioItem {
     let url: URL
     let title: String
     let artist: String

@@ -10,7 +10,7 @@ import SwiftUI
 
 struct DocumentsExplorerList: View {
     let url: URL
-    let player: Player = BasicPlayer()
+    let audioPlayer: AudioPlayer = BasicAudioPlayer()
 
     @State var items = [DocumentsExplorerItem]()
     @State var isShowingPlayer = false
@@ -28,8 +28,8 @@ struct DocumentsExplorerList: View {
                     }
                     .sheet(isPresented: self.$isShowingPlayer) {
                         PlayerView(
-                            item: PlayItem(url: self.url.appendingPathComponent(item.name)),
-                            player: self.player
+                            item: AudioItem(url: self.url.appendingPathComponent(item.name)),
+                            audioPlayer: self.audioPlayer
                         )
                     }
             }
@@ -60,10 +60,10 @@ struct DocumentsExplorerList: View {
         do {
             let items = self.getItemsInDirectory()
                 .filter { !$0.isDirectory }
-                .map { PlayItem(url: self.url.appendingPathComponent($0.name)) }
+                .map { AudioItem(url: self.url.appendingPathComponent($0.name)) }
             let startAt = items.firstIndex (where: { $0.url == self.url.appendingPathComponent(item.name) }) ?? 0
             let newItems = startAt == 0 ? items : Array(items[startAt...]) + Array(items[0..<startAt])
-            try self.player.play(with: newItems)
+            try self.audioPlayer.play(with: newItems)
             self.isShowingPlayer = true
         } catch {
             // TODO: Should show alert and why

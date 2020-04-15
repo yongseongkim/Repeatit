@@ -1,17 +1,16 @@
 //
-//  Player.swift
+//  AudioPlayer.swift
 //  Repeatit
 //
 //  Created by KimYongSeong on 2017. 5. 14..
 //  Copyright © 2017년 yongseongkim. All rights reserved.
 //
 
-import Foundation
 import AVFoundation
-import MediaPlayer
+import Combine
 import Firebase
-import RxSwift
-import RxCocoa
+import Foundation
+import MediaPlayer
 
 enum PlayerError: Error {
     case invalidArgumentPlayerItem
@@ -19,29 +18,29 @@ enum PlayerError: Error {
 }
 
 enum RepeatMode {
-    case None
-    case All        // 전곡 반복
-    case One        // 한곡 반복
+    case none
+    case all        // 전곡 반복
+    case one        // 한곡 반복
 }
 
-protocol Player {
+protocol AudioPlayer {
     // MARK: Properties
     var isPlaying: Bool { get }
-    var currentPlayItem: PlayItem? { get }
+    var currentPlayItem: AudioItem? { get }
     var currentPlayTime: Double { get }
     var duration: Double  { get }
-    var playList: [PlayItem]  { get }
+    var playList: [AudioItem]  { get }
     var repeatMode: RepeatMode { get set }
     var rate: Double { get set }
     // MARK: -
 
     // MARK: Event
-    var isPlayingObservable: Observable<Bool> { get }
-    var currentPlayTimeObservable: Observable<Double> { get }
+    var isPlayingPublisher: AnyPublisher<Bool, Never> { get }
+    var currentPlayTimePublisher: AnyPublisher<Double, Never> { get }
     // MARK: -
 
     // MARK - Actions
-    func play(with list: [PlayItem], startAt: Int) throws
+    func play(with list: [AudioItem], startAt: Int) throws
     func pause()
     func resume()
     func stop()
@@ -53,22 +52,22 @@ protocol Player {
     // MARK: -
 }
 
-extension Player {
-    func play(with list: [PlayItem], startAt: Int = 0) throws {
+extension AudioPlayer {
+    func play(with list: [AudioItem], startAt: Int = 0) throws {
         try play(with: list, startAt: startAt)
     }
 }
 
-class BasicPlayer {
-    var repeatMode: RepeatMode = .None
+class BasicAudioPlayer {
+    var repeatMode: RepeatMode = .none
     var rate: Double = 1.0
 
-    private let isPlayingRelay = BehaviorRelay<Bool>(value: false)
+    private let isPlayingSubject = CurrentValueSubject<Bool, Never>(false)
     // play time 변화 감지를 위해 AVPlayerItem 의 time 을 쓰지 않고 observer 를 이용하여 관리한다.
-    private let currentPlayTimeRelay = BehaviorRelay<Double>(value: 0)
-    private let playListRelay = BehaviorRelay<[PlayItem]>(value: [])
-    private let currentPlayItemRelay = BehaviorRelay<PlayItem?>(value: nil)
-    private let disposeBag = DisposeBag()
+    private let currentPlayTimeSubject = CurrentValueSubject<Double, Never>(0)
+    private let playListSubject = CurrentValueSubject<[AudioItem], Never>([])
+    private let currentPlayItemSubject = CurrentValueSubject<AudioItem?, Never>(nil)
+    private var cancellables: [AnyCancellable] = []
 
     private var avPlayer: AVPlayer?
     private var avPlayerItem: AVPlayerItem?
@@ -79,22 +78,22 @@ class BasicPlayer {
 
     init() {
         NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: nil)
-
-        currentPlayItemRelay
-            .subscribe(onNext: { [weak self] playItem in
-                if let playItem = playItem {
-                    self?.load(item: playItem)
-                } else {
-                    self?.stop()
+        cancellables += [
+            currentPlayItemSubject.sink(
+                receiveValue: { [weak self] value in
+                    if let playItem = value {
+                        self?.load(item: playItem)
+                    } else {
+                        self?.stop()
+                    }
                 }
-            })
-            .disposed(by: disposeBag)
-
-        currentPlayTimeRelay
-            .subscribe(onNext: { [weak self] time in
+            )
+        ]
+        cancellables += [
+            currentPlayTimeSubject.sink { [weak self] time in
                 self?.updatePlayingInfo()
-            })
-            .disposed(by: disposeBag)
+            }
+        ]
     }
 
     deinit {
@@ -111,7 +110,7 @@ class BasicPlayer {
 
     // Do not call this method for play.
     // Just set item to currentPlayItemRelay.
-    private func load(item: PlayItem) {
+    private func load(item: AudioItem) {
         // Remove previouse player
         clear()
 
@@ -127,7 +126,7 @@ class BasicPlayer {
     }
 
     private func updateIsPlaying() {
-        isPlayingRelay.accept(avPlayer?.isPlaying ?? false)
+        isPlayingSubject.send(avPlayer?.isPlaying ?? false)
     }
 
     private func loadCommandCenterIfNecessary() {
@@ -219,7 +218,7 @@ class BasicPlayer {
                         return
                     }
                 }
-                self?.currentPlayTimeRelay.accept(time.seconds)
+                self?.currentPlayTimeSubject.send(time.seconds)
             }
         )
     }
@@ -233,17 +232,17 @@ class BasicPlayer {
     }
 }
 
-extension BasicPlayer: Player {
+extension BasicAudioPlayer: AudioPlayer {
     var isPlaying: Bool {
-        return isPlayingRelay.value
+        return isPlayingSubject.value
     }
 
-    var currentPlayItem: PlayItem? {
-        return currentPlayItemRelay.value
+    var currentPlayItem: AudioItem? {
+        return currentPlayItemSubject.value
     }
 
     var currentPlayTime: Double {
-        return currentPlayTimeRelay.value
+        return currentPlayTimeSubject.value
     }
 
     var duration: Double {
@@ -251,26 +250,26 @@ extension BasicPlayer: Player {
         return duration
     }
 
-    var playList: [PlayItem] {
-        return playListRelay.value
+    var playList: [AudioItem] {
+        return playListSubject.value
     }
 
     // MARK: Event
-    var isPlayingObservable: Observable<Bool> {
-        return isPlayingRelay.asObservable()
+    var isPlayingPublisher: AnyPublisher<Bool, Never> {
+        return isPlayingSubject.eraseToAnyPublisher()
     }
 
-    var currentPlayTimeObservable: Observable<Double> {
-        return currentPlayTimeRelay.asObservable()
+    var currentPlayTimePublisher: AnyPublisher<Double, Never> {
+        return currentPlayTimeSubject.eraseToAnyPublisher()
     }
     // MARK: -
 
-    func play(with list: [PlayItem], startAt: Int = 0) throws {
+    func play(with list: [AudioItem], startAt: Int = 0) throws {
         if (list.count <= startAt) {
             throw PlayerError.invalidArgumentPlayerItem
         }
-        playListRelay.accept(list)
-        currentPlayItemRelay.accept(list[startAt])
+        playListSubject.send(list)
+        currentPlayItemSubject.send(list[startAt])
     }
 
     func pause() {
@@ -299,16 +298,16 @@ extension BasicPlayer: Player {
     }
 
     func playNext() throws {
-        var nextPlayItem: PlayItem? = nil
+        var nextPlayItem: AudioItem? = nil
         switch repeatMode {
-        case .One:
+        case .one:
             nextPlayItem = currentPlayItem
-        case .All:
+        case .all:
             if let currentPlayItem = currentPlayItem,
                 let currentPlayItemIdx = playList.firstIndex(where: { $0.url == currentPlayItem.url }) {
                 nextPlayItem = playList[(currentPlayItemIdx + 1) % playList.count]
             }
-        case .None:
+        case .none:
             if let currentPlayItem = currentPlayItem,
                 let currentPlayItemIdx = playList.firstIndex(where: { $0.url == currentPlayItem.url }),
                 currentPlayItemIdx < playList.count - 1 {
@@ -316,23 +315,23 @@ extension BasicPlayer: Player {
             }
         }
         if let nextPlayItem = nextPlayItem {
-            currentPlayItemRelay.accept(nextPlayItem)
+            currentPlayItemSubject.send(nextPlayItem)
         } else {
             throw PlayerError.noSuchElement
         }
     }
 
     func playPrev() throws {
-        var nextPlayItem: PlayItem? = nil
+        var nextPlayItem: AudioItem? = nil
         switch repeatMode {
-        case .One:
+        case .one:
             nextPlayItem = currentPlayItem
-        case .All:
+        case .all:
             if let currentPlayItem = currentPlayItem,
                 let currentPlayItemIdx = playList.firstIndex(where: { $0.url == currentPlayItem.url }) {
                 nextPlayItem = playList[(currentPlayItemIdx - 1 + playList.count) % playList.count]
             }
-        case .None:
+        case .none:
             if let currentPlayItem = currentPlayItem,
                 let currentPlayItemIdx = playList.firstIndex(where: { $0.url == currentPlayItem.url }),
                 currentPlayItemIdx > 0 {
@@ -340,7 +339,7 @@ extension BasicPlayer: Player {
             }
         }
         if let nextPlayItem = nextPlayItem {
-            currentPlayItemRelay.accept(nextPlayItem)
+            currentPlayItemSubject.send(nextPlayItem)
         } else {
             throw PlayerError.noSuchElement
         }

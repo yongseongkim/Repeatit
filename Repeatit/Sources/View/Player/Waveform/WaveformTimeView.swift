@@ -6,38 +6,42 @@
 //  Copyright © 2020 yongseongkim. All rights reserved.
 //
 
+import Combine
 import SwiftUI
-import RxSwift
 
 struct WaveformTimeView: View {
+    class ViewModel: ObservableObject {
+        let audioPlayer: AudioPlayer
+        @Published var currentTime: Double = 0
+        @Published var duration: Double = 0
 
-    let player: Player
+        private var cancellables: [AnyCancellable] = []
 
-    @State var currentTime: Double = 0
-    @State var duration: Double = 0
+        init(audioPlayer: AudioPlayer) {
+            self.audioPlayer = audioPlayer
+            self.duration = audioPlayer.duration
+            self.cancellables += [
+                audioPlayer.currentPlayTimePublisher
+                    .receive(on: RunLoop.main)
+                    .assign(to: \.currentTime, on: self)
+            ]
+        }
+    }
 
-    private let disposeBag = DisposeBag()
+    @ObservedObject var model: ViewModel
 
     var body: some View {
         HStack {
-            Text(secondsToFormat(time: currentTime))
+            Text(secondsToFormat(time: self.model.currentTime))
                 .foregroundColor(.systemWhite)
                 .frame(width: 110, alignment: .center)
             Divider().foregroundColor(Color.classicBlue).background(Color.classicBlue)
-            Text(secondsToFormat(time: duration))
+            Text(secondsToFormat(time: self.model.duration))
                 .foregroundColor(.systemWhite)
                 .frame(width: 110, alignment: .center)
         }
         .frame(height: 32)
         .background(Color.systemBlack)
-        .onAppear {
-            self.duration = self.player.duration
-            self.player.currentPlayTimeObservable
-                .subscribe(onNext: { currentTime in
-                    self.currentTime = currentTime
-                })
-                .disposed(by: self.disposeBag)
-        }
     }
 
     private func secondsToFormat(time: Double) -> String {
@@ -51,6 +55,6 @@ struct WaveformTimeView: View {
 
 struct WaveformTimeView_Previews: PreviewProvider {
     static var previews: some View {
-        WaveformTimeView(player: BasicPlayer())
+        WaveformTimeView(model: .init(audioPlayer: BasicAudioPlayer()))
     }
 }

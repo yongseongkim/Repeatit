@@ -6,8 +6,6 @@ target 'Repeatit' do
 
   pod 'SnapKit', '~> 5.0.0'
   pod 'SwiftyImage'
-  pod 'RxCocoa', '~> 5'
-  pod 'RxSwift', '~> 5'
 
   # Report
   pod 'Firebase/Analytics'

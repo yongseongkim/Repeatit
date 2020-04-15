@@ -20,7 +20,6 @@ struct PlayerMoveControlButtonUI: UIViewRepresentable {
     }
 }
 
-
 class PlayerMoveControlButton: UIView {
     enum Direction {
         case forward
@@ -37,6 +36,10 @@ class PlayerMoveControlButton: UIView {
     }
     private let secondsLabel = UILabel().apply {
         $0.textColor = .systemBlack
+    }
+    let button = UIButton().apply {
+        $0.setTitle(nil, for: .normal)
+        $0.backgroundColor = .clear
     }
     // MARK: -
 
@@ -65,6 +68,9 @@ class PlayerMoveControlButton: UIView {
         secondsLabel.text = "\(seconds)"
         snp.addSubview(secondsLabel) { make in
             make.centerX.centerY.equalToSuperview()
+        }
+        snp.addSubview(button) { make in
+            make.edges.equalToSuperview()
         }
     }
 }
