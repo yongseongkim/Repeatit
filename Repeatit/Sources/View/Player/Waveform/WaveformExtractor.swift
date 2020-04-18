@@ -10,6 +10,12 @@ import AVFoundation
 import Accelerate
 import UIKit
 
+enum WaveformBarStyle {
+    case up
+    case down
+    case upDown
+}
+
 class WaveformExtractor {
 
     struct SampleDrawingInfo {
@@ -17,6 +23,7 @@ class WaveformExtractor {
         let interval: Int
         let maxHeight: Int
         let color: UIColor
+        let barStyle: WaveformBarStyle
     }
 
     func loadSamples(url: URL) throws -> [Float] {
@@ -55,7 +62,16 @@ class WaveformExtractor {
         UIGraphicsBeginImageContext(CGSize(width: width, height: height))
         let context = UIGraphicsGetCurrentContext()
         context?.setLineWidth(CGFloat(sample.width))
-        let centerY = height / 2
+
+        let centerY: CGFloat
+        switch sample.barStyle {
+        case .up:
+            centerY = height
+        case .down:
+            centerY = 0
+        case .upDown:
+            centerY = height / 2
+        }
         var x: CGFloat = 0
         for idx in 0..<samples.count {
             let sampleHeight: CGFloat = max(min(CGFloat(samples[idx]) * 100, CGFloat(sample.maxHeight)), 1)

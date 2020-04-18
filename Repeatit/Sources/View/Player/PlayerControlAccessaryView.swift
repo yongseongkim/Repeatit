@@ -38,10 +38,10 @@ class PlayerControlAccessoryView: UIStackView {
 
     func initialize() {
         axis = .horizontal
-        alignment = .center
+        alignment = .fill
         distribution = .equalSpacing
         isLayoutMarginsRelativeArrangement = true
-        directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 15)
+        directionalLayoutMargins = NSDirectionalEdgeInsets(top: 5, leading: 15, bottom: 5, trailing: 15)
 
         let backgroundView = UIView().apply {
             $0.backgroundColor = .systemWhite
@@ -51,11 +51,11 @@ class PlayerControlAccessoryView: UIStackView {
             $0.layer.shadowOpacity = 0.2
         }
         snp.addSubview(backgroundView) { $0.top.leading.bottom.trailing.equalToSuperview() }
-        snp.addArrangedSubview(moveBackward5SecondsButton) { $0.width.height.equalTo(32) }
-        snp.addArrangedSubview(moveBackward1SecondsButton) { $0.width.height.equalTo(32) }
-        snp.addArrangedSubview(playButton) { $0.width.height.equalTo(32) }
-        snp.addArrangedSubview(moveForward1SecondsButton) { $0.width.height.equalTo(32) }
-        snp.addArrangedSubview(moveForward5SecondsButton) { $0.width.height.equalTo(32) }
+        snp.addArrangedSubview(moveBackward5SecondsButton) { $0.width.equalTo(moveBackward5SecondsButton.snp.height) }
+        snp.addArrangedSubview(moveBackward1SecondsButton) { $0.width.equalTo(moveBackward5SecondsButton.snp.height) }
+        snp.addArrangedSubview(playButton) { $0.width.equalTo(moveBackward5SecondsButton.snp.height) }
+        snp.addArrangedSubview(moveForward1SecondsButton) { $0.width.equalTo(moveBackward5SecondsButton.snp.height) }
+        snp.addArrangedSubview(moveForward5SecondsButton) { $0.width.equalTo(moveBackward5SecondsButton.snp.height) }
 
         cancellables += [
             audioPlayer.isPlayingPublisher

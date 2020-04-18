@@ -11,13 +11,16 @@ import SwiftUI
 struct PlayerWaveformView: View {
     let url: URL
     let audioPlayer: AudioPlayer
+    let barStyle: WaveformBarStyle
 
     var body: some View {
-        return ZStack(alignment: .bottom) {
+        return ZStack(alignment: barStyle == .up ? .top : .bottom) {
             WaveformViewUI(
                 url: url,
-                audioPlayer: audioPlayer
+                audioPlayer: audioPlayer,
+                barStyle: barStyle
             )
+                .frame(maxHeight: .infinity)
             Path()
                 .background(Color.classicBlue)
                 .frame(width: 2)
@@ -31,7 +34,8 @@ struct PlayerWaveformView_Previews: PreviewProvider {
     static var previews: some View {
         PlayerWaveformView(
             url: URL.documentsURL,
-            audioPlayer: BasicAudioPlayer()
+            audioPlayer: BasicAudioPlayer(),
+            barStyle: .upDown
         )
     }
 }

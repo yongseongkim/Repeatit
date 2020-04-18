@@ -11,11 +11,11 @@ import SnapKit
 import SwiftUI
 import UIKit
 
-class WaveformView: UIView {
-    enum WaveformError: Error {
-        case failToLoadSamples
-    }
+enum WaveformError: Error {
+    case failToLoadSamples
+}
 
+class WaveformView: UIView {
     var progress: Double {
         get {
             guard let contentWidth = self.waveformImageView.image?.size.width else { return 0 }
@@ -44,8 +44,9 @@ class WaveformView: UIView {
     }
 
     private let audioPlayer: AudioPlayer
+    private let url: URL
+    private let barStyle: WaveformBarStyle
     private let extractor = WaveformExtractor()
-    private var cacheWaveform: (url: URL, image: UIImage?)?
     private let isDraggingSubject = CurrentValueSubject<Bool, Never>(false)
     private var cancellables: [AnyCancellable] = []
     private var waveformCancellable: AnyCancellable?
@@ -60,8 +61,10 @@ class WaveformView: UIView {
     private let waveformImageView = UIImageView()
     // MARK: -
 
-    init(audioPlayer: AudioPlayer) {
+    init(audioPlayer: AudioPlayer, url: URL, barStyle: WaveformBarStyle) {
         self.audioPlayer = audioPlayer
+        self.url = url
+        self.barStyle = barStyle
         super.init(frame: .zero)
         initialize()
     }
@@ -70,8 +73,13 @@ class WaveformView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func loadWaveform(url: URL) {
-        waveformCancellable = loadWaveform(url: url, maxHeight: bounds.height)
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        loadWaveform(with: barStyle)
+    }
+
+    func loadWaveform(with barStyle: WaveformBarStyle) {
+        waveformCancellable = loadWaveform(url: url, maxHeight: bounds.height, barStyle: barStyle)
             .receive(on: RunLoop.main)
             .sink(
                 receiveCompletion: { _ in },
@@ -126,24 +134,25 @@ class WaveformView: UIView {
         ]
     }
 
-    private func loadWaveform(url: URL, maxHeight: CGFloat) -> Future<UIImage?, WaveformError> {
+    private func loadWaveform(url: URL, maxHeight: CGFloat, barStyle: WaveformBarStyle) -> Future<UIImage?, WaveformError> {
         return Future<UIImage?, WaveformError> { [weak self] promise in
-            guard let self = self else { promise(.success(nil)); return }
-            if let cache = self.cacheWaveform, cache.url == url, let image = cache.image, image.size.height == maxHeight {
-                promise(.success(image))
+            guard let self = self, maxHeight > 0 else { promise(.success(nil)); return }
+            if let cache = WaveformCacheManager.shared.get(url: url, barStyle: barStyle, height: maxHeight) {
+                promise(.success(cache))
             }
             DispatchQueue.global().async {
                 if let samples = try? self.extractor.loadSamples(url: url) {
                     let downSamples = self.extractor.downSamples(samples, unit: 3000)
-                    promise(.success(
-                        self.extractor.createImage(
-                            samples: downSamples,
-                            sample: .init(
-                                width: 2,
-                                interval: 1,
-                                maxHeight: Int(maxHeight),
-                                color: .systemBlack)
-                    )))
+                    let waveformImage = self.extractor.createImage(
+                        samples: downSamples,
+                        sample: .init(
+                            width: 2,
+                            interval: 1,
+                            maxHeight: Int(maxHeight),
+                            color: .systemBlack,
+                            barStyle: barStyle)
+                        )?.apply { WaveformCacheManager.shared.add(url: url, barStyle: barStyle, image: $0) }
+                    promise(.success(waveformImage))
                 } else {
                     promise(.failure(.failToLoadSamples))
                 }
@@ -171,12 +180,13 @@ extension WaveformView: UIScrollViewDelegate {
 struct WaveformViewUI: UIViewRepresentable {
     let url: URL
     let audioPlayer: AudioPlayer
+    let barStyle: WaveformBarStyle
 
     func makeUIView(context: Context) -> WaveformView {
-        return WaveformView(audioPlayer: audioPlayer)
+        return WaveformView(audioPlayer: audioPlayer, url: url, barStyle: barStyle)
     }
 
     func updateUIView(_ uiView: WaveformView, context: Context) {
-        uiView.loadWaveform(url: url)
+        uiView.loadWaveform(with: barStyle)
     }
 }
