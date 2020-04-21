@@ -6,6 +6,9 @@ target 'Repeatit' do
 
   pod 'SnapKit', '~> 5.0.0'
   pod 'SwiftyImage'
+  pod 'GRDB.swift'
+  pod 'GRDBCombine'
+
 
   # Report
   pod 'Firebase/Analytics'

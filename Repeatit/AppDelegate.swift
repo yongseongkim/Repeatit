@@ -6,10 +6,10 @@
 //  Copyright © 2017년 yongseongkim. All rights reserved.
 //
 
-import UIKit
-import Firebase
-import Fabric
 import Crashlytics
+import Fabric
+import Firebase
+import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,7 +17,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let player = BasicAudioPlayer()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        
         // Sample Media File
         do {
             let contents = try FileManager.default.contentsOfDirectory(atPath: URL.documentsURL.path)
@@ -30,6 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } catch let error {
             print(error)
         }
+        Datastore.shared.configure()
 
         // Report
         FirebaseApp.configure()

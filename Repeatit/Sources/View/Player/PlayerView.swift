@@ -66,7 +66,7 @@ struct PlayerView: View {
                     .onTapGesture { UIApplication.hideKeyboard() }
                     .background(Color.white)
                     .background(SizeCalculator(size: self.$headerViewSize))
-                    DictationNoteView(audioPlayer: self.audioPlayer)
+                    DictationNoteView(audioPlayer: self.audioPlayer, url: self.item.url)
                         .padding(EdgeInsets(top: 15, leading: 25, bottom: 15, trailing: 25))
                         .frame(height: outerGeometry.size.height - self.keyboardHeight - self.headerViewSize.height)
                     Spacer()

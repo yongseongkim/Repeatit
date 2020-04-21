@@ -13,7 +13,7 @@ struct DocumentsExplorerList: View {
     let audioPlayer: AudioPlayer = BasicAudioPlayer()
 
     @State var items = [DocumentsExplorerItem]()
-    @State var isShowingPlayer = false
+    @State var selectedItem: DocumentsExplorerItem?
 
     var body: some View {
         List(items, id: \.name) { item in
@@ -24,13 +24,8 @@ struct DocumentsExplorerList: View {
             } else {
                 DocumentsExplorerRow(item: item)
                     .onTapGesture {
+                        self.selectedItem = item
                         self.playItemsInDirectory(with: item)
-                    }
-                    .sheet(isPresented: self.$isShowingPlayer) {
-                        PlayerView(
-                            item: AudioItem(url: self.url.appendingPathComponent(item.name)),
-                            audioPlayer: self.audioPlayer
-                        )
                     }
             }
         }
@@ -47,6 +42,12 @@ struct DocumentsExplorerList: View {
                 Image(systemName: "folder.fill.badge.plus").foregroundColor(.systemBlack)
             }
         )
+        .sheet(item: $selectedItem, content: {
+            PlayerView(
+                item: AudioItem(url: self.url.appendingPathComponent($0.name)),
+                audioPlayer: self.audioPlayer
+            )
+        })
         .onAppear {
             self.loadItems()
         }
@@ -64,10 +65,8 @@ struct DocumentsExplorerList: View {
             let startAt = items.firstIndex (where: { $0.url == self.url.appendingPathComponent(item.name) }) ?? 0
             let newItems = startAt == 0 ? items : Array(items[startAt...]) + Array(items[0..<startAt])
             try self.audioPlayer.play(with: newItems)
-            self.isShowingPlayer = true
         } catch {
             // TODO: Should show alert and why
-            self.isShowingPlayer = false
         }
     }
 

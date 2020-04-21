@@ -13,5 +13,8 @@ struct DocumentsExplorerItem: Hashable, Codable {
     var isDirectory: Bool
 }
 
-extension DocumentsExplorerItem {
+extension DocumentsExplorerItem: Identifiable {
+    var id: String {
+        return name
+    }
 }
