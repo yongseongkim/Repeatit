@@ -256,7 +256,7 @@ extension BasicAudioPlayer: AudioPlayer {
 
     // MARK: Event
     var isPlayingPublisher: AnyPublisher<Bool, Never> {
-        return isPlayingSubject.eraseToAnyPublisher()
+        return isPlayingSubject.removeDuplicates().eraseToAnyPublisher()
     }
 
     var currentPlayTimePublisher: AnyPublisher<Double, Never> {

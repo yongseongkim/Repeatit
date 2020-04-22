@@ -30,6 +30,7 @@ class WaveformView: UIView {
     var progressChangedByDraggingPublisher: AnyPublisher<Double, Never> {
         let initialResultValue = isDraggingSubject.value
         return isDraggingSubject
+            .removeDuplicates()
             .scan((initialResultValue, initialResultValue), { ($0.1, $1) })
             .filter { $0.0 && !$0.1 }
             .compactMap { [weak self] _ -> Double? in
@@ -40,7 +41,7 @@ class WaveformView: UIView {
     }
 
     var isDraggingPublisher: AnyPublisher<Bool, Never> {
-        return isDraggingSubject.eraseToAnyPublisher()
+        return isDraggingSubject.removeDuplicates().eraseToAnyPublisher()
     }
 
     private let audioPlayer: AudioPlayer
@@ -109,9 +110,25 @@ class WaveformView: UIView {
 
         cancellables += [
             isDraggingPublisher
-                .receive(on: RunLoop.main)
-                .sink { [weak self] isDragging in
-                    isDragging ? self?.audioPlayer.pause() : self?.audioPlayer.resume()
+                .filter { $0 }
+                .map { [weak self] isDragging -> Bool in
+                    guard let self = self else { return false }
+                    return self.audioPlayer.isPlaying
+                }
+                .handleEvents(receiveOutput: { [weak self] _ in
+                    self?.audioPlayer.pause()
+                })
+                .map { [weak self] isPlaying -> AnyPublisher<Bool, Never> in
+                    guard let self = self else { return Empty<Bool, Never>().eraseToAnyPublisher() }
+                    return self.isDraggingPublisher
+                        .filter { !$0 }
+                        .map { _ in isPlaying }
+                        .eraseToAnyPublisher()
+                }
+                .switchToLatest()
+                .sink { [weak self] isPlaying in
+                    guard isPlaying else { return }
+                    self?.audioPlayer.resume()
                 }
         ]
 
