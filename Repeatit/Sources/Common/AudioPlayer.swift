@@ -78,8 +78,8 @@ class BasicAudioPlayer {
 
     init() {
         NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: nil)
-        cancellables += [
-            currentPlayItemSubject.sink(
+        currentPlayItemSubject
+            .sink(
                 receiveValue: { [weak self] value in
                     if let playItem = value {
                         self?.load(item: playItem)
@@ -88,12 +88,12 @@ class BasicAudioPlayer {
                     }
                 }
             )
-        ]
-        cancellables += [
-            currentPlayTimeSubject.sink { [weak self] time in
+            .store(in: &cancellables)
+        currentPlayTimeSubject
+            .sink { [weak self] time in
                 self?.updatePlayingInfo()
             }
-        ]
+            .store(in: &cancellables)
     }
 
     deinit {

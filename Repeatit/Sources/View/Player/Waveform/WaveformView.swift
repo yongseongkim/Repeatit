@@ -108,47 +108,44 @@ class WaveformView: UIView {
             make.edges.equalToSuperview()
         }
 
-        cancellables += [
-            isDraggingPublisher
-                .filter { $0 }
-                .map { [weak self] isDragging -> Bool in
-                    guard let self = self else { return false }
-                    return self.audioPlayer.isPlaying
-                }
-                .handleEvents(receiveOutput: { [weak self] _ in
-                    self?.audioPlayer.pause()
-                })
-                .map { [weak self] isPlaying -> AnyPublisher<Bool, Never> in
-                    guard let self = self else { return Empty<Bool, Never>().eraseToAnyPublisher() }
-                    return self.isDraggingPublisher
-                        .filter { !$0 }
-                        .map { _ in isPlaying }
-                        .eraseToAnyPublisher()
-                }
-                .switchToLatest()
-                .sink { [weak self] isPlaying in
-                    guard isPlaying else { return }
-                    self?.audioPlayer.resume()
-                }
-        ]
-
-        cancellables += [
-            progressChangedByDraggingPublisher
-                .receive(on: RunLoop.main)
-                .sink { [weak self] progress in
-                                    guard let self = self else { return }
-                    self.audioPlayer.move(to: self.audioPlayer.duration * progress)
-                }
-        ]
-
-        cancellables += [
-            audioPlayer.currentPlayTimePublisher
-                .receive(on: RunLoop.main)
-                .sink { [weak self] currentTime in
-                    guard let self = self else { return }
-                    self.progress = self.audioPlayer.duration != 0 ? currentTime / self.audioPlayer.duration : 1
+        isDraggingPublisher
+            .filter { $0 }
+            .map { [weak self] isDragging -> Bool in
+                guard let self = self else { return false }
+                return self.audioPlayer.isPlaying
             }
-        ]
+            .handleEvents(receiveOutput: { [weak self] _ in
+                self?.audioPlayer.pause()
+            })
+            .map { [weak self] isPlaying -> AnyPublisher<Bool, Never> in
+                guard let self = self else { return Empty<Bool, Never>().eraseToAnyPublisher() }
+                return self.isDraggingPublisher
+                    .filter { !$0 }
+                    .map { _ in isPlaying }
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .sink { [weak self] isPlaying in
+                guard isPlaying else { return }
+                self?.audioPlayer.resume()
+            }
+            .store(in: &cancellables)
+
+        progressChangedByDraggingPublisher
+            .receive(on: RunLoop.main)
+            .sink { [weak self] progress in
+                                guard let self = self else { return }
+                self.audioPlayer.move(to: self.audioPlayer.duration * progress)
+            }
+            .store(in: &cancellables)
+
+        audioPlayer.currentPlayTimePublisher
+            .receive(on: RunLoop.main)
+            .sink { [weak self] currentTime in
+                guard let self = self else { return }
+                self.progress = self.audioPlayer.duration != 0 ? currentTime / self.audioPlayer.duration : 1
+            }
+            .store(in: &cancellables)
     }
 
     private func loadWaveform(url: URL, maxHeight: CGFloat, barStyle: WaveformBarStyle) -> Future<UIImage?, WaveformError> {

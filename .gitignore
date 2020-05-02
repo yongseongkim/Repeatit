@@ -1,9 +1,8 @@
 .DS_Store
 .bundle
 
-**/xcuserdata
-*.pbxuser
-*.mode1v3
+build/
+DerivedData/
 
 # Key files
 GoogleService-Info.plist
@@ -14,3 +13,13 @@ Repeatit.xcodeproj/xcshareddata/xcschemes/
 
 # CocoaPods
 Pods/
+
+# Swift Package Manager
+.build/
+
+# Others
+*.pbxuser
+*.xcworkspacedata
+xcuserdata/
+**/Configs/*.local.xcconfig
+

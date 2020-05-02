@@ -10,42 +10,6 @@ import Combine
 import SwiftUI
 
 struct PlayerControlView: View {
-    class ViewModel: ObservableObject {
-        let audioPlayer: AudioPlayer
-        @Published var isPlaying: Bool = false
-
-        private var cancellables: [AnyCancellable] = []
-
-        init(audioPlayer: AudioPlayer) {
-            self.audioPlayer = audioPlayer
-            self.cancellables += [
-                audioPlayer.isPlayingPublisher
-                    .receive(on: RunLoop.main)
-                    .assign(to: \.isPlaying, on: self)
-            ]
-        }
-
-        func togglePlay() {
-            if audioPlayer.isPlaying {
-                audioPlayer.pause()
-            } else {
-                audioPlayer.resume()
-            }
-        }
-
-        func forward(by seconds: Double) {
-            audioPlayer.moveForward(seconds: seconds)
-        }
-
-        func backward(by seconds: Double) {
-            audioPlayer.moveBackward(seconds: seconds)
-        }
-
-        func moveToStart() {
-            audioPlayer.move(to: 0)
-        }
-    }
-
     @ObservedObject var model: ViewModel
 
     var body: some View {
@@ -94,6 +58,43 @@ struct PlayerControlView: View {
                     .frame(width: 44, height: 44)
                 Spacer()
             }
+        }
+    }
+}
+
+extension PlayerControlView {
+    class ViewModel: ObservableObject {
+        let audioPlayer: AudioPlayer
+        @Published var isPlaying: Bool = false
+
+        private var cancellables: [AnyCancellable] = []
+
+        init(audioPlayer: AudioPlayer) {
+            self.audioPlayer = audioPlayer
+            audioPlayer.isPlayingPublisher
+                .receive(on: RunLoop.main)
+                .assign(to: \.isPlaying, on: self)
+                .store(in: &cancellables)
+        }
+
+        func togglePlay() {
+            if audioPlayer.isPlaying {
+                audioPlayer.pause()
+            } else {
+                audioPlayer.resume()
+            }
+        }
+
+        func forward(by seconds: Double) {
+            audioPlayer.moveForward(seconds: seconds)
+        }
+
+        func backward(by seconds: Double) {
+            audioPlayer.moveBackward(seconds: seconds)
+        }
+
+        func moveToStart() {
+            audioPlayer.move(to: 0)
         }
     }
 }

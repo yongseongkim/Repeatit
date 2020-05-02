@@ -9,12 +9,6 @@
 import SwiftUI
 
 struct PlayerHeaderView: View {
-    struct ViewModel {
-        let title: String
-        let artist: String
-        let artwork: UIImage
-    }
-
     let model: ViewModel
 
     var body: some View {
@@ -35,10 +29,18 @@ struct PlayerHeaderView: View {
                     .foregroundColor(.systemBlack)
                 Spacer()
             }
-            .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+            .padding([.leading, .trailing], 10)
             Spacer()
         }
         .frame(height: 100)
+    }
+}
+
+extension PlayerHeaderView {
+    struct ViewModel {
+        let title: String
+        let artist: String
+        let artwork: UIImage
     }
 }
 

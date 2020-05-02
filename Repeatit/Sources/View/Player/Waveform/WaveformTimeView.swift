@@ -10,24 +10,6 @@ import Combine
 import SwiftUI
 
 struct WaveformTimeView: View {
-    class ViewModel: ObservableObject {
-        let audioPlayer: AudioPlayer
-        @Published var currentTime: Double = 0
-        @Published var duration: Double = 0
-
-        private var cancellables: [AnyCancellable] = []
-
-        init(audioPlayer: AudioPlayer) {
-            self.audioPlayer = audioPlayer
-            self.duration = audioPlayer.duration
-            self.cancellables += [
-                audioPlayer.currentPlayTimePublisher
-                    .receive(on: RunLoop.main)
-                    .assign(to: \.currentTime, on: self)
-            ]
-        }
-    }
-
     @ObservedObject var model: ViewModel
 
     var body: some View {
@@ -50,6 +32,25 @@ struct WaveformTimeView: View {
         let seconds = time.truncatingRemainder(dividingBy: 60)
         let remainder = Int((seconds * 10).truncatingRemainder(dividingBy: 10))
         return String.init(format: "%02d:%02d:%02d.%02d", hour, minutes, Int(seconds), remainder)
+    }
+}
+
+extension WaveformTimeView {
+    class ViewModel: ObservableObject {
+        let audioPlayer: AudioPlayer
+        @Published var currentTime: Double = 0
+        @Published var duration: Double = 0
+
+        private var cancellables: [AnyCancellable] = []
+
+        init(audioPlayer: AudioPlayer) {
+            self.audioPlayer = audioPlayer
+            self.duration = audioPlayer.duration
+            audioPlayer.currentPlayTimePublisher
+                .receive(on: RunLoop.main)
+                .assign(to: \.currentTime, on: self)
+                .store(in: &cancellables)
+        }
     }
 }
 

@@ -8,7 +8,7 @@ target 'Repeatit' do
   pod 'SwiftyImage'
   pod 'GRDB.swift'
   pod 'GRDBCombine'
-
+  pod 'SwiftEntryKit'
 
   # Report
   pod 'Firebase/Analytics'

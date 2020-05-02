@@ -9,12 +9,30 @@
 import SwiftUI
 
 struct DocumentsExplorerItem: Hashable, Codable {
-    var name: String
+    var url: URL
     var isDirectory: Bool
 }
 
 extension DocumentsExplorerItem: Identifiable {
     var id: String {
-        return name
+        return url.absoluteString
+    }
+
+    var isAudioFile: Bool {
+        return URL.supportedFormats.contains((name as NSString).pathExtension)
+    }
+
+    var name: String {
+        return url.lastPathComponent
+    }
+
+    var imageName: String {
+        if isDirectory {
+            return "folder"
+        }
+        if isAudioFile {
+            return "music.note"
+        }
+        return "doc.text"
     }
 }

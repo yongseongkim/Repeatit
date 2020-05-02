@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 
 class PlayerControlAccessoryView: UIStackView {
-    static let height: CGFloat = 40
+    static let height: CGFloat = 48
 
     private let audioPlayer: AudioPlayer
     private var cancellables: [AnyCancellable] = []
@@ -39,7 +39,8 @@ class PlayerControlAccessoryView: UIStackView {
     func initialize() {
         axis = .horizontal
         alignment = .fill
-        distribution = .equalSpacing
+        distribution = .fillEqually
+        spacing = 10
         isLayoutMarginsRelativeArrangement = true
         directionalLayoutMargins = NSDirectionalEdgeInsets(top: 5, leading: 15, bottom: 5, trailing: 15)
 
@@ -51,40 +52,44 @@ class PlayerControlAccessoryView: UIStackView {
             $0.layer.shadowOpacity = 0.2
         }
         snp.addSubview(backgroundView) { $0.top.leading.bottom.trailing.equalToSuperview() }
-        snp.addArrangedSubview(moveBackward5SecondsButton) { $0.width.equalTo(moveBackward5SecondsButton.snp.height) }
-        snp.addArrangedSubview(moveBackward1SecondsButton) { $0.width.equalTo(moveBackward5SecondsButton.snp.height) }
-        snp.addArrangedSubview(playButton) { $0.width.equalTo(moveBackward5SecondsButton.snp.height) }
-        snp.addArrangedSubview(moveForward1SecondsButton) { $0.width.equalTo(moveBackward5SecondsButton.snp.height) }
-        snp.addArrangedSubview(moveForward5SecondsButton) { $0.width.equalTo(moveBackward5SecondsButton.snp.height) }
+        addArrangedSubview(moveBackward5SecondsButton)
+        addArrangedSubview(moveBackward1SecondsButton)
+        addArrangedSubview(playButton)
+        addArrangedSubview(moveForward1SecondsButton)
+        addArrangedSubview(moveForward5SecondsButton)
 
-        cancellables += [
-            audioPlayer.isPlayingPublisher
-                .receive(on: RunLoop.main)
-                .sink(receiveValue: { [weak self] isPlaying in
-                    guard let self = self else { return }
-                    self.playButton.setImage(UIImage(systemName: isPlaying ? "pause.fill" : "play.fill"), for: .normal)
-                }),
-            moveBackward5SecondsButton.button.publisher(for: UIControl.Event.touchUpInside)
-                .sink(receiveValue: { [weak self] _ in
-                    self?.audioPlayer.moveBackward(seconds: 5)
-                }),
-            moveBackward1SecondsButton.button.publisher(for: UIControl.Event.touchUpInside)
-                .sink(receiveValue: { [weak self] _ in
-                    self?.audioPlayer.moveBackward(seconds: 1)
-                }),
-            playButton.publisher(for: UIControl.Event.touchUpInside)
-                .sink(receiveValue: { [weak self] _ in
-                    guard let isPlaying = self?.audioPlayer.isPlaying else { return }
-                    isPlaying ? self?.audioPlayer.pause() : self?.audioPlayer.resume()
-                }),
-            moveForward1SecondsButton.button.publisher(for: UIControl.Event.touchUpInside)
-                .sink(receiveValue: { [weak self] _ in
-                    self?.audioPlayer.moveForward(seconds: 1)
-                }),
-            moveForward5SecondsButton.button.publisher(for: UIControl.Event.touchUpInside)
-                .sink(receiveValue: { [weak self] _ in
-                    self?.audioPlayer.moveForward(seconds: 5)
-                })
-        ]
+        audioPlayer.isPlayingPublisher
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { [weak self] isPlaying in
+                guard let self = self else { return }
+                self.playButton.setImage(UIImage(systemName: isPlaying ? "pause.fill" : "play.fill"), for: .normal)
+            })
+            .store(in: &cancellables)
+        moveBackward5SecondsButton.button.publisher(for: UIControl.Event.touchUpInside)
+            .sink(receiveValue: { [weak self] _ in
+                self?.audioPlayer.moveBackward(seconds: 5)
+            })
+            .store(in: &cancellables)
+        moveBackward1SecondsButton.button.publisher(for: UIControl.Event.touchUpInside)
+            .sink(receiveValue: { [weak self] _ in
+                self?.audioPlayer.moveBackward(seconds: 1)
+            })
+            .store(in: &cancellables)
+        playButton.publisher(for: UIControl.Event.touchUpInside)
+            .sink(receiveValue: { [weak self] _ in
+                guard let isPlaying = self?.audioPlayer.isPlaying else { return }
+                isPlaying ? self?.audioPlayer.pause() : self?.audioPlayer.resume()
+            })
+            .store(in: &cancellables)
+        moveForward1SecondsButton.button.publisher(for: UIControl.Event.touchUpInside)
+            .sink(receiveValue: { [weak self] _ in
+                self?.audioPlayer.moveForward(seconds: 1)
+            })
+            .store(in: &cancellables)
+        moveForward5SecondsButton.button.publisher(for: UIControl.Event.touchUpInside)
+            .sink(receiveValue: { [weak self] _ in
+                self?.audioPlayer.moveForward(seconds: 5)
+            })
+            .store(in: &cancellables)
     }
 }
