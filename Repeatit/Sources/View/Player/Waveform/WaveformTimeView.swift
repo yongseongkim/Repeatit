@@ -13,17 +13,29 @@ struct WaveformTimeView: View {
     @ObservedObject var model: ViewModel
 
     var body: some View {
-        HStack {
+        HStack(spacing: 0) {
             Text(secondsToFormat(time: self.model.currentTime))
-                .foregroundColor(.systemWhite)
-                .frame(width: 110, alignment: .center)
-            Divider().foregroundColor(Color.classicBlue).background(Color.classicBlue)
+                .padding(9)
+                .foregroundColor(Color.systemBlack)
+                .background(Color.systemWhite.opacity(0.95))
+            Spacer()
             Text(secondsToFormat(time: self.model.duration))
-                .foregroundColor(.systemWhite)
-                .frame(width: 110, alignment: .center)
+                .padding(9)
+                .foregroundColor(Color.systemBlack)
+                .background(Color.systemWhite.opacity(0.95))
         }
-        .frame(height: 32)
-        .background(Color.systemBlack)
+        .background(Color.clear)
+//        HStack {
+//            Text(secondsToFormat(time: self.model.currentTime))
+//                .foregroundColor(.systemWhite)
+//                .frame(width: 110, alignment: .center)
+//            Divider().foregroundColor(Color.classicBlue).background(Color.classicBlue)
+//            Text(secondsToFormat(time: self.model.duration))
+//                .foregroundColor(.systemWhite)
+//                .frame(width: 110, alignment: .center)
+//        }
+//        .frame(height: 32)
+//        .background(Color.systemBlack)
     }
 
     private func secondsToFormat(time: Double) -> String {
@@ -56,6 +68,13 @@ extension WaveformTimeView {
 
 struct WaveformTimeView_Previews: PreviewProvider {
     static var previews: some View {
-        WaveformTimeView(model: .init(audioPlayer: BasicAudioPlayer()))
+        Group {
+            WaveformTimeView(model: .init(audioPlayer: BasicAudioPlayer()))
+                .previewLayout(.sizeThatFits)
+                .environment(\.colorScheme, .light)
+            WaveformTimeView(model: .init(audioPlayer: BasicAudioPlayer()))
+                .previewLayout(.sizeThatFits)
+                .environment(\.colorScheme, .dark)
+        }
     }
 }

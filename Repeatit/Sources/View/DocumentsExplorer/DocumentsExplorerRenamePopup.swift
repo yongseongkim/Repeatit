@@ -9,8 +9,8 @@ import SwiftUI
 
 struct DocumentsExplorerRenamePopup: View {
     @State var textInput: String
-    let positiveButtonTapped: (String) -> ()
-    let negativeButtonTapped: () -> ()
+    let onPositiveButtonTapGesture: (String) -> ()
+    let onNegativeButtonTapGesture: () -> ()
 
     var body: some View {
         VStack {
@@ -18,7 +18,7 @@ struct DocumentsExplorerRenamePopup: View {
             VStack(alignment: .leading, spacing: 0) {
                 Text("Rename")
                     .foregroundColor(Color.systemBlack)
-                    .padding(EdgeInsets(top: 30, leading: 25, bottom: 0, trailing: 0))
+                    .padding(EdgeInsets(top: 30, leading: 25, bottom: 0, trailing: 25))
                 TextField("Please Enter a new name", text: $textInput)
                     .padding(8)
                     .background(Color(UIColor.systemGray5))
@@ -27,7 +27,7 @@ struct DocumentsExplorerRenamePopup: View {
                 GeometryReader { containerGeometry in
                     HStack(alignment: .center, spacing: 0) {
                         Button(
-                            action: { self.negativeButtonTapped() },
+                            action: { self.onNegativeButtonTapGesture() },
                             label: {
                                 Text("Cancel")
                                     .foregroundColor(Color.lushLava)
@@ -37,7 +37,7 @@ struct DocumentsExplorerRenamePopup: View {
                             .frame(minHeight: 0, maxHeight: .infinity)
                         Divider()
                         Button(
-                            action: { self.positiveButtonTapped(self.textInput) },
+                            action: { self.onPositiveButtonTapGesture(self.textInput) },
                             label: {
                                 Text("Confirm")
                                     .foregroundColor(Color.classicBlue)
@@ -62,8 +62,8 @@ struct DocumentsExplorerRenamePopup_Previews: PreviewProvider {
     static var previews: some View {
         DocumentsExplorerRenamePopup(
             textInput: "first init",
-            positiveButtonTapped: { _ in },
-            negativeButtonTapped: {}
+            onPositiveButtonTapGesture: { _ in },
+            onNegativeButtonTapGesture: {}
         )
     }
 }

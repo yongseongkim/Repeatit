@@ -57,9 +57,13 @@ class WaveformView: UIView {
         $0.showsVerticalScrollIndicator = false
         $0.showsHorizontalScrollIndicator = false
         $0.decelerationRate = .fast
-        $0.backgroundColor = .systemWhite
+        $0.backgroundColor = .clear
     }
     private let waveformImageView = UIImageView()
+    private let progressedWaveformContainer = UIView().apply {
+        $0.clipsToBounds = true
+    }
+    private let progressedWaveformImageView = UIImageView()
     // MARK: -
 
     init(audioPlayer: AudioPlayer, url: URL, barStyle: WaveformBarStyle) {
@@ -85,27 +89,40 @@ class WaveformView: UIView {
             .sink(
                 receiveCompletion: { _ in },
                 receiveValue: { [weak self] image in
-                    guard let self = self, let image = image else { return }
+                    guard let self = self, let image = image, image != self.waveformImageView.image else { return }
                     self.waveformImageView.image = image
                     self.waveformImageView.snp.updateConstraints { make in
                         make.width.equalTo(image.size.width)
                         make.height.equalTo(image.size.height)
                         make.leading.trailing.equalToSuperview().inset(self.bounds.size.width / 2)
                     }
+                    self.progressedWaveformImageView.image = image.withTintColor(.classicBlue)
+                    self.progressedWaveformImageView.snp.updateConstraints { make in
+                        make.width.equalTo(image.size.width)
+                        make.height.equalTo(image.size.height)
+                        make.leading.equalToSuperview().inset(self.bounds.size.width / 2)
+                    }
                 }
         )
     }
 
     private func initialize() {
+        scrollView.delegate = self
+        addSubview(scrollView)
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         scrollView.addSubview(waveformImageView)
         waveformImageView.snp.makeConstraints { make in
             make.width.height.equalTo(0)
             make.top.leading.bottom.trailing.equalToSuperview()
         }
-        addSubview(scrollView)
-        scrollView.delegate = self
-        scrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+        scrollView.addSubview(progressedWaveformContainer)
+        progressedWaveformContainer.frame = CGRect.zero
+        progressedWaveformContainer.addSubview(progressedWaveformImageView)
+        progressedWaveformImageView.snp.makeConstraints { make in
+            make.width.height.equalTo(0)
+            make.top.leading.equalToSuperview()
         }
 
         isDraggingPublisher
@@ -151,32 +168,38 @@ class WaveformView: UIView {
     private func loadWaveform(url: URL, maxHeight: CGFloat, barStyle: WaveformBarStyle) -> Future<UIImage?, WaveformError> {
         return Future<UIImage?, WaveformError> { [weak self] promise in
             guard let self = self, maxHeight > 0 else { promise(.success(nil)); return }
-            if let cache = WaveformCacheManager.shared.get(url: url, barStyle: barStyle, height: maxHeight) {
-                promise(.success(cache))
-            }
-            DispatchQueue.global().async {
-                if let samples = try? self.extractor.loadSamples(url: url) {
-                    let downSamples = self.extractor.downSamples(samples, unit: 3000)
-                    let waveformImage = self.extractor.createImage(
-                        samples: downSamples,
-                        sample: .init(
-                            width: 2,
-                            interval: 1,
-                            maxHeight: Int(maxHeight),
-                            color: .systemBlack,
-                            barStyle: barStyle)
-                        )?.apply { WaveformCacheManager.shared.add(url: url, barStyle: barStyle, image: $0) }
-                    promise(.success(waveformImage))
-                } else {
-                    promise(.failure(.failToLoadSamples))
+            DispatchQueue.main.async {
+                let tintColor = self.tintColor!
+                if let cache = WaveformCacheManager.shared.get(url: url, barStyle: barStyle, height: maxHeight) {
+                    promise(.success(cache.withTintColor(tintColor)))
+                }
+                DispatchQueue.global().async {
+                    if let samples = try? self.extractor.loadSamples(url: url) {
+                        let downSamples = self.extractor.downSamples(samples, unit: 3000)
+                        let waveformImage = self.extractor.createImage(
+                            samples: downSamples,
+                            sample: .init(
+                                width: 2,
+                                interval: 1,
+                                maxHeight: Int(maxHeight),
+                                color: .red,
+                                barStyle: barStyle)
+                            )?.apply { WaveformCacheManager.shared.add(url: url, barStyle: barStyle, image: $0) }
+                        promise(.success(waveformImage?.withTintColor(tintColor)))
+                    } else {
+                        promise(.failure(.failToLoadSamples))
+                    }
                 }
             }
-
         }
     }
 }
 
 extension WaveformView: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        progressedWaveformContainer.frame = CGRect(x: 0, y: 0, width: scrollView.bounds.width / 2 + scrollView.contentOffset.x, height: scrollView.frame.height)
+    }
+    
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         isDraggingSubject.send(true)
     }

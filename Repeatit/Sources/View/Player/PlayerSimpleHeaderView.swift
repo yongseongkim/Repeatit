@@ -11,20 +11,26 @@ struct PlayerSimpleHeaderView: View {
     let model: ViewModel
 
     var body: some View {
-        GeometryReader { geometry in
-            HStack {
-                Text(self.model.title)
-                    .lineLimit(1)
-                    .foregroundColor(.systemBlack)
-                    .frame(width: geometry.size.width * 3 / 5 - 25, alignment: .leading)
-                Text(self.model.artist)
-                    .lineLimit(1)
-                    .multilineTextAlignment(.leading)
-                    .foregroundColor(.systemBlack)
-                    .padding(.leading, 10)
-                    .frame(width: geometry.size.width * 2 / 5 - 15)
-            }
+        HStack(alignment: .center, spacing: 0) {
+            Text(self.model.title)
+                .lineLimit(1)
+                .layoutPriority(5)
+                .font(.system(size: 17))
+                .foregroundColor(.systemBlack)
+            Divider()
+                .background(Color.systemBlack)
+                .padding([.leading, .trailing], 8)
+                .frame(height: 20, alignment: .center)
+            Text(self.model.artist)
+                .lineLimit(1)
+                .layoutPriority(1)
+                .font(.system(size: 17))
+                .foregroundColor(.systemBlack)
+                .frame(minWidth: 50)
         }
+        .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+        .padding(EdgeInsets(top: 8, leading: 15, bottom: 8, trailing: 15))
+        .background(Color.systemGray6)
     }
 }
 
@@ -37,8 +43,23 @@ extension PlayerSimpleHeaderView {
 
 struct PlayerSimpleHeaderView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerSimpleHeaderView(
-            model: .init(title: "Higher Love", artist: "Kygo, Whitney Houston")
-        )
+        Group {
+            PlayerSimpleHeaderView(
+                model: .init(
+                    title: "Second Emotion(Feat. Travis Scott)",
+                    artist: "Kygo, Whitney Houston"
+                )
+            )
+                .environment(\.colorScheme, .light)
+                .previewLayout(.fixed(width: 1000, height: 100))
+            PlayerSimpleHeaderView(
+                model: .init(
+                    title: "Second Emotion(Feat. Travis Scott)",
+                    artist: "Kygo, Whitney Houston"
+                )
+            )
+                .environment(\.colorScheme, .dark)
+                .previewLayout(.sizeThatFits)
+        }
     }
 }

@@ -59,7 +59,7 @@ class WaveformExtractor {
         let numberOfSamples = samples.count
         let width: CGFloat = CGFloat(numberOfSamples * sample.width + (numberOfSamples - 1) * sample.interval)
         let height: CGFloat = CGFloat(sample.maxHeight)
-        UIGraphicsBeginImageContext(CGSize(width: width, height: height))
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: width, height: height), false, 0)
         let context = UIGraphicsGetCurrentContext()
         context?.setLineWidth(CGFloat(sample.width))
 

@@ -10,8 +10,8 @@ import SwiftUI
 struct DocumentsExplorerDestinationView: View {
     let url: URL
     let selectedFiles: Set<DocumentsExplorerItem>
-    let moveButtonTapped: (URL) -> ()
-    let closeButtonTapped: () -> ()
+    let moveButtonAction: (URL) -> ()
+    let closeButtonAction: () -> ()
     @State private var items: [DocumentsExplorerItem] = []
 
     var body: some View {
@@ -19,7 +19,7 @@ struct DocumentsExplorerDestinationView: View {
             VStack {
                 List(self.items, id: \.name) { item in
                     if item.isDirectory && !self.selectedFiles.contains(item) {
-                        NavigationLink(destination: DocumentsExplorerDestinationView(url: item.url, selectedFiles: self.selectedFiles, moveButtonTapped: self.moveButtonTapped, closeButtonTapped: self.closeButtonTapped)) {
+                        NavigationLink(destination: DocumentsExplorerDestinationView(url: item.url, selectedFiles: self.selectedFiles, moveButtonAction: self.moveButtonAction, closeButtonAction: self.closeButtonAction)) {
                             DocumentsExplorerRow(item: item)
                         }
                     } else {
@@ -33,7 +33,7 @@ struct DocumentsExplorerDestinationView: View {
                     }
                 }
                 Button(
-                    action: { self.moveButtonTapped(self.url) },
+                    action: { self.moveButtonAction(self.url) },
                     label: {
                         Text("Move Here").foregroundColor(Color.white)
                 })
@@ -46,7 +46,7 @@ struct DocumentsExplorerDestinationView: View {
         .navigationBarTitle(url.lastPathComponent)
         .navigationBarItems(
             trailing: Button(action: {
-                self.closeButtonTapped()
+                self.closeButtonAction()
             }) {
                 Image(systemName: "xmark")
                     .padding(12)
@@ -59,7 +59,7 @@ struct DocumentsExplorerDestinationView: View {
         let contents = (try? FileManager.default.contentsOfDirectory(atPath: url.path)) ?? [String]()
         var isDirectory : ObjCBool = false
         return contents.map { filename in
-            let fileURL = URL.documentsURL.appendingPathComponent(filename)
+            let fileURL = url.appendingPathComponent(filename)
             let _ = FileManager.default.fileExists(atPath: fileURL.path, isDirectory: &isDirectory)
             return (url: fileURL, isDir: isDirectory.boolValue)
         }
@@ -68,6 +68,6 @@ struct DocumentsExplorerDestinationView: View {
 
 struct DocumentsExplorerDestinationView_Previews: PreviewProvider {
     static var previews: some View {
-        DocumentsExplorerDestinationView(url: URL.documentsURL, selectedFiles: [], moveButtonTapped: { _ in }, closeButtonTapped: {})
+        DocumentsExplorerDestinationView(url: URL.homeDirectory, selectedFiles: [], moveButtonAction: { _ in }, closeButtonAction: {})
     }
 }

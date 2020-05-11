@@ -10,29 +10,28 @@ import SwiftUI
 
 struct PlayerHeaderView: View {
     let model: ViewModel
-
+    
     var body: some View {
-        HStack {
+        HStack(spacing: 17) {
             Image(uiImage: self.model.artwork)
                 .resizable()
                 .frame(width: 100, height: 100)
                 .background(Color.white)
-                .padding(10)
-            VStack(alignment: .leading) {
-                Spacer()
+                .cornerRadius(8)
+            VStack(alignment: .leading, spacing: 0) {
                 Text(self.model.title)
-                    .layoutPriority(5)
+                    .font(.system(size: 21))
                     .foregroundColor(.systemBlack)
-                Spacer()
                 Text(self.model.artist)
-                    .layoutPriority(1)
-                    .foregroundColor(.systemBlack)
-                Spacer()
+                    .font(.system(size: 17))
+                    .foregroundColor(.systemGray)
+                    .padding(.top, 7)
             }
-            .padding([.leading, .trailing], 10)
             Spacer()
         }
-        .frame(height: 100)
+        .frame(minWidth: 0, maxWidth: .infinity)
+        .padding(12)
+        .background(Color.systemGray6)
     }
 }
 
@@ -46,11 +45,25 @@ extension PlayerHeaderView {
 
 struct PlayerHeaderView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerHeaderView(
-            model: .init(
-                title: "Second Emotion(Feat. Travis Scott)",
-                artist: "Justin bieber", artwork: UIImage(named: "logo_100pt")!
+        Group {
+            PlayerHeaderView(
+                model: .init(
+                    title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ",
+                    artist: "Justin bieber",
+                    artwork: UIImage(named: "logo_100pt")!
+                )
             )
-        )
+                .environment(\.colorScheme, .light)
+                .previewLayout(.fixed(width: 360, height: 350))
+            PlayerHeaderView(
+                model: .init(
+                    title: "Second Emotion(Feat. Travis Scott)",
+                    artist: "Justin bieber",
+                    artwork: UIImage(named: "logo_100pt")!
+                )
+            )
+                .environment(\.colorScheme, .dark)
+                .previewLayout(.fixed(width: 360, height: 200))
+        }
     }
 }

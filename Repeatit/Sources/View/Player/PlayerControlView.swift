@@ -13,7 +13,7 @@ struct PlayerControlView: View {
     @ObservedObject var model: ViewModel
 
     var body: some View {
-        VStack {
+        VStack(spacing: 15) {
             HStack {
                 PlayerMoveControlButtonUI(direction: .backward, seconds: 5)
                     .frame(width: 44, height: 44)
@@ -36,29 +36,31 @@ struct PlayerControlView: View {
                     .onTapGesture { self.model.forward(by: 5) }
             }
             .padding(EdgeInsets(top: 5, leading: 10, bottom: 8, trailing: 10))
-            HStack {
+            HStack(spacing: 0) {
                 Spacer()
                 Image(systemName: "backward.fill")
                     .resizable()
                     .foregroundColor(.systemBlack)
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 44, height: 44)
+                    .frame(width: 56, height: 56)
                 Spacer()
                 Image(systemName: self.model.isPlaying ? "pause.fill" : "play.fill")
                     .resizable()
                     .foregroundColor(.systemBlack)
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 44, height: 44)
+                    .frame(width: 56, height: 56)
                     .onTapGesture { self.model.togglePlay() }
                 Spacer()
                 Image(systemName: "forward.fill")
                     .resizable()
                     .foregroundColor(.systemBlack)
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 44, height: 44)
+                    .frame(width: 56, height: 56)
                 Spacer()
             }
         }
+        .padding(10)
+        .background(Color.systemGray6)
     }
 }
 
@@ -101,6 +103,13 @@ extension PlayerControlView {
 
 struct PlayerControlView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerControlView(model: .init(audioPlayer: BasicAudioPlayer()))
+        Group {
+            PlayerControlView(model: .init(audioPlayer: BasicAudioPlayer()))
+                .environment(\.colorScheme, .light)
+                .previewLayout(.sizeThatFits)
+            PlayerControlView(model: .init(audioPlayer: BasicAudioPlayer()))
+                .environment(\.colorScheme, .dark)
+                .previewLayout(.sizeThatFits)
+        }
     }
 }

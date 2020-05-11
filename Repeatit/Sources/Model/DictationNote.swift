@@ -5,28 +5,20 @@
 //  Created by yongseongkim on 2020/04/18.
 //
 
-import GRDB
+import RealmSwift
 
-struct DictationNote: Codable, FetchableRecord, PersistableRecord {
-    // based on the directory 'Docuements'
-    var relativePath: String
-    var note: String
-    var createdAt: Date
-    var updatedAt: Date
+class DictationNote: Object {
+    @objc dynamic var relativePath: String = ""
+    @objc dynamic var note: String = ""
+    var createdAt: Date = Date()
+    var updatedAt: Date = Date()
 
-    static func configure(dbQueue: DatabaseQueue) throws {
-        try dbQueue.write { db in
-            try db.create(table: "dictationNote") { t in
-                t.column("relativePath", .text).primaryKey().unique()
-                t.column("note", .text)
-                t.column("createdAt", .date)
-                t.column("updatedAt", .date)
-            }
-        }
+    override static func primaryKey() -> String? {
+        return "relativePath"
     }
 
     static func keyPath(url: URL) -> String {
-        guard let relativePath = url.path.components(separatedBy: URL.documentsURL.path).last else { return url.path }
+        guard let relativePath = url.path.components(separatedBy: URL.homeDirectory.path).last else { return url.path }
         return relativePath
     }
 }

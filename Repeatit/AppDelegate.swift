@@ -9,6 +9,7 @@
 import Crashlytics
 import Fabric
 import Firebase
+import RealmSwift
 import UIKit
 
 @UIApplicationMain
@@ -17,19 +18,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let player = BasicAudioPlayer()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        if !FileManager.default.fileExists(atPath: URL.homeDirectory.path) {
+            try! FileManager.default.createDirectory(at: URL.homeDirectory, withIntermediateDirectories: true)
+        }
+
         // Sample Media File
         do {
-            let contents = try FileManager.default.contentsOfDirectory(atPath: URL.documentsURL.path)
+            let contents = try FileManager.default.contentsOfDirectory(atPath: URL.homeDirectory.path)
             if contents.count == 0 {
                 // sample 노래 넣기
                 if let path = Bundle.main.path(forResource: "sample", ofType: "mp3") {
-                    try FileManager.default.copyItem(atPath: path, toPath: URL.documentsURL.appendingPathComponent("sample.mp3").path)
+                    try FileManager.default.copyItem(atPath: path, toPath: URL.homeDirectory.appendingPathComponent("sample.mp3").path)
                 }
             }
         } catch let error {
             print(error)
         }
-        Datastore.shared.configure()
 
         // Report
         FirebaseApp.configure()

@@ -8,34 +8,52 @@
 
 import SwiftUI
 
+
+
 struct PlayerWaveformView: View {
     let url: URL
     let audioPlayer: AudioPlayer
     let barStyle: WaveformBarStyle
-
+    
     var body: some View {
-        return ZStack(alignment: barStyle == .up ? .top : .bottom) {
+        return ZStack(alignment: .top) {
             WaveformViewUI(
                 url: url,
                 audioPlayer: audioPlayer,
                 barStyle: barStyle
             )
-                .frame(maxHeight: .infinity)
-            Path()
-                .background(Color.classicBlue)
-                .frame(width: 2)
+                .accentColor(Color.systemBlack)
                 .frame(minHeight: 0, maxHeight: .infinity)
-            WaveformTimeView(model: .init(audioPlayer: audioPlayer))
+            WaveformTimeView(model: .init(audioPlayer: self.audioPlayer))
         }
+        .background(Color.systemWhite)
     }
 }
 
 struct PlayerWaveformView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerWaveformView(
-            url: URL.documentsURL,
-            audioPlayer: BasicAudioPlayer(),
-            barStyle: .upDown
-        )
+        Group {
+            PlayerWaveformView(
+                url: URL.homeDirectory.appendingPathComponent("sample.mp3"),
+                audioPlayer: BasicAudioPlayer(),
+                barStyle: .upDown
+            )
+                .previewLayout(.fixed(width: 360, height: 140))
+                .environment(\.colorScheme, .light)
+            PlayerWaveformView(
+                url: URL.homeDirectory.appendingPathComponent("sample.mp3"),
+                audioPlayer: BasicAudioPlayer(),
+                barStyle: .upDown
+            )
+                .previewLayout(.fixed(width: 360, height: 140))
+                .environment(\.colorScheme, .dark)
+            PlayerWaveformView(
+                url: URL.homeDirectory.appendingPathComponent("sample.mp3"),
+                audioPlayer: BasicAudioPlayer(),
+                barStyle: .up
+            )
+                .previewLayout(.fixed(width: 360, height: 70))
+                .environment(\.colorScheme, .dark)
+        }
     }
 }

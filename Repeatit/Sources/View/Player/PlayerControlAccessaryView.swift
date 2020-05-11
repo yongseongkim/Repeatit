@@ -45,11 +45,11 @@ class PlayerControlAccessoryView: UIStackView {
         directionalLayoutMargins = NSDirectionalEdgeInsets(top: 5, leading: 15, bottom: 5, trailing: 15)
 
         let backgroundView = UIView().apply {
-            $0.backgroundColor = .systemWhite
-            $0.layer.shadowColor = UIColor.systemBlack.cgColor
+            $0.backgroundColor = .systemGray6
+            $0.layer.shadowColor = UIColor.black.cgColor
             $0.layer.shadowRadius = 10
             $0.layer.shadowOffset = CGSize(width: 0, height: 0)
-            $0.layer.shadowOpacity = 0.2
+            $0.layer.shadowOpacity = 0.3
         }
         snp.addSubview(backgroundView) { $0.top.leading.bottom.trailing.equalToSuperview() }
         addArrangedSubview(moveBackward5SecondsButton)

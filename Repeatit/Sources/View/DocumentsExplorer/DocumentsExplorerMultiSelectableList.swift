@@ -21,14 +21,16 @@ struct DocumentsExplorerMultiSelectableList: View {
     
     var body: some View {
         List(self.items, id: \.name) { item in
-            DocumentsExplorerSelectableRow(item: item, isSelected: self.selectedItems.contains(item))
-                .onTapGesture {
-                    if self.selectedItems.contains(item) {
-                        self.selectedItems.remove(item)
+            DocumentsExplorerSelectableRow(
+                item: item,
+                isSelected: self.selectedItems.contains(item),
+                onTapGesture: {
+                    if self.selectedItems.contains($0) {
+                        self.selectedItems.remove($0)
                     } else {
-                        self.selectedItems.insert(item)
+                        self.selectedItems.insert($0)
                     }
-            }
+            })
         }
         .preference(key: DocumentsExplorerSelectedItemsKey.self, value: selectedItems)
     }
@@ -38,15 +40,15 @@ struct DocumentsExplorerEditableList_Previews: PreviewProvider {
     static var previews: some View {
         DocumentsExplorerMultiSelectableList(
             items: [
-                DocumentsExplorerItem(url: URL.documentsURL.appendingPathComponent("directory1"), isDirectory: true),
-                DocumentsExplorerItem(url: URL.documentsURL.appendingPathComponent("directory2"), isDirectory: true),
-                DocumentsExplorerItem(url: URL.documentsURL.appendingPathComponent("file1"), isDirectory: false),
-                DocumentsExplorerItem(url: URL.documentsURL.appendingPathComponent("file2"), isDirectory: false),
-                DocumentsExplorerItem(url: URL.documentsURL.appendingPathComponent("file3"), isDirectory: false),
+                DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("directory1"), isDirectory: true),
+                DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("directory2"), isDirectory: true),
+                DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("file1"), isDirectory: false),
+                DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("file2"), isDirectory: false),
+                DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("file3"), isDirectory: false),
             ],
             selectedItems: [
-                DocumentsExplorerItem(url: URL.documentsURL.appendingPathComponent("directory1"), isDirectory: true),
-                DocumentsExplorerItem(url: URL.documentsURL.appendingPathComponent("file2"), isDirectory: false)
+                DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("directory1"), isDirectory: true),
+                DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("file2"), isDirectory: false)
             ]
         )
     }

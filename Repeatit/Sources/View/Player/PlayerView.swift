@@ -35,56 +35,66 @@ struct PlayerView: View {
         let isDicationMode = keyboardHeight > 0
         return GeometryReader { outerGeometry in
             ScrollView(.vertical, showsIndicators: false) {
-                VStack {
-                    VStack {
-                        HStack {
+                VStack(alignment: .center, spacing: 0) {
+                    VStack(alignment: .center, spacing: 0) {
+                        HStack(alignment: .center, spacing: 0) {
                             Spacer()
-                            Button(action: {
-                                self.presentationMode.wrappedValue.dismiss()
-                            }) {
+                            Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
                                 Image(systemName: "xmark")
-                                    .resizable()
-                                    .padding(18)
                                     .foregroundColor(.systemBlack)
                                     .frame(width: 56, height: 56)
                             }
                         }
+                        .background(Color.systemGray6)
                         if isDicationMode {
                             PlayerSimpleHeaderView(model: .init(title: self.item.title, artist: self.item.artist))
-                                .padding(.bottom, 10)
                             PlayerWaveformView(url: self.item.url, audioPlayer: self.audioPlayer, barStyle: .up)
-                                .frame(height: 70)
+                                .frame(height: 100)
                         } else {
                             PlayerHeaderView(model: .init(title: self.item.title, artist: self.item.artist, artwork: self.item.artwork))
-                                .padding(.bottom, 10)
                             PlayerWaveformView(url: self.item.url, audioPlayer: self.audioPlayer, barStyle: .upDown)
                                 .frame(height: 140)
                             PlayerControlView(model: .init(audioPlayer: self.audioPlayer))
-                                .padding([.leading, .trailing], 15)
                         }
                     }
                     .onTapGesture { UIApplication.hideKeyboard() }
-                    .background(Color.white)
                     .background(SizeCalculator(size: self.$headerViewSize))
                     DictationNoteView(audioPlayer: self.audioPlayer, url: self.item.url)
-                        .padding(EdgeInsets(top: 15, leading: 25, bottom: 15, trailing: 25))
                         .frame(height: outerGeometry.size.height - self.keyboardHeight - self.headerViewSize.height)
+                        .background(Color.systemGray5)
+                        .padding(15)
                     Spacer()
                 }
+                .background(Color.systemGray6)
                 .modifier(KeyboardHeightDetector(self.$keyboardHeight))
             }
             .onDisappear {
                 self.audioPlayer.pause()
             }
         }
+        .edgesIgnoringSafeArea(.all)
     }
 }
 
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerView(
-            item: AudioItem(url: URL.documentsURL),
-            audioPlayer: BasicAudioPlayer()
-        )
+        Group {
+            PlayerView(
+                item: AudioItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3")),
+                audioPlayer: BasicAudioPlayer()
+            )
+            .environment(\.colorScheme, .light)
+            PlayerView(
+                item: AudioItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3")),
+                audioPlayer: BasicAudioPlayer()
+            )
+            .environment(\.colorScheme, .dark)
+            PlayerView(
+                item: AudioItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3")),
+                audioPlayer: BasicAudioPlayer(),
+                keyboardHeight: 140
+            )
+            .environment(\.colorScheme, .dark)
+        }
     }
 }

@@ -12,7 +12,7 @@ struct DocumentsExplorer: View {
     
     var body: some View {
         NavigationView {
-            DocumentsExplorerList(model: .init(url: URL.documentsURL))
+            DocumentsExplorerList(model: .init(url: URL.homeDirectory))
         }
     }
 }
