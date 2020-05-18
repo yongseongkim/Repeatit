@@ -8,22 +8,15 @@
 import SwiftUI
 
 struct RootView: View {
-    @ObservedObject var model: ViewModel
-
     var body: some View {
         ZStack {
-            DocumentsExplorer(model: .init())
+            DocumentsExplorer(store: DocumentsExplorerStore())
         }
-    }
-}
-
-extension RootView {
-    class ViewModel: ObservableObject {
     }
 }
 
 struct RootView_Previews: PreviewProvider {
     static var previews: some View {
-        RootView(model: .init())
+        RootView()
     }
 }

@@ -76,7 +76,7 @@ PODS:
   - SnapKit (5.0.1)
   - SwiftEntryKit (1.2.3):
     - QuickLayout (= 3.0.0)
-  - SwiftyImage (1.5.1)
+  - youtube-ios-player-helper (0.1.6)
 
 DEPENDENCIES:
   - Crashlytics
@@ -85,7 +85,7 @@ DEPENDENCIES:
   - RealmSwift
   - SnapKit (~> 5.0.0)
   - SwiftEntryKit
-  - SwiftyImage
+  - youtube-ios-player-helper
 
 SPEC REPOS:
   trunk:
@@ -107,7 +107,7 @@ SPEC REPOS:
     - RealmSwift
     - SnapKit
     - SwiftEntryKit
-    - SwiftyImage
+    - youtube-ios-player-helper
 
 SPEC CHECKSUMS:
   Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
@@ -128,8 +128,8 @@ SPEC CHECKSUMS:
   RealmSwift: 3eb8924ff7100df5928c7602f71d0fec51e7c9c5
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SwiftEntryKit: 340713c2e4a6662c5149629990bf1088bf5f0389
-  SwiftyImage: 88a8c90ee3963a498de728c4ccdb079b4820cef0
+  youtube-ios-player-helper: 21ab92db027c7ff86cb17a3843a3f6eafc8158d2
 
-PODFILE CHECKSUM: f1ceba7623c479c1a2bc5bc59a90b561e6a11b0d
+PODFILE CHECKSUM: fa7c4bb9a1584d6b7814fcdfa64b24ab6237cb11
 
 COCOAPODS: 1.9.1

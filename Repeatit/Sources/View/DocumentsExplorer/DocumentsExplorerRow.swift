@@ -14,7 +14,7 @@ struct DocumentsExplorerSelectableRow: View {
     let onTapGesture: (DocumentsExplorerItem) -> ()
 
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             HStack(alignment: .center) {
                 Image(systemName: item.imageName)
                     .foregroundColor(.systemBlack)
@@ -36,7 +36,7 @@ struct DocumentsExplorerRow: View {
     var item: DocumentsExplorerItem
 
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             HStack(alignment: .center) {
                 Image(systemName: item.imageName)
                     .foregroundColor(.systemBlack)

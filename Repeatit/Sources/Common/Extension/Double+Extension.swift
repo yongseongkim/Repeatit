@@ -13,7 +13,7 @@ extension Double {
     
     func roundTo(place: Int) -> Double {
         let divisor = pow(10, Double(place))
-        return (self * divisor.rounded()) / divisor
+        return ((self * divisor).rounded()) / divisor
     }
 
     func leftSide() -> Double {

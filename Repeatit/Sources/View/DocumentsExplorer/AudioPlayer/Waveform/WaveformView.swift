@@ -156,7 +156,7 @@ class WaveformView: UIView {
             }
             .store(in: &cancellables)
 
-        audioPlayer.currentPlayTimePublisher
+        audioPlayer.playTimePublisher
             .receive(on: RunLoop.main)
             .sink { [weak self] currentTime in
                 guard let self = self else { return }

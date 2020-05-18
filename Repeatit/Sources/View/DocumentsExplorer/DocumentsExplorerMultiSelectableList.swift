@@ -32,6 +32,7 @@ struct DocumentsExplorerMultiSelectableList: View {
                     }
             })
         }
+        .lineSpacing(0)
         .preference(key: DocumentsExplorerSelectedItemsKey.self, value: selectedItems)
     }
 }
@@ -40,7 +41,7 @@ struct DocumentsExplorerEditableList_Previews: PreviewProvider {
     static var previews: some View {
         DocumentsExplorerMultiSelectableList(
             items: [
-                DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("directory1"), isDirectory: true),
+                DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("directory1directory1directory1directory1directory1directory1directory1"), isDirectory: true),
                 DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("directory2"), isDirectory: true),
                 DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("file1"), isDirectory: false),
                 DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("file2"), isDirectory: false),

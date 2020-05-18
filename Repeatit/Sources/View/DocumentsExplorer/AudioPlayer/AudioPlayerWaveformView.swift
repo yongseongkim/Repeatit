@@ -1,5 +1,5 @@
 //
-//  PlayerWaveformView.swift
+//  AudioPlayerWaveformView.swift
 //  Repeatit
 //
 //  Created by yongseongkim on 2020/01/27.
@@ -10,7 +10,7 @@ import SwiftUI
 
 
 
-struct PlayerWaveformView: View {
+struct AudioPlayerWaveformView: View {
     let url: URL
     let audioPlayer: AudioPlayer
     let barStyle: WaveformBarStyle
@@ -30,24 +30,24 @@ struct PlayerWaveformView: View {
     }
 }
 
-struct PlayerWaveformView_Previews: PreviewProvider {
+struct AudioPlayerWaveformView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            PlayerWaveformView(
+            AudioPlayerWaveformView(
                 url: URL.homeDirectory.appendingPathComponent("sample.mp3"),
                 audioPlayer: BasicAudioPlayer(),
                 barStyle: .upDown
             )
                 .previewLayout(.fixed(width: 360, height: 140))
                 .environment(\.colorScheme, .light)
-            PlayerWaveformView(
+            AudioPlayerWaveformView(
                 url: URL.homeDirectory.appendingPathComponent("sample.mp3"),
                 audioPlayer: BasicAudioPlayer(),
                 barStyle: .upDown
             )
                 .previewLayout(.fixed(width: 360, height: 140))
                 .environment(\.colorScheme, .dark)
-            PlayerWaveformView(
+            AudioPlayerWaveformView(
                 url: URL.homeDirectory.appendingPathComponent("sample.mp3"),
                 audioPlayer: BasicAudioPlayer(),
                 barStyle: .up

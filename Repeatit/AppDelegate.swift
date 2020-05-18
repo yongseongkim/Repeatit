@@ -22,6 +22,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             try! FileManager.default.createDirectory(at: URL.homeDirectory, withIntermediateDirectories: true)
         }
 
+        // Delete Realm files.
+//        let realmURL = Realm.Configuration.defaultConfiguration.fileURL!
+//        let realmURLs = [
+//            realmURL,
+//            realmURL.appendingPathExtension("lock"),
+//            realmURL.appendingPathExtension("note"),
+//            realmURL.appendingPathExtension("management")
+//        ]
+//        for URL in realmURLs {
+//            do {
+//                try FileManager.default.removeItem(at: URL)
+//            } catch {
+//                // handle error
+//            }
+//        }
+
         // Sample Media File
         do {
             let contents = try FileManager.default.contentsOfDirectory(atPath: URL.homeDirectory.path)
@@ -38,6 +54,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Report
         FirebaseApp.configure()
         Fabric.with([Crashlytics.self])
+
+        // View
+        UITableViewCell.appearance().backgroundColor = .clear
+        UITableView.appearance().backgroundColor = .clear
         return true
     }
 

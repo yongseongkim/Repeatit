@@ -35,7 +35,7 @@ struct DocumentsExplorerDestinationView: View {
                 Button(
                     action: { self.moveButtonAction(self.url) },
                     label: {
-                        Text("Move Here").foregroundColor(Color.white)
+                        Text("Confirm").foregroundColor(Color.white)
                 })
                     .frame(minWidth: 0, maxWidth: .infinity)
                     .frame(height: 50 + geometry.safeAreaInsets.bottom)

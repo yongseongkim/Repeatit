@@ -25,17 +25,6 @@ struct WaveformTimeView: View {
                 .background(Color.systemWhite.opacity(0.95))
         }
         .background(Color.clear)
-//        HStack {
-//            Text(secondsToFormat(time: self.model.currentTime))
-//                .foregroundColor(.systemWhite)
-//                .frame(width: 110, alignment: .center)
-//            Divider().foregroundColor(Color.classicBlue).background(Color.classicBlue)
-//            Text(secondsToFormat(time: self.model.duration))
-//                .foregroundColor(.systemWhite)
-//                .frame(width: 110, alignment: .center)
-//        }
-//        .frame(height: 32)
-//        .background(Color.systemBlack)
     }
 
     private func secondsToFormat(time: Double) -> String {
@@ -58,7 +47,7 @@ extension WaveformTimeView {
         init(audioPlayer: AudioPlayer) {
             self.audioPlayer = audioPlayer
             self.duration = audioPlayer.duration
-            audioPlayer.currentPlayTimePublisher
+            audioPlayer.playTimePublisher
                 .receive(on: RunLoop.main)
                 .assign(to: \.currentTime, on: self)
                 .store(in: &cancellables)

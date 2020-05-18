@@ -26,8 +26,9 @@ enum RepeatMode {
 protocol AudioPlayer {
     // MARK: Properties
     var isPlaying: Bool { get }
-    var currentPlayItem: AudioItem? { get }
-    var currentPlayTime: Double { get }
+    var playItem: AudioItem? { get }
+    var playTimeSeconds: Double { get }
+    var playTimeMillis: Int { get }
     var duration: Double  { get }
     var playList: [AudioItem]  { get }
     var repeatMode: RepeatMode { get set }
@@ -36,7 +37,7 @@ protocol AudioPlayer {
 
     // MARK: Event
     var isPlayingPublisher: AnyPublisher<Bool, Never> { get }
-    var currentPlayTimePublisher: AnyPublisher<Double, Never> { get }
+    var playTimePublisher: AnyPublisher<Double, Never> { get }
     // MARK: -
 
     // MARK - Actions
@@ -64,9 +65,9 @@ class BasicAudioPlayer {
 
     private let isPlayingSubject = CurrentValueSubject<Bool, Never>(false)
     // play time 변화 감지를 위해 AVPlayerItem 의 time 을 쓰지 않고 observer 를 이용하여 관리한다.
-    private let currentPlayTimeSubject = CurrentValueSubject<Double, Never>(0)
+    private let playTimeSubject = CurrentValueSubject<Double, Never>(0)
     private let playListSubject = CurrentValueSubject<[AudioItem], Never>([])
-    private let currentPlayItemSubject = CurrentValueSubject<AudioItem?, Never>(nil)
+    private let playItemSubject = CurrentValueSubject<AudioItem?, Never>(nil)
     private var cancellables: [AnyCancellable] = []
 
     private var avPlayer: AVPlayer?
@@ -78,7 +79,7 @@ class BasicAudioPlayer {
 
     init() {
         NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: nil)
-        currentPlayItemSubject
+        playItemSubject
             .sink(
                 receiveValue: { [weak self] value in
                     if let playItem = value {
@@ -88,11 +89,6 @@ class BasicAudioPlayer {
                     }
                 }
             )
-            .store(in: &cancellables)
-        currentPlayTimeSubject
-            .sink { [weak self] time in
-                self?.updatePlayingInfo()
-            }
             .store(in: &cancellables)
     }
 
@@ -119,88 +115,11 @@ class BasicAudioPlayer {
         avPlayer?.rate = Float(rate)
         addPeriodicTimeObserver()
         avPlayer?.play()
-
-        loadCommandCenterIfNecessary()
-        updatePlayingInfo()
         updateIsPlaying()
     }
 
     private func updateIsPlaying() {
         isPlayingSubject.send(avPlayer?.isPlaying ?? false)
-    }
-
-    private func loadCommandCenterIfNecessary() {
-        guard !hasLoaded else { return }
-        // Register event handler just once.
-        hasLoaded = true
-        do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
-            try AVAudioSession.sharedInstance().setActive(true)
-            let commandCenter = MPRemoteCommandCenter.shared()
-            commandCenter.playCommand.isEnabled = true
-            commandCenter.playCommand.addTarget { [weak self] event in
-                guard let self = self else { return .commandFailed }
-                self.resume()
-                return .success
-            }
-            commandCenter.pauseCommand.isEnabled = true
-            commandCenter.pauseCommand.addTarget { [weak self] event in
-                guard let self = self else { return .commandFailed }
-                self.pause()
-                return .success
-            }
-            commandCenter.previousTrackCommand.isEnabled = true
-            commandCenter.previousTrackCommand.addTarget { [weak self] event in
-                guard let self = self else { return .commandFailed }
-                do {
-                    try self.playPrev()
-                    return .success
-                } catch PlayerError.noSuchElement {
-                    self.clear()
-                    return .noSuchContent
-                } catch {
-                    return .commandFailed
-                }
-            }
-            commandCenter.nextTrackCommand.isEnabled = true
-            commandCenter.nextTrackCommand.addTarget { [weak self] event in
-                guard let self = self else { return .commandFailed }
-                do {
-                    try self.playNext()
-                    return .success
-                } catch PlayerError.noSuchElement {
-                    self.clear()
-                    return .noSuchContent
-                } catch {
-                    return .commandFailed
-                }
-            }
-        } catch let error as NSError {
-            print(error)
-        }
-    }
-
-    private func updatePlayingInfo() {
-        if let playingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo {
-            var info = playingInfo
-            info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: currentPlayTime)
-            info[MPMediaItemPropertyPlaybackDuration] = NSNumber(value: duration)
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = playingInfo
-        } else {
-            var albumInfo = Dictionary<String, Any>()
-            albumInfo[MPMediaItemPropertyTitle] = currentPlayItem?.title
-            albumInfo[MPMediaItemPropertyArtist] = currentPlayItem?.artist
-            albumInfo[MPMediaItemPropertyAlbumTitle] = currentPlayItem?.albumTitle
-            if let artwork = currentPlayItem?.artwork {
-                albumInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: UIScreen.mainSize) { (_) -> UIImage in
-                    return artwork
-                }
-            }
-            albumInfo[MPMediaItemPropertyPlaybackDuration] = duration
-            albumInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = currentPlayTime
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = albumInfo
-
-        }
     }
 
     private func addPeriodicTimeObserver() {
@@ -218,7 +137,7 @@ class BasicAudioPlayer {
                         return
                     }
                 }
-                self?.currentPlayTimeSubject.send(time.seconds)
+                self?.playTimeSubject.send(time.seconds)
             }
         )
     }
@@ -233,34 +152,28 @@ class BasicAudioPlayer {
 }
 
 extension BasicAudioPlayer: AudioPlayer {
-    var isPlaying: Bool {
-        return isPlayingSubject.value
-    }
+    var isPlaying: Bool { isPlayingSubject.value }
 
-    var currentPlayItem: AudioItem? {
-        return currentPlayItemSubject.value
-    }
+    var playItem: AudioItem? { playItemSubject.value }
 
-    var currentPlayTime: Double {
-        return currentPlayTimeSubject.value
-    }
+    var playTimeSeconds: Double { playTimeSubject.value.roundTo(place: 1) }
+
+    var playTimeMillis: Int { Int(playTimeSeconds * 1000) }
 
     var duration: Double {
         guard let duration = avPlayer?.durationSeconds else { return 0 }
         return duration
     }
 
-    var playList: [AudioItem] {
-        return playListSubject.value
-    }
+    var playList: [AudioItem] { playListSubject.value }
 
     // MARK: Event
     var isPlayingPublisher: AnyPublisher<Bool, Never> {
-        return isPlayingSubject.removeDuplicates().eraseToAnyPublisher()
+        isPlayingSubject.removeDuplicates().eraseToAnyPublisher()
     }
 
-    var currentPlayTimePublisher: AnyPublisher<Double, Never> {
-        return currentPlayTimeSubject.eraseToAnyPublisher()
+    var playTimePublisher: AnyPublisher<Double, Never> {
+        playTimeSubject.eraseToAnyPublisher()
     }
     // MARK: -
 
@@ -269,7 +182,7 @@ extension BasicAudioPlayer: AudioPlayer {
             throw PlayerError.invalidArgumentPlayerItem
         }
         playListSubject.send(list)
-        currentPlayItemSubject.send(list[startAt])
+        playItemSubject.send(list[startAt])
     }
 
     func pause() {
@@ -301,21 +214,21 @@ extension BasicAudioPlayer: AudioPlayer {
         var nextPlayItem: AudioItem? = nil
         switch repeatMode {
         case .one:
-            nextPlayItem = currentPlayItem
+            nextPlayItem = playItem
         case .all:
-            if let currentPlayItem = currentPlayItem,
+            if let currentPlayItem = playItem,
                 let currentPlayItemIdx = playList.firstIndex(where: { $0.url == currentPlayItem.url }) {
                 nextPlayItem = playList[(currentPlayItemIdx + 1) % playList.count]
             }
         case .none:
-            if let currentPlayItem = currentPlayItem,
+            if let currentPlayItem = playItem,
                 let currentPlayItemIdx = playList.firstIndex(where: { $0.url == currentPlayItem.url }),
                 currentPlayItemIdx < playList.count - 1 {
                 nextPlayItem = playList[currentPlayItemIdx + 1]
             }
         }
         if let nextPlayItem = nextPlayItem {
-            currentPlayItemSubject.send(nextPlayItem)
+            playItemSubject.send(nextPlayItem)
         } else {
             throw PlayerError.noSuchElement
         }
@@ -325,21 +238,21 @@ extension BasicAudioPlayer: AudioPlayer {
         var nextPlayItem: AudioItem? = nil
         switch repeatMode {
         case .one:
-            nextPlayItem = currentPlayItem
+            nextPlayItem = playItem
         case .all:
-            if let currentPlayItem = currentPlayItem,
+            if let currentPlayItem = playItem,
                 let currentPlayItemIdx = playList.firstIndex(where: { $0.url == currentPlayItem.url }) {
                 nextPlayItem = playList[(currentPlayItemIdx - 1 + playList.count) % playList.count]
             }
         case .none:
-            if let currentPlayItem = currentPlayItem,
+            if let currentPlayItem = playItem,
                 let currentPlayItemIdx = playList.firstIndex(where: { $0.url == currentPlayItem.url }),
                 currentPlayItemIdx > 0 {
                 nextPlayItem = playList[currentPlayItemIdx - 1]
             }
         }
         if let nextPlayItem = nextPlayItem {
-            currentPlayItemSubject.send(nextPlayItem)
+            playItemSubject.send(nextPlayItem)
         } else {
             throw PlayerError.noSuchElement
         }
@@ -360,7 +273,7 @@ extension BasicAudioPlayer: AudioPlayer {
     }
 
     func moveForward(seconds: Double) {
-        var time = currentPlayTime + seconds
+        var time = playTimeSeconds + seconds
         if (time >= duration) {
             time = duration.leftSide()
         }
@@ -368,7 +281,7 @@ extension BasicAudioPlayer: AudioPlayer {
     }
 
     func moveBackward(seconds: Double) {
-        var time = currentPlayTime - seconds
+        var time = playTimeSeconds - seconds
         if (time < 0) {
             time = 0
         }

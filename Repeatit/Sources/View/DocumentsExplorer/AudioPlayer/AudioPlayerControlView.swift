@@ -1,5 +1,5 @@
 //
-//  PlayerControlView.swift
+//  AudioPlayerControlView.swift
 //  Repeatit
 //
 //  Created by yongseongkim on 2020/01/27.
@@ -9,30 +9,25 @@
 import Combine
 import SwiftUI
 
-struct PlayerControlView: View {
+struct AudioPlayerControlView: View {
     @ObservedObject var model: ViewModel
 
     var body: some View {
         VStack(spacing: 15) {
             HStack {
-                PlayerMoveControlButtonUI(direction: .backward, seconds: 5)
-                    .frame(width: 44, height: 44)
+                TimeControlButton(direction: .backward, seconds: 5)
                     .onTapGesture { self.model.backward(by: 5) }
                 Spacer()
-                PlayerMoveControlButtonUI(direction: .backward, seconds: 1)
-                    .frame(width: 44, height: 44)
+                TimeControlButton(direction: .backward, seconds: 1)
                     .onTapGesture { self.model.backward(by: 1) }
                 Spacer()
-                PlayerMoveControlButtonUI(direction: .backward, seconds: 0)
-                    .frame(width: 44, height: 44)
+                TimeControlButton(direction: .backward, seconds: 0)
                     .onTapGesture { self.model.moveToStart() }
                 Spacer()
-                PlayerMoveControlButtonUI(direction: .forward, seconds: 1)
-                    .frame(width: 44, height: 44)
+                TimeControlButton(direction: .forward, seconds: 1)
                     .onTapGesture { self.model.forward(by: 1) }
                 Spacer()
-                PlayerMoveControlButtonUI(direction: .forward, seconds: 5)
-                    .frame(width: 44, height: 44)
+                TimeControlButton(direction: .forward, seconds: 5)
                     .onTapGesture { self.model.forward(by: 5) }
             }
             .padding(EdgeInsets(top: 5, leading: 10, bottom: 8, trailing: 10))
@@ -42,20 +37,20 @@ struct PlayerControlView: View {
                     .resizable()
                     .foregroundColor(.systemBlack)
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 56, height: 56)
+                    .frame(width: 34, height: 34)
                 Spacer()
                 Image(systemName: self.model.isPlaying ? "pause.fill" : "play.fill")
                     .resizable()
                     .foregroundColor(.systemBlack)
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 56, height: 56)
+                    .frame(width: 34, height: 34)
                     .onTapGesture { self.model.togglePlay() }
                 Spacer()
                 Image(systemName: "forward.fill")
                     .resizable()
                     .foregroundColor(.systemBlack)
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 56, height: 56)
+                    .frame(width: 34, height: 34)
                 Spacer()
             }
         }
@@ -64,7 +59,7 @@ struct PlayerControlView: View {
     }
 }
 
-extension PlayerControlView {
+extension AudioPlayerControlView {
     class ViewModel: ObservableObject {
         let audioPlayer: AudioPlayer
         @Published var isPlaying: Bool = false
@@ -101,13 +96,13 @@ extension PlayerControlView {
     }
 }
 
-struct PlayerControlView_Previews: PreviewProvider {
+struct AudioPlayerControlView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            PlayerControlView(model: .init(audioPlayer: BasicAudioPlayer()))
+            AudioPlayerControlView(model: .init(audioPlayer: BasicAudioPlayer()))
                 .environment(\.colorScheme, .light)
                 .previewLayout(.sizeThatFits)
-            PlayerControlView(model: .init(audioPlayer: BasicAudioPlayer()))
+            AudioPlayerControlView(model: .init(audioPlayer: BasicAudioPlayer()))
                 .environment(\.colorScheme, .dark)
                 .previewLayout(.sizeThatFits)
         }

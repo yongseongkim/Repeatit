@@ -1,5 +1,5 @@
 //
-//  PlayerHeaderView.swift
+//  AudioPlayerHeaderView.swift
 //  Repeatit
 //
 //  Created by yongseongkim on 2020/01/27.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct PlayerHeaderView: View {
+struct AudioPlayerHeaderView: View {
     let model: ViewModel
     
     var body: some View {
@@ -35,7 +35,7 @@ struct PlayerHeaderView: View {
     }
 }
 
-extension PlayerHeaderView {
+extension AudioPlayerHeaderView {
     struct ViewModel {
         let title: String
         let artist: String
@@ -43,10 +43,10 @@ extension PlayerHeaderView {
     }
 }
 
-struct PlayerHeaderView_Previews: PreviewProvider {
+struct AudioPlayerHeaderView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            PlayerHeaderView(
+            AudioPlayerHeaderView(
                 model: .init(
                     title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ",
                     artist: "Justin bieber",
@@ -55,7 +55,7 @@ struct PlayerHeaderView_Previews: PreviewProvider {
             )
                 .environment(\.colorScheme, .light)
                 .previewLayout(.fixed(width: 360, height: 350))
-            PlayerHeaderView(
+            AudioPlayerHeaderView(
                 model: .init(
                     title: "Second Emotion(Feat. Travis Scott)",
                     artist: "Justin bieber",
