@@ -20,15 +20,6 @@ struct AudioPlayerView: View {
         let isDicationMode = keyboardHeight > 0
         return VStack(alignment: .center, spacing: 0) {
             VStack(alignment: .center, spacing: 0) {
-                HStack(alignment: .center, spacing: 0) {
-                    Spacer()
-                    Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
-                        Image(systemName: "xmark")
-                            .foregroundColor(.systemBlack)
-                            .frame(width: 56, height: 56)
-                    }
-                }
-                .background(Color.systemGray6)
                 if isDicationMode {
                     AudioPlayerSimpleHeaderView(model: .init(title: self.item.title, artist: self.item.artist))
                     AudioPlayerWaveformView(url: self.item.url, audioPlayer: self.audioPlayer, barStyle: .up)

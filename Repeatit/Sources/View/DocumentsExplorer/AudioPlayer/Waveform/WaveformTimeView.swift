@@ -14,7 +14,7 @@ struct WaveformTimeView: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            Text(secondsToFormat(time: self.model.currentTime))
+            Text(secondsToFormat(time: self.model.playTime))
                 .padding(9)
                 .foregroundColor(Color.systemBlack)
                 .background(Color.systemWhite.opacity(0.95))
@@ -39,7 +39,7 @@ struct WaveformTimeView: View {
 extension WaveformTimeView {
     class ViewModel: ObservableObject {
         let audioPlayer: AudioPlayer
-        @Published var currentTime: Double = 0
+        @Published var playTime: Double = 0
         @Published var duration: Double = 0
 
         private var cancellables: [AnyCancellable] = []
@@ -48,8 +48,13 @@ extension WaveformTimeView {
             self.audioPlayer = audioPlayer
             self.duration = audioPlayer.duration
             audioPlayer.playTimePublisher
-                .receive(on: RunLoop.main)
-                .assign(to: \.currentTime, on: self)
+                // TODO: receive(RunLoop.main) 를 사용하면 bookmark scrolling 중에 이동이 멈춘다.
+                .sink(receiveValue: { playTime in
+                    DispatchQueue.main.async {
+                        self.playTime = playTime
+                        self.duration = audioPlayer.duration
+                    }
+                })
                 .store(in: &cancellables)
         }
     }

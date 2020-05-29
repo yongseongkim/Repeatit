@@ -13,47 +13,39 @@ struct AudioPlayerControlView: View {
     @ObservedObject var model: ViewModel
 
     var body: some View {
-        VStack(spacing: 15) {
-            HStack {
-                TimeControlButton(direction: .backward, seconds: 5)
-                    .onTapGesture { self.model.backward(by: 5) }
-                Spacer()
-                TimeControlButton(direction: .backward, seconds: 1)
-                    .onTapGesture { self.model.backward(by: 1) }
-                Spacer()
-                TimeControlButton(direction: .backward, seconds: 0)
-                    .onTapGesture { self.model.moveToStart() }
-                Spacer()
-                TimeControlButton(direction: .forward, seconds: 1)
-                    .onTapGesture { self.model.forward(by: 1) }
-                Spacer()
-                TimeControlButton(direction: .forward, seconds: 5)
-                    .onTapGesture { self.model.forward(by: 5) }
-            }
-            .padding(EdgeInsets(top: 5, leading: 10, bottom: 8, trailing: 10))
+        HStack(spacing: 0) {
+            Spacer()
             HStack(spacing: 0) {
                 Spacer()
-                Image(systemName: "backward.fill")
-                    .resizable()
-                    .foregroundColor(.systemBlack)
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 34, height: 34)
+                TimeControlButton(direction: .backward, seconds: 5)
+                    .onTapGesture { self.model.moveBackward(by: 5) }
                 Spacer()
-                Image(systemName: self.model.isPlaying ? "pause.fill" : "play.fill")
-                    .resizable()
-                    .foregroundColor(.systemBlack)
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 34, height: 34)
-                    .onTapGesture { self.model.togglePlay() }
-                Spacer()
-                Image(systemName: "forward.fill")
-                    .resizable()
-                    .foregroundColor(.systemBlack)
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 34, height: 34)
+                TimeControlButton(direction: .backward, seconds: 1)
+                    .onTapGesture { self.model.moveBackward(by: 1) }
                 Spacer()
             }
+            Spacer()
+            Image(systemName: self.model.isPlaying ? "pause.fill" : "play.fill")
+                .resizable()
+                .foregroundColor(.systemBlack)
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 36, height: 36)
+                .onTapGesture { self.model.togglePlay() }
+            Spacer()
+            HStack(spacing: 0) {
+                Spacer()
+                TimeControlButton(direction: .forward, seconds: 1)
+                    .onTapGesture { self.model.moveForward(by: 1) }
+                Spacer()
+                TimeControlButton(direction: .forward, seconds: 5)
+                    .onTapGesture { self.model.moveForward(by: 5) }
+                Spacer()
+            }
+            Spacer()
         }
+        .padding([.top, .bottom], 10)
+        .background(Color.systemWhite)
+        .cornerRadius(8)
         .padding(10)
         .background(Color.systemGray6)
     }
@@ -82,11 +74,11 @@ extension AudioPlayerControlView {
             }
         }
 
-        func forward(by seconds: Double) {
+        func moveForward(by seconds: Double) {
             audioPlayer.moveForward(seconds: seconds)
         }
 
-        func backward(by seconds: Double) {
+        func moveBackward(by seconds: Double) {
             audioPlayer.moveBackward(seconds: seconds)
         }
 

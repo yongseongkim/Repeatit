@@ -22,14 +22,14 @@ struct TimeControlButton: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .foregroundColor(Color.systemBlack)
-                .frame(width: 34, height: 34)
+                .frame(width: 30, height: 30)
             Text("\(seconds)")
-                .font(.system(size: 19))
-                .fontWeight(.bold)
+                .font(.system(size: 17))
+                .fontWeight(.semibold)
                 .foregroundColor(Color.systemBlack)
-                .offset(x: 0, y: 2)
+                .offset(x: 0, y: 1)
         }
-        .frame(width: 50, height: 50)
+        .frame(width: 44, height: 44)
         .contentShape(Rectangle())
     }
 }
@@ -47,7 +47,7 @@ struct InputAccessaryTimeControlButton: View {
                 .frame(width: 28, height: 28)
             Text("\(seconds)")
                 .font(.system(size: 15))
-                .fontWeight(.bold)
+                .fontWeight(.semibold)
                 .foregroundColor(Color.systemBlack)
                 .offset(x: 0, y: 1)
         }

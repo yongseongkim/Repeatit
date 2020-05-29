@@ -41,7 +41,7 @@ struct DocumentsExplorerCreateYouTubePopup: View {
                             label: {
                                 Text("Confirm")
                                     .foregroundColor(Color.classicBlue)
-                                    .fontWeight(.bold)
+                                    .fontWeight(.semibold)
                         }
                         )
                             .frame(width: containerGeometry.size.width / 2)

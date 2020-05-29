@@ -9,7 +9,6 @@
 import SwiftUI
 
 struct KeyboardHeightDetector: ViewModifier {
-
     @Binding var height: CGFloat
 
     init() {

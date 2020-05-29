@@ -16,15 +16,13 @@ enum WaveformError: Error {
 }
 
 class WaveformView: UIView {
-    var progress: Double {
-        get {
-            guard let contentWidth = self.waveformImageView.image?.size.width else { return 0 }
-            return Double(scrollView.contentOffset.x / contentWidth)
-        }
-        set {
-            guard let contentWidth = self.waveformImageView.image?.size.width else { return }
-            scrollView.setContentOffset(CGPoint(x: contentWidth * CGFloat(newValue), y: scrollView.contentOffset.y), animated: false)
-        }
+    var progressOfAudio: Double {
+        return audioPlayer.playTimeSeconds / audioPlayer.duration
+    }
+
+    var ratioOfContentOffset: Double {
+        guard let contentWidth = self.waveformImageView.image?.size.width else { return 0 }
+        return Double(scrollView.contentOffset.x / contentWidth)
     }
 
     var progressChangedByDraggingPublisher: AnyPublisher<Double, Never> {
@@ -35,7 +33,7 @@ class WaveformView: UIView {
             .filter { $0.0 && !$0.1 }
             .compactMap { [weak self] _ -> Double? in
                 guard let self = self else { return nil }
-                return self.progress
+                return self.ratioOfContentOffset
             }
             .eraseToAnyPublisher()
     }
@@ -102,6 +100,7 @@ class WaveformView: UIView {
                         make.height.equalTo(image.size.height)
                         make.leading.equalToSuperview().inset(self.bounds.size.width / 2)
                     }
+                    self.applyPlayTimeToScrollView(time: self.audioPlayer.playTimeSeconds)
                 }
         )
     }
@@ -151,16 +150,15 @@ class WaveformView: UIView {
         progressChangedByDraggingPublisher
             .receive(on: RunLoop.main)
             .sink { [weak self] progress in
-                                guard let self = self else { return }
+                guard let self = self else { return }
                 self.audioPlayer.move(to: self.audioPlayer.duration * progress)
             }
             .store(in: &cancellables)
 
         audioPlayer.playTimePublisher
-            .receive(on: RunLoop.main)
-            .sink { [weak self] currentTime in
-                guard let self = self else { return }
-                self.progress = self.audioPlayer.duration != 0 ? currentTime / self.audioPlayer.duration : 1
+            // TODO: receive(RunLoop.main)
+            .sink { [weak self] in
+                self?.applyPlayTimeToScrollView(time: $0)
             }
             .store(in: &cancellables)
     }
@@ -191,6 +189,14 @@ class WaveformView: UIView {
                     }
                 }
             }
+        }
+    }
+
+    private func applyPlayTimeToScrollView(time: Double) {
+        guard let contentWidth = self.waveformImageView.image?.size.width else { return }
+        let progress = audioPlayer.duration != 0 ? time / self.audioPlayer.duration : 1
+        DispatchQueue.main.async {
+            self.scrollView.setContentOffset(CGPoint(x: contentWidth * CGFloat(progress), y: self.scrollView.contentOffset.y), animated: false)
         }
     }
 }
