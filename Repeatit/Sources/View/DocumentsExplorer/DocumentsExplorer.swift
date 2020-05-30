@@ -9,7 +9,7 @@ import SwiftUI
 
 struct DocumentsExplorer: View {
     @ObservedObject var store: DocumentsExplorerStore
-    
+
     var body: some View {
         GeometryReader { geometry in
             ZStack {

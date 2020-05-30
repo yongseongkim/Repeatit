@@ -22,14 +22,14 @@ struct MultilineTextField: UIViewRepresentable {
     @Binding var text: String
     @Binding var calculatedHeight: CGFloat
     let inputAccessaryContent: UIView
-    let onDone: (() -> ())?
+    let onDone: (() -> Void)?
 
     init<Content: View>(
         text: Binding<String>,
         calculatedHeight: Binding<CGFloat>,
         @ViewBuilder inputAccessaryContent: (() -> Content),
         inputAccessaryContentHeight: CGFloat,
-        onDone: (() -> ())?
+        onDone: (() -> Void)?
     ) {
         self._text = text
         self._calculatedHeight = calculatedHeight
@@ -71,10 +71,10 @@ struct MultilineTextField: UIViewRepresentable {
     final class Coordinator: NSObject, UITextViewDelegate {
         var text: Binding<String>
         var calculatedHeight: Binding<CGFloat>
-        var onEndEditing: ((String) -> ())?
-        var onDone: (() -> ())?
+        var onEndEditing: ((String) -> Void)?
+        var onDone: (() -> Void)?
 
-        init(text: Binding<String>, height: Binding<CGFloat>, onEndEditing: ((String) -> ())? = nil, onDone: (() -> Void)? = nil) {
+        init(text: Binding<String>, height: Binding<CGFloat>, onEndEditing: ((String) -> Void)? = nil, onDone: (() -> Void)? = nil) {
             self.text = text
             self.calculatedHeight = height
             self.onEndEditing = onEndEditing

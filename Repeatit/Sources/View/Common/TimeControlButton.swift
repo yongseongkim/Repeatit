@@ -71,7 +71,6 @@ struct InputAccessaryTimeControlButton_Previews: PreviewProvider {
     }
 }
 
-
 struct TimeControlButton_Previews: PreviewProvider {
     static var previews: some View {
         Group {
@@ -86,4 +85,3 @@ struct TimeControlButton_Previews: PreviewProvider {
         }
     }
 }
-

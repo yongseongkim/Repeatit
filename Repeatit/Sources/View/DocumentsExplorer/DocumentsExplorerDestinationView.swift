@@ -10,8 +10,8 @@ import SwiftUI
 struct DocumentsExplorerDestinationView: View {
     let url: URL
     let selectedFiles: Set<DocumentsExplorerItem>
-    let moveButtonAction: (URL) -> ()
-    let closeButtonAction: () -> ()
+    let moveButtonAction: (URL) -> Void
+    let closeButtonAction: () -> Void
     @State private var items: [DocumentsExplorerItem] = []
 
     var body: some View {
@@ -45,22 +45,25 @@ struct DocumentsExplorerDestinationView: View {
         .edgesIgnoringSafeArea(.bottom)
         .navigationBarTitle(url.lastPathComponent)
         .navigationBarItems(
-            trailing: Button(action: {
-                self.closeButtonAction()
-            }) {
-                Image(systemName: "xmark")
-                    .padding(12)
-                    .foregroundColor(.systemBlack)
-            }
+            trailing: Button(
+                action: {
+                    self.closeButtonAction()
+                },
+                label: {
+                    Image(systemName: "xmark")
+                        .padding(12)
+                        .foregroundColor(.systemBlack)
+                }
+            )
         )
     }
 
     private func getFiles() -> [(url: URL, isDir: Bool)] {
         let contents = (try? FileManager.default.contentsOfDirectory(atPath: url.path)) ?? [String]()
-        var isDirectory : ObjCBool = false
+        var isDirectory: ObjCBool = false
         return contents.map { filename in
             let fileURL = url.appendingPathComponent(filename)
-            let _ = FileManager.default.fileExists(atPath: fileURL.path, isDirectory: &isDirectory)
+            FileManager.default.fileExists(atPath: fileURL.path, isDirectory: &isDirectory)
             return (url: fileURL, isDir: isDirectory.boolValue)
         }
     }

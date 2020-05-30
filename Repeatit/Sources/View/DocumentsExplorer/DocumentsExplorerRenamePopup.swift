@@ -9,8 +9,8 @@ import SwiftUI
 
 struct DocumentsExplorerRenamePopup: View {
     @State var textInput: String
-    let onPositiveButtonTapGesture: (String) -> ()
-    let onNegativeButtonTapGesture: () -> ()
+    let onPositiveButtonTapGesture: (String) -> Void
+    let onNegativeButtonTapGesture: () -> Void
 
     var body: some View {
         VStack {

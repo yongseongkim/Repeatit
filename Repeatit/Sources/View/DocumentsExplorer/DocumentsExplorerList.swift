@@ -61,7 +61,7 @@ struct DocumentsExplorerList: View {
         .navigationBarTitle(url.lastPathComponent)
         .onAppear { self.store.onAppear(url: self.url) }
     }
-    
+
     private var renameButtonColor: Color {
         return self.store.isRenameButtonDisabled ? Color.systemGray4 : Color.classicBlue
     }

@@ -12,18 +12,18 @@ extension AVPlayer {
     var isPlaying: Bool {
         return self.rate != 0 && self.error == nil
     }
-    
+
     var currentSeconds: Double {
         return CMTimeGetSeconds(self.currentTime())
     }
-    
+
     var durationSeconds: Double {
         if let duration = self.currentItem?.asset.duration {
             return CMTimeGetSeconds(duration)
         }
         return 0.0
     }
-    
+
     func seek(to: Double) {
         guard let scale = self.currentItem?.asset.duration.timescale else { return }
         self.seek(to: CMTimeMakeWithSeconds(to, preferredTimescale: scale), toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)

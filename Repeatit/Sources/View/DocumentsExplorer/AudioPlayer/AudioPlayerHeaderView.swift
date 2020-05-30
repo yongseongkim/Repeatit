@@ -10,7 +10,7 @@ import SwiftUI
 
 struct AudioPlayerHeaderView: View {
     let model: ViewModel
-    
+
     var body: some View {
         HStack(spacing: 17) {
             Image(uiImage: self.model.artwork)

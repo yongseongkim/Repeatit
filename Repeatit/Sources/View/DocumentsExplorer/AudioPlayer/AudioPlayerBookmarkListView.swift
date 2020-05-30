@@ -13,7 +13,7 @@ struct AudioPlayerBookmarkListView: View {
 
     var body: some View {
         let withIndex = self.model.items.enumerated().map({ $0 })
-        return List(withIndex, id: \.element.id) { idx, item in
+        return List(withIndex, id: \.element.id) { idx, _ in
             self.model.rowBuilder(idx: idx)
         }
         .onAppear {
@@ -76,14 +76,13 @@ extension AudioPlayerBookmarkListView {
         }
 
         func onAddRowTapGesture() {
-            guard let item = audioPlayer.playItem else { return }
-            let realm = try! Realm()
+            guard let item = audioPlayer.playItem, let realm = try? Realm() else { return }
             let relativePath = URL.relativePathFromHome(url: item.url)
             let bookmarkKeyId = AudioBookmark.makeKeyId(
                 relativePath: relativePath,
                 startMillis: audioPlayer.playTimeMillis
             )
-            if let _ = realm.object(ofType: AudioBookmark.self, forPrimaryKey: bookmarkKeyId) {
+            if realm.object(ofType: AudioBookmark.self, forPrimaryKey: bookmarkKeyId) != nil {
                 return
             }
 
@@ -94,22 +93,21 @@ extension AudioPlayerBookmarkListView {
             new.startMillis = audioPlayer.playTimeMillis
             new.createdAt = Date()
             new.updatedAt = Date()
-            try! realm.write {
+            try? realm.write {
                 realm.add(new)
             }
             refresh()
         }
 
         func handleTextChanges(idx: Int, text: String) {
-            let realm = try! Realm()
-            guard let item = self.items[idx].value else { return }
-            try! realm.write {
+            guard let realm = try? Realm(), let item = self.items[idx].value else { return }
+            try? realm.write {
                 item.note = text
             }
         }
 
         func refresh() {
-            let realm = try! Realm()
+            guard let realm = try? Realm() else { return }
             bookmarks = realm.objects(AudioBookmark.self)
                 .filter("relativePath = '\(URL.relativePathFromHome(url: audioItem.url))'")
                 .sorted(byKeyPath: "startMillis")

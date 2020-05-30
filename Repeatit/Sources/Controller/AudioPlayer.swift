@@ -29,8 +29,8 @@ protocol AudioPlayer {
     var playItem: AudioItem? { get }
     var playTimeSeconds: Double { get }
     var playTimeMillis: Int { get }
-    var duration: Double  { get }
-    var playList: [AudioItem]  { get }
+    var duration: Double { get }
+    var playList: [AudioItem] { get }
     var repeatMode: RepeatMode { get set }
     var rate: Double { get set }
     // MARK: -
@@ -40,7 +40,7 @@ protocol AudioPlayer {
     var playTimePublisher: AnyPublisher<Double, Never> { get }
     // MARK: -
 
-    // MARK - Actions
+    // MARK: Actions
     func play(with list: [AudioItem], startAt: Int) throws
     func pause()
     func resume()
@@ -178,7 +178,7 @@ extension BasicAudioPlayer: AudioPlayer {
     // MARK: -
 
     func play(with list: [AudioItem], startAt: Int = 0) throws {
-        if (list.count <= startAt) {
+        if list.count <= startAt {
             throw PlayerError.invalidArgumentPlayerItem
         }
         playListSubject.send(list)
@@ -211,7 +211,7 @@ extension BasicAudioPlayer: AudioPlayer {
     }
 
     func playNext() throws {
-        var nextPlayItem: AudioItem? = nil
+        var nextPlayItem: AudioItem?
         switch repeatMode {
         case .one:
             nextPlayItem = playItem
@@ -235,7 +235,7 @@ extension BasicAudioPlayer: AudioPlayer {
     }
 
     func playPrev() throws {
-        var nextPlayItem: AudioItem? = nil
+        var nextPlayItem: AudioItem?
         switch repeatMode {
         case .one:
             nextPlayItem = playItem
@@ -261,10 +261,10 @@ extension BasicAudioPlayer: AudioPlayer {
     func move(to: Double) {
         // 모든 move는 이 method를 call해야 한다. movedTime 관리를 위해
         var time = to
-        if (time < 0) {
+        if time < 0 {
             time = 0
         }
-        if (time > duration) {
+        if time > duration {
             time = duration.leftSide()
         }
         time = time.roundTo(place: 2)
@@ -274,7 +274,7 @@ extension BasicAudioPlayer: AudioPlayer {
 
     func moveForward(seconds: Double) {
         var time = playTimeSeconds + seconds
-        if (time >= duration) {
+        if time >= duration {
             time = duration.leftSide()
         }
         move(to: time)
@@ -282,7 +282,7 @@ extension BasicAudioPlayer: AudioPlayer {
 
     func moveBackward(seconds: Double) {
         var time = playTimeSeconds - seconds
-        if (time < 0) {
+        if time < 0 {
             time = 0
         }
         move(to: time)

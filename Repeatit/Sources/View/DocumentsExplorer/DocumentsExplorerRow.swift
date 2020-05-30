@@ -11,7 +11,7 @@ import SwiftUI
 struct DocumentsExplorerSelectableRow: View {
     var item: DocumentsExplorerItem
     var isSelected: Bool
-    let onTapGesture: (DocumentsExplorerItem) -> ()
+    let onTapGesture: (DocumentsExplorerItem) -> Void
 
     var body: some View {
         VStack(spacing: 0) {

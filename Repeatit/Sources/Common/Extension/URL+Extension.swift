@@ -17,14 +17,7 @@ extension URL {
         guard let relativePath = url.path.components(separatedBy: URL.homeDirectory.path).last else { return url.path }
         return relativePath
     }
-    
-    func isPlayerSupported() -> Bool {
-        if (URL.supportedFormats.contains(self.pathExtension)) {
-            return true
-        }
-        return false
-    }
-    
+
     func bookmarkKey() -> String {
         guard let relativePath = self.path.components(separatedBy: URL.homeDirectory.path).last else { return self.path }
         return relativePath

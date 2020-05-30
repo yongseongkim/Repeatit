@@ -13,7 +13,7 @@ struct YouTubePlayerBookmarkListView: View {
 
     var body: some View {
         let withIndex = self.model.items.enumerated().map({ $0 })
-        return List(withIndex, id: \.element.id) { idx, item in
+        return List(withIndex, id: \.element.id) { idx, _ in
             self.model.rowBuilder(idx: idx)
         }
         .onAppear {
@@ -74,14 +74,14 @@ extension YouTubePlayerBookmarkListView {
         }
 
         func onAddRowTapGesture() {
-            let realm = try! Realm()
+            guard let realm = try? Realm() else { return }
             let relativePath = URL.relativePathFromHome(url: URL.homeDirectory)
             let bookmarkKeyId = YouTubeBookmark.makeKeyId(
                 relativePath: relativePath,
                 videoId: self.playerController.videoId,
                 startMillis: self.playerController.playTimeMillis
             )
-            if let _ = realm.object(ofType: YouTubeBookmark.self, forPrimaryKey: bookmarkKeyId) {
+            if realm.object(ofType: YouTubeBookmark.self, forPrimaryKey: bookmarkKeyId) != nil {
                 return
             }
 
@@ -93,22 +93,21 @@ extension YouTubePlayerBookmarkListView {
             new.startMillis = playerController.playTimeMillis
             new.createdAt = Date()
             new.updatedAt = Date()
-            try! realm.write {
+            try? realm.write {
                 realm.add(new)
             }
             refresh()
         }
 
         func handleTextChanges(idx: Int, text: String) {
-            let realm = try! Realm()
-            guard let item = self.items[idx].value else { return }
-            try! realm.write {
+            guard let realm = try? Realm(), let item = self.items[idx].value else { return }
+            try? realm.write {
                 item.note = text
             }
         }
 
         func refresh() {
-            let realm = try! Realm()
+            guard let realm = try? Realm() else { return }
             let videoId = playerController.videoId
             bookmarks = realm.objects(YouTubeBookmark.self)
                 .filter("videoId = '\(videoId)'")

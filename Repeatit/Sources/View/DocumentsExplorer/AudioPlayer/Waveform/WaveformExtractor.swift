@@ -35,17 +35,17 @@ class WaveformExtractor {
             let buf = AVAudioPCMBuffer(pcmFormat: format,
                                        frameCapacity: UInt32(file.length)) else { return [Float]() }
         try file.read(into: buf)
-        return Array(UnsafeBufferPointer(start: buf.floatChannelData?[0], count:Int(buf.frameLength)))
+        return Array(UnsafeBufferPointer(start: buf.floatChannelData?[0], count: Int(buf.frameLength)))
     }
 
     // unit = 3000, 14.7 samples per second
     func downSamples(_ samples: [Float], unit: Int) -> [Float] {
         var processingBuffer = [Float](repeating: 0.0, count: Int(samples.count))
         let numberOfSamples = vDSP_Length(samples.count)
-        vDSP_vabs(samples, 1, &processingBuffer, 1, numberOfSamples);
+        vDSP_vabs(samples, 1, &processingBuffer, 1, numberOfSamples)
         let filter = [Float](repeating: 1.0 / Float(unit), count: unit)
         let numberOfDownSamples = Int(samples.count / unit)
-        var downSamples = [Float](repeating:0.0, count: numberOfDownSamples)
+        var downSamples = [Float](repeating: 0.0, count: numberOfDownSamples)
         vDSP_desamp(processingBuffer,
                     vDSP_Stride(unit),
                     filter,
@@ -79,7 +79,7 @@ class WaveformExtractor {
             context?.addLine(to: CGPoint(x: x, y: centerY + sampleHeight))
             context?.setStrokeColor(sample.color.cgColor)
             context?.strokePath()
-            x = x + CGFloat(sample.width) + CGFloat(sample.interval)
+            x += CGFloat(sample.width) + CGFloat(sample.interval)
         }
 
         let image = UIGraphicsGetImageFromCurrentImageContext()

@@ -31,7 +31,7 @@ struct AudioItem {
             artwork = UIImage(named: "logo_100pt")!
         }
         lyrics = metadataList.first {
-            if let key = $0.key as? String, let _ = $0.stringValue {
+            if let key = $0.key as? String, $0.stringValue != nil {
                 return key == "USLT"
             }
             return false

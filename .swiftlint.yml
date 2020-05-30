@@ -1,0 +1,27 @@
+disabled_rules:
+  - line_length
+  - generic_type_name
+  - file_header
+  - identifier_name
+  - function_parameter_count
+  - todo
+  - nesting
+  - function_body_length
+  - type_name
+  - large_tuple
+  - cyclomatic_complexity
+  - file_length
+included: # paths to include during linting. `--path` is ignored if present.
+  - Repeatit/Sources
+excluded: # paths to ignore during linting. Takes precedence over `included`.
+  - Carthage
+  - Pods
+identifier_name:
+  min_length: 1
+type_name:
+  excluded: T
+function_body_length: 100
+type_body_length: 500
+cyclomatic_complexity:
+  warning: 15
+  error: 25

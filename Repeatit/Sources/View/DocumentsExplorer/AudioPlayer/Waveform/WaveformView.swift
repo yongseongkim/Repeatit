@@ -126,7 +126,7 @@ class WaveformView: UIView {
 
         isDraggingPublisher
             .filter { $0 }
-            .map { [weak self] isDragging -> Bool in
+            .map { [weak self] _ -> Bool in
                 guard let self = self else { return false }
                 return self.audioPlayer.isPlaying
             }
@@ -205,7 +205,7 @@ extension WaveformView: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         progressedWaveformContainer.frame = CGRect(x: 0, y: 0, width: scrollView.bounds.width / 2 + scrollView.contentOffset.x, height: scrollView.frame.height)
     }
-    
+
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         isDraggingSubject.send(true)
     }

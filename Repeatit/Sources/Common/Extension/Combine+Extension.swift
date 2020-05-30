@@ -47,7 +47,7 @@ struct UIControlPublisher<C: UIControl>: Publisher {
         self.events = events
     }
 
-    func receive<S>(subscriber: S) where S : Subscriber, Self.Failure == S.Failure, Self.Output == S.Input {
+    func receive<S>(subscriber: S) where S: Subscriber, Self.Failure == S.Failure, Self.Output == S.Input {
         subscriber.receive(subscription: UIControlSubscription(subscriber: subscriber, control: control, event: events))
     }
 }

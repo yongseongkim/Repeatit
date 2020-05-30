@@ -8,13 +8,11 @@
 
 import SwiftUI
 
-
-
 struct AudioPlayerWaveformView: View {
     let url: URL
     let audioPlayer: AudioPlayer
     let barStyle: WaveformBarStyle
-    
+
     var body: some View {
         return ZStack(alignment: .top) {
             WaveformViewUI(
