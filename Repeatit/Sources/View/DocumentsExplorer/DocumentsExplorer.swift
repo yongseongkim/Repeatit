@@ -8,20 +8,20 @@
 import SwiftUI
 
 struct DocumentsExplorer: View {
-    @ObservedObject var store: DocumentsExplorerStore
+    @EnvironmentObject var store: DocumentsExplorerStore
 
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 NavigationView {
-                    DocumentsExplorerList(store: self.store, url: URL.homeDirectory)
+                    DocumentsExplorerList(url: URL.homeDirectory)
                 }
                 if !self.store.isEditing {
-                    DocumentsExplorerFloatingViews(store: self.store)
+                    DocumentsExplorerFloatingViews()
                 } else {
                     VStack {
                         Spacer()
-                        DocumentsExplorerActionSheet(store: self.store)
+                        DocumentsExplorerActionSheet()
                             .padding(.bottom, geometry.safeAreaInsets.bottom)
                             .background(Color.systemGray6)
                     }
@@ -78,6 +78,7 @@ struct DocumentsExplorer: View {
 
 struct DocumentsExplorer_Previews: PreviewProvider {
     static var previews: some View {
-        DocumentsExplorer(store: DocumentsExplorerStore())
+        DocumentsExplorer()
+            .environmentObject(DocumentsExplorerStore())
     }
 }

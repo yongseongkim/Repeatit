@@ -9,7 +9,7 @@ import SwiftEntryKit
 import SwiftUI
 
 struct DocumentsExplorerActionSheet: View {
-    @ObservedObject var store: DocumentsExplorerStore
+    @EnvironmentObject var store: DocumentsExplorerStore
 
     var body: some View {
         HStack {
@@ -91,7 +91,8 @@ struct DocumentsExplorerActionSheet: View {
 
 struct DocumentsExplorerActionSheet_Previews: PreviewProvider {
     static var previews: some View {
-        DocumentsExplorerActionSheet(store: DocumentsExplorerStore())
+        DocumentsExplorerActionSheet()
+            .environmentObject(DocumentsExplorerStore())
             .previewLayout(.sizeThatFits)
     }
 }

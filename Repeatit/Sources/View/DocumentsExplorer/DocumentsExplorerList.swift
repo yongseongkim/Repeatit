@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct DocumentsExplorerList: View {
-    @ObservedObject var store: DocumentsExplorerStore
+    @EnvironmentObject var store: DocumentsExplorerStore
     let url: URL
 
     @ViewBuilder
@@ -34,7 +34,7 @@ struct DocumentsExplorerList: View {
             } else {
                 List(self.store.items[url] ?? [], id: \.name) { item in
                     if item.isDirectory {
-                        NavigationLink(destination: DocumentsExplorerList(store: self.store, url: item.url)) {
+                        NavigationLink(destination: DocumentsExplorerList(url: item.url)) {
                             DocumentsExplorerRow(item: item)
                         }
                     } else {
@@ -70,12 +70,14 @@ struct DocumentsExplorerList: View {
 struct DocumentsExplorerList_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            DocumentsExplorerList(store: DocumentsExplorerStore(), url: URL.homeDirectory)
-                .previewLayout(.fixed(width: 320, height: 300))
+            DocumentsExplorerList(url: URL.homeDirectory)
+                .environmentObject(DocumentsExplorerStore())
                 .environment(\.colorScheme, .light)
-            DocumentsExplorerList(store: DocumentsExplorerStore(), url: URL.homeDirectory)
                 .previewLayout(.fixed(width: 320, height: 300))
+            DocumentsExplorerList(url: URL.homeDirectory)
+                .environmentObject(DocumentsExplorerStore())
                 .environment(\.colorScheme, .dark)
+                .previewLayout(.fixed(width: 320, height: 300))
         }
     }
 }

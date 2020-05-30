@@ -9,7 +9,7 @@ import SwiftEntryKit
 import SwiftUI
 
 struct DocumentsExplorerFloatingViews: View {
-    let store: DocumentsExplorerStore
+    @EnvironmentObject var store: DocumentsExplorerStore
 
     var body: some View {
         VStack {
@@ -86,14 +86,16 @@ struct DocumentsExplorerFloatingViews: View {
 struct DocumentsExplorerFloatingViews_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            DocumentsExplorerFloatingViews(store: DocumentsExplorerStore())
-                .previewLayout(.fixed(width: 360, height: 300))
+            DocumentsExplorerFloatingViews()
                 .background(Color.systemGray6)
+                .environmentObject(DocumentsExplorerStore())
                 .environment(\.colorScheme, .light)
-            DocumentsExplorerFloatingViews(store: DocumentsExplorerStore())
                 .previewLayout(.fixed(width: 360, height: 300))
+            DocumentsExplorerFloatingViews()
                 .background(Color.systemGray6)
+                .environmentObject(DocumentsExplorerStore())
                 .environment(\.colorScheme, .dark)
+                .previewLayout(.fixed(width: 360, height: 300))
         }
     }
 }
