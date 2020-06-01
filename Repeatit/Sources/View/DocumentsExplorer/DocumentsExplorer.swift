@@ -17,7 +17,7 @@ struct DocumentsExplorer: View {
                     DocumentsExplorerList(url: URL.homeDirectory)
                 }
                 if !self.store.isEditing {
-                    DocumentsExplorerFloatingViews()
+                    DocumentsExplorerFloatingActionButtons()
                 } else {
                     VStack {
                         Spacer()

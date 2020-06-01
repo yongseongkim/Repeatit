@@ -42,8 +42,7 @@ class DocumentsExplorerStore: ObservableObject {
         refresh()
     }
 
-    func createNewDirectory() {
-        let dirName = UUID().uuidString
+    func createNewDirectory(dirName: String) {
         try? FileManager.default.createDirectory(
             at: visibleURL.appendingPathComponent(dirName),
             withIntermediateDirectories: true,

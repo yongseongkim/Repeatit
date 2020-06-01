@@ -1,5 +1,5 @@
 //
-//  DocumentsExplorerCreateYouTubePopup.swift
+//  SingleTextFieldPopup.swift
 //  Repeatit
 //
 //  Created by YongSeong Kim on 2020/05/18.
@@ -7,19 +7,21 @@
 
 import SwiftUI
 
-struct DocumentsExplorerCreateYouTubePopup: View {
+struct SingleTextFieldPopup: View {
     @State var textInput: String
-    let onPositiveButtonTapGesture: (String) -> Void
-    let onNegativeButtonTapGesture: () -> Void
+    let title: String
+    let placeholder: String
+    let positiveButton: (name: String, action:(String) -> Void)
+    let negativeButton: (name: String, action: () -> Void)
 
     var body: some View {
         VStack {
             Spacer()
             VStack(alignment: .leading, spacing: 0) {
-                Text("YouTube")
+                Text(title)
                     .foregroundColor(Color.systemBlack)
                     .padding(EdgeInsets(top: 30, leading: 25, bottom: 0, trailing: 25))
-                TextField("Please Enter a YouTube link.", text: $textInput)
+                TextField(placeholder, text: $textInput)
                     .padding(8)
                     .background(Color(UIColor.systemGray5))
                     .padding(EdgeInsets(top: 15, leading: 25, bottom: 30, trailing: 25))
@@ -27,9 +29,9 @@ struct DocumentsExplorerCreateYouTubePopup: View {
                 GeometryReader { containerGeometry in
                     HStack(alignment: .center, spacing: 0) {
                         Button(
-                            action: { self.onNegativeButtonTapGesture() },
+                            action: { self.negativeButton.action() },
                             label: {
-                                Text("Cancel")
+                                Text(self.negativeButton.name)
                                     .foregroundColor(Color.lushLava)
                             }
                         )
@@ -37,9 +39,9 @@ struct DocumentsExplorerCreateYouTubePopup: View {
                             .frame(minHeight: 0, maxHeight: .infinity)
                         Divider()
                         Button(
-                            action: { self.onPositiveButtonTapGesture(self.textInput) },
+                            action: { self.positiveButton.action(self.textInput) },
                             label: {
-                                Text("Confirm")
+                                Text(self.positiveButton.name)
                                     .foregroundColor(Color.classicBlue)
                                     .fontWeight(.semibold)
                         }
@@ -58,12 +60,14 @@ struct DocumentsExplorerCreateYouTubePopup: View {
     }
 }
 
-struct DocumentsExplorerCreateYouTubePopup_Previews: PreviewProvider {
+struct SingleTextFieldPopup_Previews: PreviewProvider {
     static var previews: some View {
-        DocumentsExplorerCreateYouTubePopup(
+        SingleTextFieldPopup(
             textInput: "first init",
-            onPositiveButtonTapGesture: { _ in },
-            onNegativeButtonTapGesture: {}
+            title: "YouTube Link",
+            placeholder: "Please Enter a YouTube link.",
+            positiveButton: ("Confirm", { _ in }),
+            negativeButton: ("Cancel", { })
         )
     }
 }
