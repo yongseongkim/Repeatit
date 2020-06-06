@@ -40,6 +40,19 @@ extension AudioPlayerHeaderView {
         let title: String
         let artist: String
         let artwork: UIImage
+
+        init(item: PlayItem) {
+            let audioItem = AudioItem(url: item.url)
+            self.title = audioItem.title
+            self.artist = audioItem.artist
+            self.artwork = audioItem.artwork
+        }
+
+        init(title: String, artist: String, artwork: UIImage) {
+            self.title = title
+            self.artist = artist
+            self.artwork = artwork
+        }
     }
 }
 

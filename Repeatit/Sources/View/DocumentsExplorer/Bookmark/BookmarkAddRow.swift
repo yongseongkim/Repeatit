@@ -1,13 +1,13 @@
 //
-//  YouTubeBookmarkAddRow.swift
+//  BookmarkAddRow.swift
 //  Repeatit
 //
-//  Created by YongSeong Kim on 2020/05/14.
+//  Created by YongSeong Kim on 2020/06/02.
 //
 
 import SwiftUI
 
-struct YouTubeBookmarkAddRow: View {
+struct BookmarkAddRow: View {
     var body: some View {
         HStack(alignment: .center, spacing: 10) {
             Image(systemName: "plus.circle")
@@ -18,9 +18,9 @@ struct YouTubeBookmarkAddRow: View {
     }
 }
 
-struct YouTubeBookmarkAddRow_Previews: PreviewProvider {
+struct BookmarkAddRow_Previews: PreviewProvider {
     static var previews: some View {
-        YouTubeBookmarkAddRow()
+        BookmarkAddRow()
             .previewLayout(.sizeThatFits)
     }
 }

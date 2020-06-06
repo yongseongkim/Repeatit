@@ -38,6 +38,17 @@ extension AudioPlayerSimpleHeaderView {
     struct ViewModel {
         let title: String
         let artist: String
+
+        init(item: PlayItem) {
+            let audioItem = AudioItem(url: item.url)
+            self.title = audioItem.title
+            self.artist = audioItem.artist
+        }
+
+        init(title: String, artist: String) {
+            self.title = title
+            self.artist = artist
+        }
     }
 }
 

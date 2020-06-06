@@ -17,8 +17,4 @@ extension FileManager {
             return (url: fileURL, isDir: isDirectory.boolValue)
         }
     }
-
-    func getDocumentsItems(in url: URL) -> [DocumentsExplorerItem] {
-        return getFiles(in: url).map { DocumentsExplorerItem(url: $0.url, isDirectory: $0.isDir) }
-    }
 }

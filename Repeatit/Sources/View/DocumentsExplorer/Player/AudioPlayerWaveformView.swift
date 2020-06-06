@@ -9,20 +9,19 @@
 import SwiftUI
 
 struct AudioPlayerWaveformView: View {
-    let url: URL
-    let audioPlayer: AudioPlayer
+    let item: AudioItem
     let barStyle: WaveformBarStyle
+    @EnvironmentObject var store: PlayerStore
 
     var body: some View {
         return ZStack(alignment: .top) {
             WaveformViewUI(
-                url: url,
-                audioPlayer: audioPlayer,
+                url: item.url,
+                player: store.player,
                 barStyle: barStyle
             )
-                .accentColor(Color.systemBlack)
                 .frame(minHeight: 0, maxHeight: .infinity)
-            WaveformTimeView(model: .init(audioPlayer: self.audioPlayer))
+            WaveformTimeView()
         }
         .background(Color.systemWhite)
     }
@@ -32,26 +31,26 @@ struct AudioPlayerWaveformView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             AudioPlayerWaveformView(
-                url: URL.homeDirectory.appendingPathComponent("sample.mp3"),
-                audioPlayer: BasicAudioPlayer(),
+                item: AudioItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3")),
                 barStyle: .upDown
             )
                 .previewLayout(.fixed(width: 360, height: 140))
                 .environment(\.colorScheme, .light)
+                .environmentObject(PlayerStore(item: DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3")), player: AudioPlayer()))
             AudioPlayerWaveformView(
-                url: URL.homeDirectory.appendingPathComponent("sample.mp3"),
-                audioPlayer: BasicAudioPlayer(),
+                item: AudioItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3")),
                 barStyle: .upDown
             )
                 .previewLayout(.fixed(width: 360, height: 140))
                 .environment(\.colorScheme, .dark)
+            .environmentObject(PlayerStore(item: DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3")), player: AudioPlayer()))
             AudioPlayerWaveformView(
-                url: URL.homeDirectory.appendingPathComponent("sample.mp3"),
-                audioPlayer: BasicAudioPlayer(),
+                item: AudioItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3")),
                 barStyle: .up
             )
                 .previewLayout(.fixed(width: 360, height: 70))
                 .environment(\.colorScheme, .dark)
+                .environmentObject(PlayerStore(item: DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3")), player: AudioPlayer()))
         }
     }
 }

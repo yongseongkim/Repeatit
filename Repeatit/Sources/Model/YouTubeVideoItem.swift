@@ -9,5 +9,9 @@ import Foundation
 
 // https://www.youtube.com/watch?v=bNpBoNeGtoA
 struct YouTubeVideoItem: Codable {
-    var videoId: String
+    static func from(item: PlayItem) -> YouTubeVideoItem? {
+        return try? JSONDecoder().decode(YouTubeVideoItem.self, from: Data(contentsOf: item.url))
+    }
+
+    let videoId: String
 }

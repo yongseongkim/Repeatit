@@ -68,9 +68,15 @@ struct DocumentsExplorer: View {
 
     private func player(item: DocumentsExplorerItem) -> AnyView {
         if item.isAudioFile {
-            return AnyView(AudioPlayerView(item: item.toAudioItem(), audioPlayer: self.store.audioPlayer))
+            return AnyView(
+                AudioPlayerView()
+                    .environmentObject(PlayerStore(item: item, player: AudioPlayer()))
+            )
         } else if item.isYouTubeFile {
-            return AnyView(YouTubePlayerView(item: item.toYouTubeItem()))
+            return AnyView(
+                YouTubePlayerView()
+                    .environmentObject(PlayerStore(item: item, player: YouTubePlayer()))
+            )
         }
         return AnyView(EmptyView())
     }

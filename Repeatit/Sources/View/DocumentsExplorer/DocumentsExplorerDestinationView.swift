@@ -17,7 +17,7 @@ struct DocumentsExplorerDestinationView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack {
-                List(self.items, id: \.name) { item in
+                List(self.items, id: \.nameWithExtension) { item in
                     if item.isDirectory && !self.selectedFiles.contains(item) {
                         NavigationLink(destination: DocumentsExplorerDestinationView(url: item.url, selectedFiles: self.selectedFiles, moveButtonAction: self.moveButtonAction, closeButtonAction: self.closeButtonAction)) {
                             DocumentsExplorerRow(item: item)

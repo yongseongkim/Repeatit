@@ -1,5 +1,5 @@
 //
-//  YouTubePlayerController.swift
+//  YouTubePlayer.swift
 //  Repeatit
 //
 //  Created by YongSeong Kim on 2020/05/14.
@@ -9,24 +9,52 @@ import Combine
 import SwiftUI
 import youtube_ios_player_helper
 
-class YouTubePlayerController: NSObject, YTPlayerViewDelegate {
-    let videoId: String
-
+class YouTubePlayer: NSObject, YTPlayerViewDelegate {
+    fileprivate(set) var playItem: PlayItem?
     fileprivate(set) var playerView: YTPlayerView?
     let stateSubject = CurrentValueSubject<YTPlayerState, Never>(.unstarted)
     let playTimeSubject = CurrentValueSubject<Double, Never>(0)
     let durationSubject = CurrentValueSubject<Double, Never>(0)
-
     var state: YTPlayerState { stateSubject.value }
+
+    func playerViewDidBecomeReady(_ playerView: YTPlayerView) {
+        stateSubject.send(.paused)
+        durationSubject.send(playerView.duration())
+    }
+
+    func playerView(_ playerView: YTPlayerView, didChangeTo state: YTPlayerState) {
+        stateSubject.send(state)
+    }
+
+    func playerView(_ playerView: YTPlayerView, didPlayTime playTime: Float) {
+        playTimeSubject.send(Double(playTime))
+    }
+}
+
+extension YouTubePlayer: Player {
+    var isPlaying: Bool { state == .playing }
     var playTimeSeconds: Double { playTimeSubject.value.roundTo(place: 1) }
     var playTimeMillis: Int { Int(playTimeSeconds * 1000) }
     var duration: Double { durationSubject.value }
 
-    init(videoId: String) {
-        self.videoId = videoId
+    var isPlayingPublisher: AnyPublisher<Bool, Never> {
+        stateSubject.map { $0 == .playing }.removeDuplicates().eraseToAnyPublisher()
     }
+    var playTimePublisher: AnyPublisher<Double, Never> { playTimeSubject.eraseToAnyPublisher() }
 
-    func load() {
+    func togglePlay() {
+        switch stateSubject.value {
+        case .paused:
+            playerView?.playVideo()
+        case .playing:
+            playerView?.pauseVideo()
+        default:
+            break
+        }
+    }
+    func play(item: PlayItem) {
+        playItem = item
+        guard let videoId = YouTubeVideoItem.from(item: item)?.videoId else { return }
         // https://developers.google.com/youtube/player_parameters?hl=ko#Parameters
         playerView?.load(
             withVideoId: videoId,
@@ -38,15 +66,16 @@ class YouTubePlayerController: NSObject, YTPlayerViewDelegate {
         )
     }
 
-    func togglePlay() {
-        switch stateSubject.value {
-        case .paused:
-            playerView?.playVideo()
-        case .playing:
-            playerView?.pauseVideo()
-        default:
-            break
-        }
+    func pause() {
+        playerView?.pauseVideo()
+    }
+
+    func resume() {
+        playerView?.playVideo()
+    }
+
+    func stop() {
+        playerView?.stopVideo()
     }
 
     func move(to: Double) {
@@ -62,29 +91,17 @@ class YouTubePlayerController: NSObject, YTPlayerViewDelegate {
         let currentTime = playTimeSubject.value
         move(to: currentTime - seconds)
     }
-
-    func playerViewDidBecomeReady(_ playerView: YTPlayerView) {
-        stateSubject.send(.paused)
-        durationSubject.send(playerView.duration())
-    }
-
-    func playerView(_ playerView: YTPlayerView, didChangeTo state: YTPlayerState) {
-        stateSubject.send(state)
-    }
-
-    func playerView(_ playerView: YTPlayerView, didPlayTime playTime: Float) {
-        playTimeSubject.send(Double(playTime))
-    }
-
 }
 
 struct YouTubeView: UIViewRepresentable {
-    let playerController: YouTubePlayerController
+    let player: Player
 
     func makeUIView(context: Context) -> YouTubeContentView {
         let contentView = YouTubeContentView()
-        playerController.playerView = contentView.playerView
-        contentView.playerView.delegate = playerController
+        if let youtubePlayer = player as? YouTubePlayer {
+            youtubePlayer.playerView = contentView.playerView
+            contentView.playerView.delegate = youtubePlayer
+        }
         return contentView
     }
 

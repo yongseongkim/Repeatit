@@ -20,7 +20,7 @@ struct DocumentsExplorerMultiSelectableList: View {
     @State var selectedItems: Set<DocumentsExplorerItem> = []
 
     var body: some View {
-        List(self.items, id: \.name) { item in
+        List(self.items, id: \.nameWithExtension) { item in
             DocumentsExplorerSelectableRow(
                 item: item,
                 isSelected: self.selectedItems.contains(item),

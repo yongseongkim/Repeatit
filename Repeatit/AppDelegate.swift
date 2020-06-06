@@ -15,8 +15,6 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    let player = BasicAudioPlayer()
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         if !FileManager.default.fileExists(atPath: URL.homeDirectory.path) {
             try! FileManager.default.createDirectory(at: URL.homeDirectory, withIntermediateDirectories: true)
@@ -42,9 +40,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         do {
             let contents = try FileManager.default.contentsOfDirectory(atPath: URL.homeDirectory.path)
             if contents.count == 0 {
-                // sample 노래 넣기
-                if let path = Bundle.main.path(forResource: "sample", ofType: "mp3") {
-                    try FileManager.default.copyItem(atPath: path, toPath: URL.homeDirectory.appendingPathComponent("sample.mp3").path)
+                // sample 넣기
+                do {
+                    if let path = Bundle.main.path(forResource: "sample", ofType: "mp3") {
+                        try FileManager.default.copyItem(atPath: path, toPath: URL.homeDirectory.appendingPathComponent("sample.mp3").path)
+                    }
+                    let sampleYouTubeURL = URL.homeDirectory.appendingPathComponent("sample.youtube")
+                    let data = try JSONEncoder().encode(YouTubeVideoItem(videoId: "VuavFEzN6oA"))
+                    try data.write(to: sampleYouTubeURL)
+                } catch let exception {
+                    print(exception)
                 }
             }
         } catch let error {
@@ -58,31 +63,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // View
         UITableViewCell.appearance().backgroundColor = .clear
         UITableView.appearance().backgroundColor = .clear
-        return true
-    }
-
-    func applicationWillResignActive(_ application: UIApplication) {
-        print("applicationWillResignActive")
-    }
-
-    func applicationDidEnterBackground(_ application: UIApplication) {
-        print("applicationDidEnterBackground")
-    }
-
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        print("applicationWillEnterForeground")
-    }
-
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        print("applicationDidBecomeActive")
-    }
-
-    func applicationWillTerminate(_ application: UIApplication) {
-        print("applicationWillTerminate")
-    }
-
-    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        print("application open")
         return true
     }
 

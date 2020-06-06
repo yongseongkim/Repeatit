@@ -34,6 +34,6 @@ struct DocumentsExplorerFloatingActionButton_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             DocumentsExplorerFloatingActionButton(imageSystemName: "play.rectangle.fill", onTapGesture: {})
-        }   
+        }
     }
 }

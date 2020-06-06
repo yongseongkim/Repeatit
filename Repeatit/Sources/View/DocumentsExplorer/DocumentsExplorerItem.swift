@@ -9,8 +9,16 @@
 import SwiftUI
 
 struct DocumentsExplorerItem: Hashable, Codable {
-    var url: URL
-    var isDirectory: Bool
+    let url: URL
+    let isDirectory: Bool
+
+    init(url: URL, isDirectory: Bool = false) {
+        self.url = url
+        self.isDirectory = isDirectory
+    }
+}
+
+extension DocumentsExplorerItem: PlayItem {
 }
 
 extension DocumentsExplorerItem: Identifiable {
@@ -19,15 +27,23 @@ extension DocumentsExplorerItem: Identifiable {
     }
 
     var isAudioFile: Bool {
-        return URL.supportedFormats.contains((name as NSString).pathExtension)
+        return URL.supportedFormats.contains(pathExtension)
     }
 
     var isYouTubeFile: Bool {
-        return (name as NSString).pathExtension == "youtube"
+        return pathExtension == "youtube"
     }
 
     var name: String {
+        return url.deletingPathExtension().lastPathComponent
+    }
+
+    var nameWithExtension: String {
         return url.lastPathComponent
+    }
+
+    var pathExtension: String {
+        return (nameWithExtension as NSString).pathExtension
     }
 
     var imageName: String {
@@ -51,4 +67,8 @@ extension DocumentsExplorerItem: Identifiable {
         guard let item = try? JSONDecoder().decode(YouTubeVideoItem.self, from: Data(contentsOf: url)) else { return YouTubeVideoItem(videoId: "") }
         return item
     }
+}
+
+fileprivate extension URL {
+    static let supportedFormats = ["aac", "adts", "ac3", "aif", "aiff", "aifc", "caf", "mp3", "mp4", "m4a", "snd", "au", "sd2", "wav"]
 }

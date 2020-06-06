@@ -5,12 +5,14 @@
 //  Created by YongSeong Kim on 2020/05/18.
 //
 
+import MobileCoreServices
 import SwiftEntryKit
 import SwiftUI
 
 struct DocumentsExplorerFloatingActionButtons: View {
     @EnvironmentObject var store: DocumentsExplorerStore
     @State var isFolding: Bool = true
+    @State var isDocumentsPickerShowing: Bool = false
 
     var body: some View {
         VStack {
@@ -19,13 +21,29 @@ struct DocumentsExplorerFloatingActionButtons: View {
                 Spacer()
                 VStack(spacing: 15) {
                     DocumentsExplorerFloatingActionButton(
-                        imageSystemName: "play.rectangle.fill",
+                        imageSystemName: "music.note",
+                        onTapGesture: {
+                            self.isDocumentsPickerShowing = true
+                        }
+                    )
+                    .sheet(isPresented: $isDocumentsPickerShowing, content: {
+                        DocumentsPickerView(
+                            documentTypes: [(kUTTypeAudio as String)],
+                            onPickDocuments: { self.store.copyToVisibleURL(urls: $0) },
+                            onCancelPick: { }
+                        )
+                    })
+                    .opacity(isFolding ? 0 : 1)
+                    .offset(x: 0, y: isFolding ? 188 : 0)
+                    DocumentsExplorerFloatingActionButton(
+                        imageSystemName: "play.rectangle",
                         onTapGesture: {
                             self.showPopup {
                                 SingleTextFieldPopup(
                                     textInput: "",
-                                    title: "YouTube Link",
-                                    placeholder: "Please Enter a YouTube link.",
+                                    title: "YouTube",
+                                    message: "Please Enter a YouTube link.",
+                                    placeholder: "ex) https://youtu.be/929plYk1lDc",
                                     positiveButton: ("Confirm", {
                                         guard let youtubeId = $0.getYouTubeId() else { return }
                                         self.store.createYouTubeFile(videoId: youtubeId)
@@ -47,7 +65,8 @@ struct DocumentsExplorerFloatingActionButtons: View {
                                 SingleTextFieldPopup(
                                     textInput: "",
                                     title: "Directory",
-                                    placeholder: "Please Enter a new directory name.",
+                                    message: "Please Enter a new directory name.",
+                                    placeholder: "ex) NewDirectory",
                                     positiveButton: ("Confirm", {
                                         self.store.createNewDirectory(dirName: $0)
                                         SwiftEntryKit.dismiss(.specific(entryName: "EntryForYouTube"))

@@ -22,7 +22,6 @@ class WaveformExtractor {
         let width: Int
         let interval: Int
         let maxHeight: Int
-        let color: UIColor
         let barStyle: WaveformBarStyle
     }
 
@@ -74,10 +73,10 @@ class WaveformExtractor {
         }
         var x: CGFloat = 0
         for idx in 0..<samples.count {
-            let sampleHeight: CGFloat = max(min(CGFloat(samples[idx]) * 100, CGFloat(sample.maxHeight)), 1)
+            let sampleHeight: CGFloat = max(min(CGFloat(samples[idx]) * 100, CGFloat(sample.maxHeight / 2)), 1)
             context?.move(to: CGPoint(x: x, y: centerY - sampleHeight))
             context?.addLine(to: CGPoint(x: x, y: centerY + sampleHeight))
-            context?.setStrokeColor(sample.color.cgColor)
+            context?.setStrokeColor(UIColor.white.cgColor)
             context?.strokePath()
             x += CGFloat(sample.width) + CGFloat(sample.interval)
         }

@@ -19,20 +19,19 @@ struct DocumentsExplorerList: View {
                 DocumentsExplorerMultiSelectableList(items: self.store.items[url] ?? [])
                     .navigationBarBackButtonHidden(true)
                     .navigationBarItems(
-                        leading: Button(
+                        trailing: Button(
                             action: { self.store.isEditing = false },
                             label: {
                                 Image(systemName: "xmark")
                                     .padding(12)
                                     .foregroundColor(.systemBlack)
                             }
-                        ),
-                        trailing: Color.clear
+                        )
                     )
                     .padding(.bottom, 50)
                     .onPreferenceChange(DocumentsExplorerSelectedItemsKey.self, perform: { self.store.selectedItems = $0 })
             } else {
-                List(self.store.items[url] ?? [], id: \.name) { item in
+                List(self.store.items[url] ?? [], id: \.nameWithExtension) { item in
                     if item.isDirectory {
                         NavigationLink(destination: DocumentsExplorerList(url: item.url)) {
                             DocumentsExplorerRow(item: item)
@@ -43,8 +42,8 @@ struct DocumentsExplorerList: View {
                     }
                 }
                     .lineSpacing(0)
+                    .navigationBarBackButtonHidden(false)
                     .navigationBarItems(
-                        leading: Color.clear,
                         trailing: HStack {
                             Button(
                                 action: { self.store.isEditing = true },

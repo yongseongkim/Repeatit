@@ -23,7 +23,6 @@ class DocumentsExplorerStore: ObservableObject {
     @Published var isDestinationViewShowingForMove: Bool = false
     @Published var isRenameButtonDisabled: Bool = true
 
-    let audioPlayer: AudioPlayer = BasicAudioPlayer()
     var selectedItems: Set<DocumentsExplorerItem> = [] {
         didSet {
             isRenameButtonDisabled = selectedItems.count != 1
@@ -64,7 +63,7 @@ class DocumentsExplorerStore: ObservableObject {
 
     func rename(item: DocumentsExplorerItem, newName: String) {
         let fromURL = item.url
-        let toURL = item.url.deletingLastPathComponent().appendingPathComponent(newName)
+        let toURL = item.url.deletingLastPathComponent().appendingPathComponent("\(newName).\(fromURL.pathExtension)")
         do {
             try FileManager.default.moveItem(at: fromURL, to: toURL)
             try updateBookmark(with: item, to: toURL)
@@ -79,7 +78,7 @@ class DocumentsExplorerStore: ObservableObject {
     func moveSelectedItems(to: URL) {
         selectedItems.forEach { item in
             let fromURL = item.url
-            let toURL = to.appendingPathComponent(item.name)
+            let toURL = to.appendingPathComponent(item.nameWithExtension)
             do {
                 try FileManager.default.moveItem(at: fromURL, to: toURL)
                 try updateBookmark(with: item, to: toURL)
@@ -88,25 +87,32 @@ class DocumentsExplorerStore: ObservableObject {
                 print(exception)
             }
         }
-        items[to] = FileManager.default.getDocumentsItems(in: to)
         refresh()
         isEditing = false
         isDestinationViewShowingForMove = false
     }
 
     func copySelectedItems(to: URL) {
-        selectedItems.forEach { item in
-            let fromURL = item.url
-            let toURL = to.appendingPathComponent(item.name)
+        copy(urls: selectedItems.map { $0.url }, to: to)
+        isEditing = false
+        isDestinationViewShowingForCopy = false
+    }
+
+    func copyToVisibleURL(urls: [URL]) {
+        copy(urls: urls, to: visibleURL)
+    }
+
+    func copy(urls: [URL], to: URL) {
+        urls.forEach { url in
+            let toURL = to.appendingPathComponent(url.lastPathComponent)
             do {
-                try FileManager.default.copyItem(at: fromURL, to: toURL)
+                try FileManager.default.copyItem(at: url, to: toURL)
             } catch let exception {
                 // TODO: show alert
                 print(exception)
             }
         }
-        isEditing = false
-        isDestinationViewShowingForCopy = false
+        refresh()
     }
 
     func removeSelectedItems() {
@@ -114,8 +120,8 @@ class DocumentsExplorerStore: ObservableObject {
             do {
                 let realm = try Realm()
                 try FileManager.default.removeItem(at: item.url)
+                let previousBookmarks = realm.objects(BookmarkObject.self).filter("relativePath = '\(URL.relativePathFromHome(url: item.url))'")
                 try realm.write {
-                    let previousBookmarks = realm.objects(YouTubeBookmark.self).filter("relativePath = '\(URL.relativePathFromHome(url: item.url))'")
                     realm.delete(previousBookmarks)
                 }
             } catch let exception {
@@ -126,28 +132,30 @@ class DocumentsExplorerStore: ObservableObject {
         isEditing = false
     }
 
-    private func refresh() {
+    func refresh() {
         items[visibleURL] = FileManager.default.getDocumentsItems(in: visibleURL)
     }
 
     private func updateBookmark(with item: DocumentsExplorerItem, to: URL) throws {
         let realm = try Realm()
         try realm.write {
-            if item.isAudioFile {
-                let previousBookmarks = realm.objects(AudioBookmark.self)
-                    .filter("relativePath = '\(URL.relativePathFromHome(url: item.url))'")
-                previousBookmarks.forEach {
-                    realm.add(AudioBookmark.copy(previous: $0, relativePath: URL.relativePathFromHome(url: to)))
-                }
-                realm.delete(previousBookmarks)
-            } else if item.isYouTubeFile {
-                let previousBookmarks = realm.objects(YouTubeBookmark.self)
-                    .filter("relativePath = '\(URL.relativePathFromHome(url: item.url))'")
-                previousBookmarks.forEach {
-                    realm.add(YouTubeBookmark.copy(previous: $0, relativePath: URL.relativePathFromHome(url: to)))
-                }
-                realm.delete(previousBookmarks)
+            let previousBookmarks = realm.objects(BookmarkObject.self)
+                .filter("relativePath = '\(URL.relativePathFromHome(url: item.url))'")
+            previousBookmarks.forEach {
+                realm.add(BookmarkObject.copy(previous: $0, relativePath: URL.relativePathFromHome(url: to)))
             }
+            realm.delete(previousBookmarks)
         }
+    }
+}
+
+fileprivate extension FileManager {
+    func getDocumentsItems(in url: URL) -> [DocumentsExplorerItem] {
+        let files = getFiles(in: url)
+        return (
+            files.filter { $0.isDir }.sorted { $0.url.lastPathComponent < $1.url.lastPathComponent }
+                + files.filter { !$0.isDir }.sorted { $0.url.lastPathComponent < $1.url.lastPathComponent }
+            )
+            .map { DocumentsExplorerItem(url: $0.url, isDirectory: $0.isDir) }
     }
 }

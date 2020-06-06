@@ -16,6 +16,8 @@ enum WaveformError: Error {
 }
 
 class WaveformView: UIView {
+    static let verticalPadding: CGFloat = 10
+
     var progressOfAudio: Double {
         return audioPlayer.playTimeSeconds / audioPlayer.duration
     }
@@ -82,13 +84,13 @@ class WaveformView: UIView {
     }
 
     func loadWaveform(with barStyle: WaveformBarStyle) {
-        waveformCancellable = loadWaveform(url: url, maxHeight: bounds.height, barStyle: barStyle)
+        waveformCancellable = loadWaveform(url: url, maxHeight: bounds.height - (WaveformView.verticalPadding * 2), barStyle: barStyle)
             .receive(on: RunLoop.main)
             .sink(
                 receiveCompletion: { _ in },
                 receiveValue: { [weak self] image in
                     guard let self = self, let image = image, image != self.waveformImageView.image else { return }
-                    self.waveformImageView.image = image
+                    self.waveformImageView.image = image.withTintColor(.systemBlack)
                     self.waveformImageView.snp.updateConstraints { make in
                         make.width.equalTo(image.size.width)
                         make.height.equalTo(image.size.height)
@@ -114,14 +116,16 @@ class WaveformView: UIView {
         scrollView.addSubview(waveformImageView)
         waveformImageView.snp.makeConstraints { make in
             make.width.height.equalTo(0)
-            make.top.leading.bottom.trailing.equalToSuperview()
+            make.top.bottom.equalToSuperview().inset(WaveformView.verticalPadding)
+            make.leading.trailing.equalToSuperview()
         }
         scrollView.addSubview(progressedWaveformContainer)
         progressedWaveformContainer.frame = CGRect.zero
         progressedWaveformContainer.addSubview(progressedWaveformImageView)
         progressedWaveformImageView.snp.makeConstraints { make in
             make.width.height.equalTo(0)
-            make.top.leading.equalToSuperview()
+            make.top.equalToSuperview().inset(WaveformView.verticalPadding)
+            make.leading.equalToSuperview()
         }
 
         isDraggingPublisher
@@ -167,9 +171,8 @@ class WaveformView: UIView {
         return Future<UIImage?, WaveformError> { [weak self] promise in
             guard let self = self, maxHeight > 0 else { promise(.success(nil)); return }
             DispatchQueue.main.async {
-                let tintColor = self.tintColor!
                 if let cache = WaveformCacheManager.shared.get(url: url, barStyle: barStyle, height: maxHeight) {
-                    promise(.success(cache.withTintColor(tintColor)))
+                    promise(.success(cache))
                 }
                 DispatchQueue.global().async {
                     if let samples = try? self.extractor.loadSamples(url: url) {
@@ -180,10 +183,9 @@ class WaveformView: UIView {
                                 width: 2,
                                 interval: 1,
                                 maxHeight: Int(maxHeight),
-                                color: .red,
                                 barStyle: barStyle)
                             )?.apply { WaveformCacheManager.shared.add(url: url, barStyle: barStyle, image: $0) }
-                        promise(.success(waveformImage?.withTintColor(tintColor)))
+                        promise(.success(waveformImage))
                     } else {
                         promise(.failure(.failToLoadSamples))
                     }
@@ -222,10 +224,11 @@ extension WaveformView: UIScrollViewDelegate {
 
 struct WaveformViewUI: UIViewRepresentable {
     let url: URL
-    let audioPlayer: AudioPlayer
+    let player: Player
     let barStyle: WaveformBarStyle
 
     func makeUIView(context: Context) -> WaveformView {
+        guard let audioPlayer = player as? AudioPlayer else { fatalError("AudioPlayer should be injected.") }
         return WaveformView(audioPlayer: audioPlayer, url: url, barStyle: barStyle)
     }
 
