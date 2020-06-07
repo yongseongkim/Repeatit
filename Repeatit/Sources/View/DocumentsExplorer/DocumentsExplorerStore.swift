@@ -28,7 +28,11 @@ class DocumentsExplorerStore: ObservableObject {
             isRenameButtonDisabled = selectedItems.count != 1
         }
     }
-    private var visibleURL: URL
+    private var visibleURL: URL {
+        didSet {
+            refresh()
+        }
+    }
 
     init() {
         let rootURL = URL.homeDirectory
@@ -38,7 +42,10 @@ class DocumentsExplorerStore: ObservableObject {
 
     func onAppear(url: URL) {
         visibleURL = url
-        refresh()
+    }
+
+    func getItems(in url: URL) -> [DocumentsExplorerItem] {
+        return items[url] ?? []
     }
 
     func createNewDirectory(dirName: String) {
@@ -146,16 +153,5 @@ class DocumentsExplorerStore: ObservableObject {
             }
             realm.delete(previousBookmarks)
         }
-    }
-}
-
-fileprivate extension FileManager {
-    func getDocumentsItems(in url: URL) -> [DocumentsExplorerItem] {
-        let files = getFiles(in: url)
-        return (
-            files.filter { $0.isDir }.sorted { $0.url.lastPathComponent < $1.url.lastPathComponent }
-                + files.filter { !$0.isDir }.sorted { $0.url.lastPathComponent < $1.url.lastPathComponent }
-            )
-            .map { DocumentsExplorerItem(url: $0.url, isDirectory: $0.isDir) }
     }
 }

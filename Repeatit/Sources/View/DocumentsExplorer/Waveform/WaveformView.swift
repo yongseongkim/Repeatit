@@ -170,10 +170,9 @@ class WaveformView: UIView {
     private func loadWaveform(url: URL, maxHeight: CGFloat, barStyle: WaveformBarStyle) -> Future<UIImage?, WaveformError> {
         return Future<UIImage?, WaveformError> { [weak self] promise in
             guard let self = self, maxHeight > 0 else { promise(.success(nil)); return }
-            DispatchQueue.main.async {
-                if let cache = WaveformCacheManager.shared.get(url: url, barStyle: barStyle, height: maxHeight) {
-                    promise(.success(cache))
-                }
+            if let cache = WaveformCacheManager.shared.get(url: url, barStyle: barStyle, height: maxHeight) {
+                promise(.success(cache))
+            } else {
                 DispatchQueue.global().async {
                     if let samples = try? self.extractor.loadSamples(url: url) {
                         let downSamples = self.extractor.downSamples(samples, unit: 3000)

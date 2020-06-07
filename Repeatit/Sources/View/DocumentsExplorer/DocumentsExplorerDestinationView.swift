@@ -27,18 +27,15 @@ struct DocumentsExplorerDestinationView: View {
                     }
                 }
                 .onAppear {
-                    self.items = self.getFiles()
-                        .map { (url, isDir) -> DocumentsExplorerItem in
-                            DocumentsExplorerItem(url: url, isDirectory: isDir)
-                    }
+                    self.items = FileManager.default.getDocumentsItems(in: self.url)
                 }
                 Button(
                     action: { self.moveButtonAction(self.url) },
-                    label: {
-                        Text("Confirm").foregroundColor(Color.white)
-                })
+                    label: { Text("Confirm").foregroundColor(Color.white) }
+                )
                     .frame(minWidth: 0, maxWidth: .infinity)
-                    .frame(height: 50 + geometry.safeAreaInsets.bottom)
+                    .frame(height: 50)
+                    .padding(.bottom, geometry.safeAreaInsets.bottom)
                     .background(Color.classicBlue)
             }
         }
@@ -46,9 +43,7 @@ struct DocumentsExplorerDestinationView: View {
         .navigationBarTitle(url.lastPathComponent)
         .navigationBarItems(
             trailing: Button(
-                action: {
-                    self.closeButtonAction()
-                },
+                action: { self.closeButtonAction() },
                 label: {
                     Image(systemName: "xmark")
                         .padding(12)
@@ -56,16 +51,6 @@ struct DocumentsExplorerDestinationView: View {
                 }
             )
         )
-    }
-
-    private func getFiles() -> [(url: URL, isDir: Bool)] {
-        let contents = (try? FileManager.default.contentsOfDirectory(atPath: url.path)) ?? [String]()
-        var isDirectory: ObjCBool = false
-        return contents.map { filename in
-            let fileURL = url.appendingPathComponent(filename)
-            FileManager.default.fileExists(atPath: fileURL.path, isDirectory: &isDirectory)
-            return (url: fileURL, isDir: isDirectory.boolValue)
-        }
     }
 }
 
