@@ -4,10 +4,6 @@ platform :ios, '13.0'
 target 'Repeatit' do
   use_frameworks!
 
-  pod 'SnapKit', '~> 5.0.0' 
-  pod 'SwiftEntryKit'
-  pod 'RealmSwift'
-#   pod 'YouTubePlayer', :git => 'https://github.com/gilesvangruisen/Swift-YouTube-Player.git', :tag => 'v0.6.0'
   pod 'youtube-ios-player-helper'
   # Report
   pod 'Firebase/Analytics'

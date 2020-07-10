@@ -19,7 +19,9 @@ class YouTubePlayer: NSObject, YTPlayerViewDelegate {
 
     func playerViewDidBecomeReady(_ playerView: YTPlayerView) {
         stateSubject.send(.paused)
-        durationSubject.send(playerView.duration())
+        playerView.duration { [weak self] time, error in
+            self?.durationSubject.send(time)
+        }
     }
 
     func playerView(_ playerView: YTPlayerView, didChangeTo state: YTPlayerState) {
@@ -59,7 +61,7 @@ extension YouTubePlayer: Player {
         playerView?.load(
             withVideoId: videoId,
             playerVars: [
-                "controls": 0,
+                "controls": 1,
                 "playsinline": 1,
                 "cc_load_policy": 1
             ]

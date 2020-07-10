@@ -8,11 +8,36 @@ settings:
 settingGroups:
   CODE_SIGN_IDENTITY: "iPhone Developer"
   CODE_SIGN_STYLE: Automatic
+packages:
+  SnapKit:
+    url: https://github.com/SnapKit/SnapKit
+    from: 5.0.0
+  SwiftEntryKit:
+    url: https://github.com/huri000/SwiftEntryKit
+    version: 1.1.4
+  Realm:
+    url: https://github.com/realm/realm-cocoa
+    version: 5.2.0
+  RxSwift:
+    url: https://github.com/ReactiveX/RxSwift
+    from: 5.0.0
+  RxSwiftExt:
+    url: https://github.com/RxSwiftCommunity/RxSwiftExt
+    from: 5.0.0
 targets:
   Repeatit:
     type: application
     platform: iOS
     deploymentTarget: 13.0
+    dependencies:
+      - package: SnapKit
+      - package: SwiftEntryKit
+      - package: Realm
+        product: RealmSwift
+      - package: RxSwift
+        product: RxSwift
+        product: RxCocoa
+      - package: RxSwiftExt
     sources:
       - Repeatit
     preBuildScripts:
