@@ -5,6 +5,7 @@
 //  Created by YongSeong Kim on 2020/05/14.
 //
 
+import Foundation
 import RealmSwift
 
 class Bookmark {

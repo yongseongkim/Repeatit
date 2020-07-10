@@ -5,6 +5,7 @@
 //  Created by yongseongkim on 2020/04/18.
 //
 
+import Foundation
 import RealmSwift
 
 class DictationNote: Object {
