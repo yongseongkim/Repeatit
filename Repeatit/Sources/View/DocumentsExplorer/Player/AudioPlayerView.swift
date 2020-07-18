@@ -7,52 +7,78 @@
 //
 
 import SwiftUI
-import AVFoundation
+import RealmSwift
 
 struct AudioPlayerView: View {
     @State var keyboardHeight: CGFloat = 0
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @EnvironmentObject var store: PlayerStore
+    @ObservedObject var model: ViewModel
 
     var body: some View {
         let isDicationMode = keyboardHeight > 0
         return VStack(alignment: .center, spacing: 0) {
             VStack(alignment: .center, spacing: 0) {
                 if isDicationMode {
-                    AudioPlayerSimpleHeaderView(model: .init(item: self.store.item))
-                    AudioPlayerWaveformView(item: AudioItem(url: self.store.item.url), barStyle: .up)
+                    AudioPlayerSimpleHeaderView(model: .init(item: self.model.item))
+                    AudioPlayerWaveformView(barStyle: .up, item: AudioItem(url: self.model.item.url), player: self.model.player)
                         .frame(height: 100)
                 } else {
-                    AudioPlayerHeaderView(model: .init(item: self.store.item))
-                    AudioPlayerWaveformView(item: AudioItem(url: self.store.item.url), barStyle: .upDown)
+                    AudioPlayerHeaderView(model: .init(item: self.model.item))
+                    AudioPlayerWaveformView(barStyle: .upDown, item: AudioItem(url: self.model.item.url), player: self.model.player)
                         .frame(height: 140)
-                    PlayerControlView()
+                    PlayerControlView(model: .init(player: self.model.player))
                 }
             }
             .onTapGesture { UIApplication.hideKeyboard() }
-            BookmarkListView()
-                .environmentObject(self.store.bookmarkStore)
+            BookmarkListView(model: .init(player: self.model.player, bookmarks: self.model.bookmarks))
             Spacer()
         }
         .background(Color.systemGray6)
         .modifier(KeyboardHeightDetector(self.$keyboardHeight))
-        .onAppear { self.store.play() }
-        .onDisappear { self.store.pause() }
+        .onAppear { self.model.player.resume() }
+        .onDisappear { self.model.player.pause() }
+    }
+}
+
+extension AudioPlayerView {
+    class ViewModel: ObservableObject {
+        let player: MediaPlayer
+        let item: PlayItem
+        var bookmarks: [Bookmark] {
+            if let realm = try? Realm() {
+                return realm.objects(BookmarkObject.self)
+                    .filter("relativePath = '\(URL.relativePathFromHome(url: item.url))'")
+                    .sorted(byKeyPath: "startMillis")
+                    .reduce([], { $0 + [Bookmark(object: $1)] })
+            } else {
+                return []
+            }
+        }
+
+        init(player: MediaPlayer, item: PlayItem) {
+            self.player = player
+            self.item = item
+            self.player.play(item: item)
+        }
     }
 }
 
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            AudioPlayerView()
-                .environmentObject(PlayerStore(item: DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3")), player: AudioPlayer()))
-                .environment(\.colorScheme, .light)
-            AudioPlayerView()
-                .environmentObject(PlayerStore(item: DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3")), player: AudioPlayer()))
-                .environment(\.colorScheme, .dark)
-            AudioPlayerView(keyboardHeight: 140)
-                .environmentObject(PlayerStore(item: DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3")), player: AudioPlayer()))
-                .environment(\.colorScheme, .dark)
+            AudioPlayerView(
+                model: .init(
+                    player: MediaPlayer(),
+                    item: DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3"))
+                )
+            )
+            .environment(\.colorScheme, .light)
+            AudioPlayerView(
+                model: .init(
+                    player: MediaPlayer(),
+                    item: DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3"))
+                )
+            )
+            .environment(\.colorScheme, .dark)
         }
     }
 }

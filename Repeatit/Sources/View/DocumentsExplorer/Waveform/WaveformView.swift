@@ -19,7 +19,7 @@ class WaveformView: UIView {
     static let verticalPadding: CGFloat = 10
 
     var progressOfAudio: Double {
-        return audioPlayer.playTimeSeconds / audioPlayer.duration
+        return player.playTimeSeconds / player.duration
     }
 
     var ratioOfContentOffset: Double {
@@ -44,7 +44,7 @@ class WaveformView: UIView {
         return isDraggingSubject.removeDuplicates().eraseToAnyPublisher()
     }
 
-    private let audioPlayer: AudioPlayer
+    private let player: MediaPlayer
     private let url: URL
     private let barStyle: WaveformBarStyle
     private let extractor = WaveformExtractor()
@@ -66,10 +66,10 @@ class WaveformView: UIView {
     private let progressedWaveformImageView = UIImageView()
     // MARK: -
 
-    init(audioPlayer: AudioPlayer, url: URL, barStyle: WaveformBarStyle) {
-        self.audioPlayer = audioPlayer
-        self.url = url
+    init(barStyle: WaveformBarStyle, player: MediaPlayer, url: URL) {
         self.barStyle = barStyle
+        self.player = player
+        self.url = url
         super.init(frame: .zero)
         initialize()
     }
@@ -85,7 +85,7 @@ class WaveformView: UIView {
 
     func loadWaveform(with barStyle: WaveformBarStyle) {
         waveformCancellable = loadWaveform(url: url, maxHeight: bounds.height - (WaveformView.verticalPadding * 2), barStyle: barStyle)
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { _ in },
                 receiveValue: { [weak self] image in
@@ -102,7 +102,7 @@ class WaveformView: UIView {
                         make.height.equalTo(image.size.height)
                         make.leading.equalToSuperview().inset(self.bounds.size.width / 2)
                     }
-                    self.applyPlayTimeToScrollView(time: self.audioPlayer.playTimeSeconds)
+                    self.applyPlayTimeToScrollView(time: self.player.playTimeSeconds)
                 }
         )
     }
@@ -132,10 +132,10 @@ class WaveformView: UIView {
             .filter { $0 }
             .map { [weak self] _ -> Bool in
                 guard let self = self else { return false }
-                return self.audioPlayer.isPlaying
+                return self.player.isPlaying
             }
             .handleEvents(receiveOutput: { [weak self] _ in
-                self?.audioPlayer.pause()
+                self?.player.pause()
             })
             .map { [weak self] isPlaying -> AnyPublisher<Bool, Never> in
                 guard let self = self else { return Empty<Bool, Never>().eraseToAnyPublisher() }
@@ -147,20 +147,20 @@ class WaveformView: UIView {
             .switchToLatest()
             .sink { [weak self] isPlaying in
                 guard isPlaying else { return }
-                self?.audioPlayer.resume()
+                self?.player.resume()
             }
             .store(in: &cancellables)
 
         progressChangedByDraggingPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] progress in
                 guard let self = self else { return }
-                self.audioPlayer.move(to: self.audioPlayer.duration * progress)
+                self.player.move(to: self.player.duration * progress)
             }
             .store(in: &cancellables)
 
-        audioPlayer.playTimePublisher
-            // TODO: receive(RunLoop.main)
+        player.playTimePublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 self?.applyPlayTimeToScrollView(time: $0)
             }
@@ -195,7 +195,7 @@ class WaveformView: UIView {
 
     private func applyPlayTimeToScrollView(time: Double) {
         guard let contentWidth = self.waveformImageView.image?.size.width else { return }
-        let progress = audioPlayer.duration != 0 ? time / self.audioPlayer.duration : 1
+        let progress = player.duration != 0 ? time / self.player.duration : 1
         DispatchQueue.main.async {
             self.scrollView.setContentOffset(CGPoint(x: contentWidth * CGFloat(progress), y: self.scrollView.contentOffset.y), animated: false)
         }
@@ -222,13 +222,12 @@ extension WaveformView: UIScrollViewDelegate {
 }
 
 struct WaveformViewUI: UIViewRepresentable {
-    let url: URL
-    let player: Player
     let barStyle: WaveformBarStyle
+    let player: MediaPlayer
+    let url: URL
 
     func makeUIView(context: Context) -> WaveformView {
-        guard let audioPlayer = player as? AudioPlayer else { fatalError("AudioPlayer should be injected.") }
-        return WaveformView(audioPlayer: audioPlayer, url: url, barStyle: barStyle)
+        return WaveformView(barStyle: barStyle, player: player, url: url)
     }
 
     func updateUIView(_ uiView: WaveformView, context: Context) {

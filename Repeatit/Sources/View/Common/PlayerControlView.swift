@@ -5,10 +5,11 @@
 //  Created by YongSeong Kim on 2020/06/04.
 //
 
+import Combine
 import SwiftUI
 
 struct PlayerControlView: View {
-    @EnvironmentObject var store: PlayerStore
+    @ObservedObject var model: ViewModel
 
     var body: some View {
         HStack(spacing: 0) {
@@ -16,27 +17,27 @@ struct PlayerControlView: View {
             HStack(spacing: 0) {
                 Spacer()
                 TimeControlButton(direction: .backward, seconds: 5)
-                    .onTapGesture { self.store.player.moveBackward(by: 5) }
+                    .onTapGesture { self.model.player.moveBackward(by: 5) }
                 Spacer()
                 TimeControlButton(direction: .backward, seconds: 1)
-                    .onTapGesture { self.store.player.moveBackward(by: 1) }
+                    .onTapGesture { self.model.player.moveBackward(by: 1) }
                 Spacer()
             }
             Spacer()
-            Image(systemName: self.store.player.isPlaying ? "pause.fill" : "play.fill")
+            Image(systemName: self.model.isPlaying ? "pause.fill" : "play.fill")
                 .resizable()
                 .foregroundColor(.systemBlack)
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 36, height: 36)
-                .onTapGesture { self.store.player.togglePlay() }
+                .onTapGesture { self.model.player.togglePlay() }
             Spacer()
             HStack(spacing: 0) {
                 Spacer()
                 TimeControlButton(direction: .forward, seconds: 1)
-                    .onTapGesture { self.store.player.moveForward(by: 1) }
+                    .onTapGesture { self.model.player.moveForward(by: 1) }
                 Spacer()
                 TimeControlButton(direction: .forward, seconds: 5)
-                    .onTapGesture { self.store.player.moveForward(by: 5) }
+                    .onTapGesture { self.model.player.moveForward(by: 5) }
                 Spacer()
             }
             Spacer()
@@ -49,13 +50,33 @@ struct PlayerControlView: View {
     }
 }
 
+extension PlayerControlView {
+    class ViewModel: ObservableObject {
+        let player: Player
+        var cancellables: [AnyCancellable]
+        @Published var isPlaying: Bool
+
+        init(player: Player) {
+            self.player = player
+            self.cancellables = []
+            self.isPlaying = false
+            self.player.isPlayingPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    self?.isPlaying = $0
+                }
+                .store(in: &cancellables)
+        }
+    }
+}
+
 struct PlayerControlView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            PlayerControlView()
+            PlayerControlView(model: .init(player: MediaPlayer()))
                 .environment(\.colorScheme, .light)
                 .previewLayout(.sizeThatFits)
-            PlayerControlView()
+            PlayerControlView(model: .init(player: MediaPlayer()))
                 .environment(\.colorScheme, .dark)
                 .previewLayout(.sizeThatFits)
         }

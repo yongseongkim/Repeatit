@@ -10,9 +10,8 @@ import SwiftEntryKit
 import SwiftUI
 
 struct DocumentsExplorerFloatingActionButtons: View {
-    @EnvironmentObject var store: DocumentsExplorerStore
-    @State var isFolding: Bool = true
-    @State var isDocumentsPickerShowing: Bool = false
+    @ObservedObject var model: ViewModel
+    let listner: Listener?
 
     var body: some View {
         VStack {
@@ -23,18 +22,23 @@ struct DocumentsExplorerFloatingActionButtons: View {
                     DocumentsExplorerFloatingActionButton(
                         imageSystemName: "music.note",
                         onTapGesture: {
-                            self.isDocumentsPickerShowing = true
+                            self.model.isDocumentsPickerShowing = true
                         }
                     )
-                    .sheet(isPresented: $isDocumentsPickerShowing, content: {
-                        DocumentsPickerView(
-                            documentTypes: [(kUTTypeAudio as String)],
-                            onPickDocuments: { self.store.copyToVisibleURL(urls: $0) },
-                            onCancelPick: { }
-                        )
-                    })
-                    .opacity(isFolding ? 0 : 1)
-                    .offset(x: 0, y: isFolding ? 188 : 0)
+                    .sheet(
+                        isPresented: .init(get: { self.model.isDocumentsPickerShowing }, set: { self.model.isDocumentsPickerShowing = $0 }),
+                        content: {
+                            DocumentsPickerView(
+                                documentTypes: [(kUTTypeAudio as String), (kUTTypeMovie as String), (kUTTypeVideo as String)],
+                                listener: .init(
+                                    onPickDocuments: { self.listner?.onCopyDocumentFiles($0) },
+                                    onCancelPick: {}
+                                )
+                            )
+                        }
+                    )
+                    .opacity(self.model.isFolding ? 0 : 1)
+                    .offset(x: 0, y: self.model.isFolding ? 188 : 0)
                     DocumentsExplorerFloatingActionButton(
                         imageSystemName: "play.rectangle",
                         onTapGesture: {
@@ -46,7 +50,7 @@ struct DocumentsExplorerFloatingActionButtons: View {
                                     placeholder: "ex) https://youtu.be/929plYk1lDc",
                                     positiveButton: ("Confirm", {
                                         guard let youtubeId = $0.getYouTubeId() else { return }
-                                        self.store.createYouTubeFile(videoId: youtubeId)
+                                        self.listner?.onCreateYouTubeConfirm(youtubeId)
                                         SwiftEntryKit.dismiss(.specific(entryName: "EntryForYouTube"))
                                     }),
                                     negativeButton: ("Cancel", {
@@ -56,8 +60,8 @@ struct DocumentsExplorerFloatingActionButtons: View {
                             }
                         }
                     )
-                    .opacity(isFolding ? 0 : 1)
-                    .offset(x: 0, y: isFolding ? 127 : 0)
+                    .opacity(self.model.isFolding ? 0 : 1)
+                    .offset(x: 0, y: self.model.isFolding ? 127 : 0)
                     DocumentsExplorerFloatingActionButton(
                         imageSystemName: "folder",
                         onTapGesture: {
@@ -68,7 +72,7 @@ struct DocumentsExplorerFloatingActionButtons: View {
                                     message: "Please Enter a new directory name.",
                                     placeholder: "ex) NewDirectory",
                                     positiveButton: ("Confirm", {
-                                        self.store.createNewDirectory(dirName: $0)
+                                        self.listner?.onCreateDirectoryConfirm($0)
                                         SwiftEntryKit.dismiss(.specific(entryName: "EntryForYouTube"))
                                     }),
                                     negativeButton: ("Cancel", {
@@ -78,12 +82,12 @@ struct DocumentsExplorerFloatingActionButtons: View {
                             }
                         }
                     )
-                    .opacity(isFolding ? 0 : 1)
-                    .offset(x: 0, y: isFolding ? 66 : 0)
+                    .opacity(self.model.isFolding ? 0 : 1)
+                    .offset(x: 0, y: self.model.isFolding ? 66 : 0)
                     Button(
                         action: {
                             withAnimation(.easeIn(duration: 0.15)) {
-                                self.isFolding = !self.isFolding
+                                self.model.isFolding = !self.model.isFolding
                             }
                         },
                         label: {
@@ -95,7 +99,7 @@ struct DocumentsExplorerFloatingActionButtons: View {
                                 .padding(12)
                                 .background(Color.systemGray5)
                                 .cornerRadius(28)
-                                .rotationEffect(isFolding ? Angle(degrees: 0) : Angle(degrees: 135))
+                                .rotationEffect(self.model.isFolding ? Angle(degrees: 0) : Angle(degrees: 135))
                                 .shadow(color: Color.black.opacity(0.35), radius: 5)
                         }
                     )
@@ -129,17 +133,42 @@ struct DocumentsExplorerFloatingActionButtons: View {
     }
 }
 
+extension DocumentsExplorerFloatingActionButtons {
+    class ViewModel: ObservableObject {
+        @Published var isFolding: Bool = true
+        @Published var isDocumentsPickerShowing: Bool = false
+    }
+
+    struct Listener {
+        let onCopyDocumentFiles: (([URL]) -> Void)
+        let onCreateDirectoryConfirm: ((String) -> Void)
+        let onCreateYouTubeConfirm: ((String) -> Void)
+    }
+}
+
 struct DocumentsExplorerFloatingActionButtons_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            DocumentsExplorerFloatingActionButtons()
+            DocumentsExplorerFloatingActionButtons(
+                model: .init(),
+                listner: .init(
+                    onCopyDocumentFiles: { _ in },
+                    onCreateDirectoryConfirm: { _ in },
+                    onCreateYouTubeConfirm: { _ in }
+                )
+            )
                 .background(Color.systemGray6)
-                .environmentObject(DocumentsExplorerStore())
                 .environment(\.colorScheme, .light)
                 .previewLayout(.fixed(width: 360, height: 300))
-            DocumentsExplorerFloatingActionButtons()
+            DocumentsExplorerFloatingActionButtons(
+                model: .init(),
+                listner: .init(
+                    onCopyDocumentFiles: { _ in },
+                    onCreateDirectoryConfirm: { _ in },
+                    onCreateYouTubeConfirm: { _ in }
+                )
+            )
                 .background(Color.systemGray6)
-                .environmentObject(DocumentsExplorerStore())
                 .environment(\.colorScheme, .dark)
                 .previewLayout(.fixed(width: 360, height: 300))
         }

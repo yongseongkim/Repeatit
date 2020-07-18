@@ -15,7 +15,7 @@ struct DocumentsExplorerSelectedItemsKey: PreferenceKey {
     }
 }
 
-struct DocumentsExplorerMultiSelectableList: View {
+struct DocumentsExplorerMultiSelectableListView: View {
     let items: [DocumentsExplorerItem]
     @State var selectedItems: Set<DocumentsExplorerItem> = []
 
@@ -39,7 +39,7 @@ struct DocumentsExplorerMultiSelectableList: View {
 
 struct DocumentsExplorerEditableList_Previews: PreviewProvider {
     static var previews: some View {
-        DocumentsExplorerMultiSelectableList(
+        DocumentsExplorerMultiSelectableListView(
             items: [
                 DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("directory1directory1directory1directory1directory1directory1directory1"), isDirectory: true),
                 DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("directory2"), isDirectory: true),

@@ -8,12 +8,11 @@
 import SwiftUI
 
 struct RootView: View {
-    @EnvironmentObject var store: RootStore
+    @Environment(\.appComponent) var appComponent: AppComponent
 
     var body: some View {
         ZStack {
-            DocumentsExplorer()
-                .environmentObject(store.docummentsExplorerStore)
+            DocumentsExplorerView(model: .init(appComponent: appComponent))
         }
     }
 }
@@ -21,6 +20,6 @@ struct RootView: View {
 struct RootView_Previews: PreviewProvider {
     static var previews: some View {
         RootView()
-            .environmentObject(RootStore())
+            .environment(\.appComponent, AppComponent())
     }
 }

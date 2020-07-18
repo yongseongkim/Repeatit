@@ -10,16 +10,16 @@ import Combine
 import SwiftUI
 
 struct WaveformTimeView: View {
-    @EnvironmentObject var store: PlayerStore
+    @ObservedObject var model: ViewModel
 
     var body: some View {
         HStack(spacing: 0) {
-            Text(secondsToFormat(time: self.store.playTime.playTime))
+            Text(secondsToFormat(time: self.model.playTimeSeconds))
                 .padding(9)
                 .foregroundColor(Color.systemBlack)
                 .background(Color.systemGray6.opacity(0.95))
             Spacer()
-            Text(secondsToFormat(time: self.store.playTime.duration))
+            Text(secondsToFormat(time: self.model.durationSeconds))
                 .padding(9)
                 .foregroundColor(Color.systemBlack)
                 .background(Color.systemGray6.opacity(0.95))
@@ -35,19 +35,37 @@ struct WaveformTimeView: View {
     }
 }
 
+extension WaveformTimeView {
+    class ViewModel: ObservableObject {
+        let player: MediaPlayer
+        private var cancellables: [AnyCancellable]
+
+        @Published var playTimeSeconds: Double = 0
+        @Published var durationSeconds: Double = 0
+
+        init(player: MediaPlayer) {
+            self.player = player
+            self.cancellables = []
+
+            self.player.playTimePublisher
+                .sink { [weak self] in
+                    self?.playTimeSeconds = $0
+                }
+                .store(in: &cancellables)
+            self.durationSeconds = self.player.duration
+        }
+    }
+}
+
 struct WaveformTimeView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            WaveformTimeView()
-                .environmentObject(AudioPlayerStore(item: DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3")), audioPlayer: AudioPlayer()))
+            WaveformTimeView(model: .init(player: MediaPlayer()))
                 .previewLayout(.sizeThatFits)
                 .environment(\.colorScheme, .light)
-                .environmentObject(PlayerStore(item: DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3")), player: AudioPlayer()))
-            WaveformTimeView()
-                .environmentObject(AudioPlayerStore(item: DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3")), audioPlayer: AudioPlayer()))
+            WaveformTimeView(model: .init(player: MediaPlayer()))
                 .previewLayout(.sizeThatFits)
                 .environment(\.colorScheme, .dark)
-                .environmentObject(PlayerStore(item: DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3")), player: AudioPlayer()))
         }
     }
 }

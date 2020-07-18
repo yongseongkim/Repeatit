@@ -1,5 +1,5 @@
 //
-//  AudioPlayer.swift
+//  MediaPlayer.swift
 //  Repeatit
 //
 //  Created by YongSeong Kim on 2020/06/02.
@@ -9,32 +9,34 @@ import AVFoundation
 import Combine
 import Foundation
 
-class AudioPlayer {
+class MediaPlayer {
     private let isPlayingSubject = CurrentValueSubject<Bool, Never>(false)
-    // play time 변화 감지를 위해 AVPlayerItem 의 time 을 쓰지 않고 observer 를 이용하여 관리한다.
     private let playTimeSubject = CurrentValueSubject<Double, Never>(0)
-    private let playItemSubject = CurrentValueSubject<AudioItem?, Never>(nil)
     private var cancellables: [AnyCancellable] = []
 
-    fileprivate(set) var playItem: PlayItem?
-    private var avPlayer: AVPlayer?
-    private var avPlayerItem: AVPlayerItem?
+    private let avPlayer = AVPlayer()
+    private(set) var playItem: PlayItem? {
+        didSet {
+            stop()
+            removePeriodicTimeObserver()
+            // Set new item.
+            if let newURL = playItem?.url {
+                if avPlayer.currentItem?.url != newURL {
+                    avPlayer.replaceCurrentItem(with: AVPlayerItem(url: newURL))
+                }
+                addPeriodicTimeObserver()
+                isPlayingSubject.send(avPlayer.isPlaying)
+            }
+        }
+    }
     private var playTimeObserverToken: Any?
     private var movedTime: Double?
+    lazy var layer: AVPlayerLayer = {
+        return AVPlayerLayer(player: avPlayer)
+    }()
 
     init() {
         NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: nil)
-        playItemSubject
-            .sink(
-                receiveValue: { [weak self] value in
-                    if let playItem = value {
-                        self?.load(item: playItem)
-                    } else {
-                        self?.stop()
-                    }
-                }
-            )
-            .store(in: &cancellables)
     }
 
     deinit {
@@ -45,27 +47,13 @@ class AudioPlayer {
         stop()
     }
 
-    // Do not call this method for play.
-    // Just set item to currentPlayItemRelay.
-    private func load(item: AudioItem) {
-        // Remove previouse player
-        clear()
-
-        // Create new player
-        avPlayer = AVPlayer(playerItem: AVPlayerItem(url: item.url))
-        addPeriodicTimeObserver()
-        avPlayer?.play()
-        updateIsPlaying()
-    }
-
     private func addPeriodicTimeObserver() {
-        // Notify every half second
-        playTimeObserverToken = avPlayer?.addPeriodicTimeObserver(
+        playTimeObserverToken = avPlayer.addPeriodicTimeObserver(
             forInterval: CMTime(seconds: 1/60, preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
             queue: .main,
             using: { [weak self] time in
-                // TODO: play 시간을 바꿨지만 그전 시간을 emit 하면서 waveform 스크롤 뷰가 튕기는 경우가 있다.
-                // 임시 방편으로 movedTime 변수를 뒀지만 더 좋은 방법을 찾아야 한다.
+                // TODO: play 시간을 변경했지만 변경하기 전 시간이 emit 되면서 이상하게 동작한다.
+                // 임시방편으로 변경하기 전 시간을 무시하는 코드를 넣는다.
                 if let movedTime = self?.movedTime {
                     if abs(movedTime - time.seconds) < 0.05 {
                         self?.movedTime = nil
@@ -83,31 +71,15 @@ class AudioPlayer {
             playTimeObserverToken = nil
         }
         guard let playTimeObserverToken = playTimeObserverToken else { return }
-        avPlayer?.removeTimeObserver(playTimeObserverToken)
-    }
-
-    private func updateIsPlaying() {
-        isPlayingSubject.send(avPlayer?.isPlaying ?? false)
-    }
-
-    private func clear() {
-        defer {
-            avPlayer = nil
-        }
-        avPlayer?.pause()
-        updateIsPlaying()
-        removePeriodicTimeObserver()
+        avPlayer.removeTimeObserver(playTimeObserverToken)
     }
 }
 
-extension AudioPlayer: Player {
+extension MediaPlayer: Player {
     var isPlaying: Bool { isPlayingSubject.value }
     var playTimeSeconds: Double { playTimeSubject.value.roundTo(place: 1) }
     var playTimeMillis: Int { Int(playTimeSeconds * 1000) }
-    var duration: Double {
-        guard let duration = avPlayer?.durationSeconds else { return 0 }
-        return duration
-    }
+    var duration: Double { avPlayer.durationSeconds }
 
     var isPlayingPublisher: AnyPublisher<Bool, Never> {
         isPlayingSubject.removeDuplicates().eraseToAnyPublisher()
@@ -127,23 +99,24 @@ extension AudioPlayer: Player {
 
     func play(item: PlayItem) {
         playItem = item
-        playItemSubject.send(AudioItem(url: item.url))
+        resume()
     }
 
     func pause() {
-        avPlayer?.pause()
-        updateIsPlaying()
+        avPlayer.pause()
+        isPlayingSubject.send(avPlayer.isPlaying)
+        removePeriodicTimeObserver()
     }
 
     func resume() {
-        avPlayer?.play()
-        updateIsPlaying()
+        addPeriodicTimeObserver()
+        avPlayer.play()
+        isPlayingSubject.send(avPlayer.isPlaying)
     }
 
     func stop() {
         move(to: 0)
-        avPlayer?.pause()
-        updateIsPlaying()
+        pause()
     }
 
     func move(to: Double) {
@@ -156,7 +129,7 @@ extension AudioPlayer: Player {
             time = duration.leftSide()
         }
         time = time.roundTo(place: 2)
-        avPlayer?.seek(to: time)
+        avPlayer.seek(to: time)
         movedTime = time
     }
 

@@ -21,9 +21,6 @@ packages:
   RxSwift:
     url: https://github.com/ReactiveX/RxSwift
     from: 5.0.0
-  RxSwiftExt:
-    url: https://github.com/RxSwiftCommunity/RxSwiftExt
-    from: 5.0.0
 targets:
   Repeatit:
     type: application
@@ -37,7 +34,7 @@ targets:
       - package: RxSwift
         product: RxSwift
         product: RxCocoa
-      - package: RxSwiftExt
+    scheme: {}
     sources:
       - Repeatit
     preBuildScripts:

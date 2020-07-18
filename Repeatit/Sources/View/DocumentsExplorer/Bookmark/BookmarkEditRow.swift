@@ -9,23 +9,20 @@ import SwiftUI
 
 struct BookmarkEditRow: View {
     let bookmark: Bookmark
+    let player: Player
     @Binding var text: String
     @State private var textFieldHeight: CGFloat = 35
-    @EnvironmentObject var store: BookmarkStore
 
     var body: some View {
         HStack {
             Text(formattedTime)
                 .onTapGesture {
-                    self.store.player.move(to: Double(self.bookmark.startMillis / 1000))
+                    self.player.move(to: Double(self.bookmark.startMillis / 1000))
                 }
             MultilineTextField(
                 text: $text,
                 calculatedHeight: $textFieldHeight,
-                inputAccessaryContent: {
-                    BookmarkInputAccessaryView()
-                        .environmentObject(store)
-                },
+                inputAccessaryContent: { BookmarkInputAccessaryView(player: self.player) },
                 inputAccessaryContentHeight: BookmarkInputAccessaryView.height,
                 onDone: nil
             )

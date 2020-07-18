@@ -8,29 +8,26 @@
 import SwiftUI
 
 struct DocumentsExplorerDestinationView: View {
-    let url: URL
-    let selectedFiles: Set<DocumentsExplorerItem>
-    let moveButtonAction: (URL) -> Void
-    let closeButtonAction: () -> Void
-    @State private var items: [DocumentsExplorerItem] = []
+    @ObservedObject var model: ViewModel
+    let listener: Listener?
 
     var body: some View {
         GeometryReader { geometry in
             VStack {
-                List(self.items, id: \.nameWithExtension) { item in
-                    if item.isDirectory && !self.selectedFiles.contains(item) {
-                        NavigationLink(destination: DocumentsExplorerDestinationView(url: item.url, selectedFiles: self.selectedFiles, moveButtonAction: self.moveButtonAction, closeButtonAction: self.closeButtonAction)) {
-                            DocumentsExplorerRow(item: item)
-                        }
+                List(self.model.items, id: \.nameWithExtension) { item in
+                    if item.isDirectory && !self.model.selectedItems.contains(item) {
+                        NavigationLink(
+                            destination: DocumentsExplorerDestinationView(
+                                model: .init(fileManager: self.model.fileManager, url: item.url),
+                                listener: self.listener
+                            )
+                        ) { DocumentsExplorerRow(item: item) }
                     } else {
                         DocumentsExplorerRow(item: item).opacity(0.6)
                     }
                 }
-                .onAppear {
-                    self.items = FileManager.default.getDocumentsItems(in: self.url)
-                }
                 Button(
-                    action: { self.moveButtonAction(self.url) },
+                    action: { self.listener?.moveButtonAction?(self.model.url) },
                     label: { Text("Confirm").foregroundColor(Color.white) }
                 )
                     .frame(minWidth: 0, maxWidth: .infinity)
@@ -40,10 +37,10 @@ struct DocumentsExplorerDestinationView: View {
             }
         }
         .edgesIgnoringSafeArea(.bottom)
-        .navigationBarTitle(url.lastPathComponent)
+        .navigationBarTitle(self.model.url.lastPathComponent)
         .navigationBarItems(
             trailing: Button(
-                action: { self.closeButtonAction() },
+                action: { self.listener?.closeButtonAction?() },
                 label: {
                     Image(systemName: "xmark")
                         .padding(12)
@@ -54,8 +51,32 @@ struct DocumentsExplorerDestinationView: View {
     }
 }
 
+extension DocumentsExplorerDestinationView {
+    class ViewModel: ObservableObject {
+        let fileManager: DocumentsExplorerFileManager
+        let url: URL
+        let items: [DocumentsExplorerItem]
+        let selectedItems: Set<DocumentsExplorerItem>
+
+        init(fileManager: DocumentsExplorerFileManager, url: URL, items: [DocumentsExplorerItem] = [], selectedItems: Set<DocumentsExplorerItem> = [], moveButtonAction: ((URL) -> Void)? = nil, closeButtonAction: (() -> Void)? = nil) {
+            self.fileManager = fileManager
+            self.url = url
+            self.items = items.isEmpty ? fileManager.getItems(in: url) : items
+            self.selectedItems = selectedItems
+        }
+    }
+
+    struct Listener {
+        let moveButtonAction: ((URL) -> Void)?
+        let closeButtonAction: (() -> Void)?
+    }
+}
+
 struct DocumentsExplorerDestinationView_Previews: PreviewProvider {
     static var previews: some View {
-        DocumentsExplorerDestinationView(url: URL.homeDirectory, selectedFiles: [], moveButtonAction: { _ in }, closeButtonAction: {})
+        DocumentsExplorerDestinationView(
+            model: .init(fileManager: DocumentsExplorerFileManager(), url: URL.homeDirectory),
+            listener: nil
+        )
     }
 }

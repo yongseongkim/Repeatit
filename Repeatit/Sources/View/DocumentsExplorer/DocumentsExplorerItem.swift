@@ -27,7 +27,11 @@ extension DocumentsExplorerItem: Identifiable {
     }
 
     var isAudioFile: Bool {
-        return URL.supportedFormats.contains(pathExtension)
+        return URL.supportedAuidoFormats.contains(pathExtension)
+    }
+
+    var isVideoFile: Bool {
+        return URL.supportedVideoFormats.contains(pathExtension)
     }
 
     var isYouTubeFile: Bool {
@@ -43,15 +47,18 @@ extension DocumentsExplorerItem: Identifiable {
     }
 
     var pathExtension: String {
-        return (nameWithExtension as NSString).pathExtension
+        return (nameWithExtension as NSString).pathExtension.lowercased()
     }
 
     var imageName: String {
         if isDirectory {
-            return "folder"
+            return "folder.fill"
         }
         if isAudioFile {
             return "music.note"
+        }
+        if isVideoFile {
+            return "video.fill"
         }
         if isYouTubeFile {
             return "play.rectangle.fill"
@@ -63,12 +70,14 @@ extension DocumentsExplorerItem: Identifiable {
         return AudioItem(url: url)
     }
 
-    func toYouTubeItem() -> YouTubeVideoItem {
-        guard let item = try? JSONDecoder().decode(YouTubeVideoItem.self, from: Data(contentsOf: url)) else { return YouTubeVideoItem(videoId: "") }
+    func toYouTubeItem() -> YouTubeItem {
+        guard let item = try? JSONDecoder().decode(YouTubeItem.self, from: Data(contentsOf: url)) else { return YouTubeItem(videoId: "") }
         return item
     }
 }
 
 fileprivate extension URL {
-    static let supportedFormats = ["aac", "adts", "ac3", "aif", "aiff", "aifc", "caf", "mp3", "mp4", "m4a", "snd", "au", "sd2", "wav"]
+    static let supportedFormats = URL.supportedAuidoFormats + URL.supportedVideoFormats
+    static let supportedAuidoFormats = ["aac", "adts", "ac3", "aif", "aiff", "aifc", "caf", "mp3", "m4a", "snd", "au", "sd2", "wav"]
+    static let supportedVideoFormats = ["mpeg", "avi", "mp4"]
 }

@@ -6,13 +6,24 @@
 //  Copyright © 2020 YongSeong Kim. All rights reserved.
 //
 
+import Combine
 import UIKit
 import SwiftUI
+
+enum SceneState {
+    case willConnectTo(session: UISceneSession)
+    case willEnterForeground
+    case willResignActive
+    case didBecomeActive
+    case didDisconnect
+    case didEnterBackground
+    case didOpenURLContexts(contexts: Set<UIOpenURLContext>)
+}
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    private let rootStore = RootStore()
+    private let sceneStateSubject = PassthroughSubject<SceneState, Never>()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -23,11 +34,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-            window.rootViewController = UIHostingController(rootView: RootView().environmentObject(rootStore))
+            window.rootViewController = UIHostingController(
+                rootView: RootView()
+                    .environment(\.appComponent, AppComponent(sceneStateSubject: sceneStateSubject))
+            )
             self.window = window
             window.makeKeyAndVisible()
         }
         UINavigationBar.appearance().tintColor = .systemBlack
+        sceneStateSubject.send(.willConnectTo(session: session))
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -35,25 +50,33 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This occurs shortly after the scene enters the background, or when its session is discarded.
         // Release any resources associated with this scene that can be re-created the next time the scene connects.
         // The scene may re-connect later, as its session was not neccessarily discarded (see `application:didDiscardSceneSessions` instead).
+        sceneStateSubject.send(.didDisconnect)
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
-        rootStore.sceneDidBecomeActive()
+        sceneStateSubject.send(.didBecomeActive)
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
-        rootStore.sceneWillResignActive()
+        sceneStateSubject.send(.willResignActive)
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
-        rootStore.sceneWillEnterForeground()
+        sceneStateSubject.send(.willEnterForeground)
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
-        rootStore.sceneDidEnterBackground()
+        sceneStateSubject.send(.didEnterBackground)
     }
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        rootStore.sceneDidOpenURLContexts(URLContexts)
+        for urlContext in URLContexts {
+            let fromURL = urlContext.url
+            if fromURL.isFileURL {
+                let toURL = URL.homeDirectory.appendingPathComponent(fromURL.lastPathComponent)
+                try? FileManager.default.copyItem(at: fromURL, to: toURL)
+            }
+        }
+        sceneStateSubject.send(.didOpenURLContexts(contexts: URLContexts))
     }
 }

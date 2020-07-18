@@ -11,7 +11,9 @@ import youtube_ios_player_helper
 
 class YouTubePlayer: NSObject, YTPlayerViewDelegate {
     fileprivate(set) var playItem: PlayItem?
-    fileprivate(set) var playerView: YTPlayerView?
+    fileprivate(set) var playerView: YTPlayerView? {
+        didSet { load() }
+    }
     let stateSubject = CurrentValueSubject<YTPlayerState, Never>(.unstarted)
     let playTimeSubject = CurrentValueSubject<Double, Never>(0)
     let durationSubject = CurrentValueSubject<Double, Never>(0)
@@ -30,6 +32,19 @@ class YouTubePlayer: NSObject, YTPlayerViewDelegate {
 
     func playerView(_ playerView: YTPlayerView, didPlayTime playTime: Float) {
         playTimeSubject.send(Double(playTime))
+    }
+
+    fileprivate func load() {
+        guard let item = self.playItem, let videoId = YouTubeItem.from(item: item)?.videoId else { return }
+        // https://developers.google.com/youtube/player_parameters?hl=ko#Parameters
+        playerView?.load(
+            withVideoId: videoId,
+            playerVars: [
+                "controls": 1,
+                "playsinline": 1,
+                "cc_load_policy": 1
+            ]
+        )
     }
 }
 
@@ -54,18 +69,11 @@ extension YouTubePlayer: Player {
             break
         }
     }
+
     func play(item: PlayItem) {
         playItem = item
-        guard let videoId = YouTubeVideoItem.from(item: item)?.videoId else { return }
-        // https://developers.google.com/youtube/player_parameters?hl=ko#Parameters
-        playerView?.load(
-            withVideoId: videoId,
-            playerVars: [
-                "controls": 1,
-                "playsinline": 1,
-                "cc_load_policy": 1
-            ]
-        )
+        load()
+        resume()
     }
 
     func pause() {
@@ -95,23 +103,21 @@ extension YouTubePlayer: Player {
     }
 }
 
-struct YouTubeView: UIViewRepresentable {
-    let player: Player
+struct YouTubeContentView: UIViewRepresentable {
+    let youtubePlayer: YouTubePlayer
 
-    func makeUIView(context: Context) -> YouTubeContentView {
-        let contentView = YouTubeContentView()
-        if let youtubePlayer = player as? YouTubePlayer {
-            youtubePlayer.playerView = contentView.playerView
-            contentView.playerView.delegate = youtubePlayer
-        }
-        return contentView
+    func makeUIView(context: Context) -> YouTubeContentUIView {
+        let uiView = YouTubeContentUIView()
+        youtubePlayer.playerView = uiView.playerView
+        uiView.playerView.delegate = youtubePlayer
+        return uiView
     }
 
-    func updateUIView(_ uiView: YouTubeContentView, context: Context) {
+    func updateUIView(_ uiView: YouTubeContentUIView, context: Context) {
     }
 }
 
-class YouTubeContentView: UIView {
+class YouTubeContentUIView: UIView {
     fileprivate let playerView = YTPlayerView()
 
     required init?(coder: NSCoder) {

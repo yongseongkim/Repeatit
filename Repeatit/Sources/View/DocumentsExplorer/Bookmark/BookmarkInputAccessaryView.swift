@@ -10,27 +10,27 @@ import SwiftUI
 struct BookmarkInputAccessaryView: View {
     static let height: CGFloat = 50
 
-    @EnvironmentObject var store: BookmarkStore
+    let player: Player
 
     var body: some View {
         HStack(alignment: .center, spacing: 0) {
             HStack(alignment: .center, spacing: 0) {
                 Spacer()
                 InputAccessaryTimeControlButton(direction: .backward, seconds: 5)
-                    .onTapGesture { self.store.player.moveBackward(by: 5) }
+                    .onTapGesture { self.player.moveBackward(by: 5) }
                 InputAccessaryTimeControlButton(direction: .backward, seconds: 1)
-                    .onTapGesture { self.store.player.moveBackward(by: 1) }
+                    .onTapGesture { self.player.moveBackward(by: 1) }
                 Spacer()
                 Button(
-                    action: { self.store.player.togglePlay() },
+                    action: { self.player.togglePlay() },
                     label: { self.buttonImage }
                 )
                     .frame(width: 44, height: 44)
                 Spacer()
                 InputAccessaryTimeControlButton(direction: .forward, seconds: 1)
-                    .onTapGesture { self.store.player.moveForward(by: 1) }
+                    .onTapGesture { self.player.moveForward(by: 1) }
                 InputAccessaryTimeControlButton(direction: .forward, seconds: 5)
-                    .onTapGesture { self.store.player.moveForward(by: 5) }
+                    .onTapGesture { self.player.moveForward(by: 5) }
                 Spacer()
             }
             Spacer()
@@ -48,13 +48,13 @@ struct BookmarkInputAccessaryView: View {
     }
 
     private var buttonImage: some View {
-        Image(systemName: self.store.isPlaying ? "pause.fill" : "play.fill")
+        Image(systemName: self.player.isPlaying ? "pause.fill" : "play.fill")
             .foregroundColor(Color.systemBlack)
     }
 }
 
 struct BookmarkInputAccessaryView_Previews: PreviewProvider {
     static var previews: some View {
-        BookmarkInputAccessaryView()
+        BookmarkInputAccessaryView(player: MediaPlayer())
     }
 }

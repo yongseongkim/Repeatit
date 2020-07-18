@@ -1,5 +1,5 @@
 //
-//  AudioPlayer.swift
+//  LegacyAudioPlayer.swift
 //  Repeatit
 //
 //  Created by KimYongSeong on 2017. 5. 14..
