@@ -38,6 +38,10 @@ extension DocumentsExplorerItem: Identifiable {
         return pathExtension == "youtube"
     }
 
+    var isSupportedSubtitleFile: Bool {
+        return URL.supportedSubtitleFormats.contains(pathExtension)
+    }
+
     var name: String {
         return url.deletingPathExtension().lastPathComponent
     }
@@ -80,4 +84,5 @@ fileprivate extension URL {
     static let supportedFormats = URL.supportedAuidoFormats + URL.supportedVideoFormats
     static let supportedAuidoFormats = ["aac", "adts", "ac3", "aif", "aiff", "aifc", "caf", "mp3", "m4a", "snd", "au", "sd2", "wav"]
     static let supportedVideoFormats = ["mpeg", "avi", "mp4"]
+    static let supportedSubtitleFormats = ["lrc", "srt", "vtt"]
 }

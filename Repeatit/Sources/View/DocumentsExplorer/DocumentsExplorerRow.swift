@@ -18,7 +18,7 @@ struct DocumentsExplorerSelectableRow: View {
             HStack(alignment: .center) {
                 Image(systemName: item.imageName)
                     .foregroundColor(.systemBlack)
-                Text(item.name)
+                Text(item.nameWithExtension)
                     .foregroundColor(.systemBlack)
                     .padding(.leading, 5)
                     .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
@@ -40,7 +40,7 @@ struct DocumentsExplorerRow: View {
             HStack(alignment: .center) {
                 Image(systemName: item.imageName)
                     .foregroundColor(.systemBlack)
-                Text(item.name)
+                Text(item.nameWithExtension)
                     .foregroundColor(.systemBlack)
                     .padding(.leading, 5)
                 Spacer()

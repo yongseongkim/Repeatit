@@ -17,11 +17,13 @@ struct DocumentsExplorerNavigationView: View {
         NavigationView {
             DocumentsExplorerListView(
                 model: .init(
-                    fileManager: model.fileManager,
-                    url: URL.homeDirectory
+                    fileManager: self.model.fileManager,
+                    url: URL.homeDirectory,
+                    isEditing: self.model.isEditing
                 ),
                 listener: .init(
                     onAppear: { self.model.visibleURL = $0 },
+                    onEditingTapGesture: { self.listener?.onEditingTapGesture?($0) },
                     onFileTapGesture: { self.listener?.onFileTapGesture?($0) }
                 )
             )
@@ -31,17 +33,20 @@ struct DocumentsExplorerNavigationView: View {
 
 extension DocumentsExplorerNavigationView {
     class ViewModel: ObservableObject {
+        @Published var isEditing: Bool
+
         let fileManager: DocumentsExplorerFileManager
         fileprivate(set) var visibleURL: URL
 
-        init(fileManager: DocumentsExplorerFileManager, visibleURL: URL, listener: Listener? = nil) {
+        init(fileManager: DocumentsExplorerFileManager, visibleURL: URL, isEditing: Bool = false, listener: Listener? = nil) {
             self.fileManager = fileManager
             self.visibleURL = visibleURL
+            self.isEditing = isEditing
         }
     }
 
-
     struct Listener {
+        let onEditingTapGesture: ((Bool) -> Void)?
         let onFileTapGesture: ((DocumentsExplorerItem) -> Void)?
     }
 }
@@ -50,7 +55,7 @@ struct DocumentsExplorerStackView_Previews: PreviewProvider {
     static var previews: some View {
         DocumentsExplorerNavigationView(
             model: .init(fileManager: DocumentsExplorerFileManager(), visibleURL: URL.homeDirectory),
-            listener: .init(onFileTapGesture: nil)
+            listener: .init(onEditingTapGesture: nil, onFileTapGesture: nil)
         )
     }
 }

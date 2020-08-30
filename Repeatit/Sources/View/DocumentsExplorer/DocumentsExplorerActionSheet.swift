@@ -61,10 +61,10 @@ extension DocumentsExplorerActionSheet {
     }
 
     struct Listener {
-        let onRenameButtonTapped: (() -> ())?
-        let onMoveButtonTapped: (() -> ())?
-        let onRemoveButtonTapped: (() -> ())?
-        let onCopyButtonTapped: (() -> ())?
+        let onRenameButtonTapped: (() -> Void)?
+        let onMoveButtonTapped: (() -> Void)?
+        let onRemoveButtonTapped: (() -> Void)?
+        let onCopyButtonTapped: (() -> Void)?
     }
 }
 

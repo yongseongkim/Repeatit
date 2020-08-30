@@ -6,10 +6,8 @@
 //
 
 import AVFoundation
-import RealmSwift
 import SwiftUI
 import UIKit
-
 
 struct VideoPlayerView: View {
     @ObservedObject var model: ViewModel
@@ -21,8 +19,7 @@ struct VideoPlayerView: View {
                     .frame(height: ceil(geometry.size.width * 9 / 16), alignment: .top)
                     .background(Color.systemGray4)
                 PlayerControlView(model: .init(player: self.model.player))
-                BookmarkListView(model: .init(player: self.model.player, bookmarks: self.model.bookmarks))
-                Spacer()
+                BookmarkListView(model: .init(player: self.model.player, controller: self.model.srtController))
             }
             .background(Color.systemGray6)
         }
@@ -35,20 +32,15 @@ extension VideoPlayerView {
     class ViewModel: ObservableObject {
         let player: MediaPlayer
         let item: PlayItem
-        var bookmarks: [Bookmark] {
-            if let realm = try? Realm() {
-                return realm.objects(BookmarkObject.self)
-                    .filter("relativePath = '\(URL.relativePathFromHome(url: item.url))'")
-                    .sorted(byKeyPath: "startMillis")
-                    .reduce([], { $0 + [Bookmark(object: $1)] })
-            } else {
-                return []
-            }
-        }
+        let srtController: SRTController
 
         init(player: MediaPlayer, item: PlayItem) {
             self.player = player
             self.item = item
+            self.srtController = SRTController(
+                url: item.url.deletingPathExtension().appendingPathExtension("srt"),
+                duration: Int(self.player.duration)
+            )
             self.player.play(item: item)
         }
     }

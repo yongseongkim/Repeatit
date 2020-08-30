@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import RealmSwift
 
 struct AudioPlayerView: View {
     @State var keyboardHeight: CGFloat = 0
@@ -29,7 +28,7 @@ struct AudioPlayerView: View {
                 }
             }
             .onTapGesture { UIApplication.hideKeyboard() }
-            BookmarkListView(model: .init(player: self.model.player, bookmarks: self.model.bookmarks))
+            BookmarkListView(model: .init(player: self.model.player, controller: self.model.lrcController))
             Spacer()
         }
         .background(Color.systemGray6)
@@ -43,20 +42,12 @@ extension AudioPlayerView {
     class ViewModel: ObservableObject {
         let player: MediaPlayer
         let item: PlayItem
-        var bookmarks: [Bookmark] {
-            if let realm = try? Realm() {
-                return realm.objects(BookmarkObject.self)
-                    .filter("relativePath = '\(URL.relativePathFromHome(url: item.url))'")
-                    .sorted(byKeyPath: "startMillis")
-                    .reduce([], { $0 + [Bookmark(object: $1)] })
-            } else {
-                return []
-            }
-        }
+        let lrcController: LRCController
 
         init(player: MediaPlayer, item: PlayItem) {
             self.player = player
             self.item = item
+            self.lrcController = LRCController(url: item.url.deletingPathExtension().appendingPathExtension("lrc"))
             self.player.play(item: item)
         }
     }

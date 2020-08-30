@@ -12,73 +12,74 @@ struct DocumentsExplorerListView: View {
     @ObservedObject var model: ViewModel
     let listener: Listener?
 
+    @ViewBuilder
     var body: some View {
         ZStack {
-            contentView
+            if self.model.items.isEmpty {
+                Text("There is no items.")
+            } else {
+                if self.model.isEditing {
+                    DocumentsExplorerMultiSelectableListView(items: self.model.items)
+                        .navigationBarBackButtonHidden(true)
+                        .navigationBarItems(
+                            trailing: Button(
+                                action: {
+//                                    self.model.isEditing = false
+                                    self.listener?.onEditingTapGesture?(false)
+                                },
+                                label: {
+                                    Image(systemName: "xmark")
+                                        .padding(12)
+                                        .foregroundColor(.systemBlack)
+                                }
+                            )
+                        )
+                        .padding(.bottom, 50)
+                } else {
+                    List(self.model.items, id: \.nameWithExtension) { item in
+                        if item.isDirectory {
+                            NavigationLink(
+                                destination:
+                                    DocumentsExplorerListView(
+                                    model: .init(
+                                        fileManager: self.model.fileManager,
+                                        url: item.url
+                                    ),
+                                    listener: self.listener
+                                ),
+                                label: {
+                                    DocumentsExplorerRow(item: item)
+                                }
+                            )
+                        } else {
+                            DocumentsExplorerRow(item: item)
+                                .onTapGesture {
+                                    self.listener?.onFileTapGesture?(item)
+                                }
+                        }
+                    }
+                    .lineSpacing(0)
+                    .navigationBarBackButtonHidden(false)
+                    .navigationBarItems(
+                        trailing: HStack {
+                            Button(
+                                action: {
+//                                    self.model.isEditing = true
+                                    self.listener?.onEditingTapGesture?(true)
+                                },
+                                label: {
+                                    Image(systemName: "list.bullet")
+                                        .padding(12)
+                                        .foregroundColor(.systemBlack)
+                                }
+                            )
+                        }
+                    )
+                }
+            }
         }
         .navigationBarTitle(self.model.url.lastPathComponent)
         .onAppear { self.listener?.onAppear?(self.model.url) }
-    }
-
-    @ViewBuilder
-    var contentView: some View {
-        let items = model.fileManager.getItems(in: model.url)
-        if items.isEmpty {
-            Text("There is no items.")
-        } else {
-            if self.model.isEditing {
-                DocumentsExplorerMultiSelectableListView(items: items)
-                    .navigationBarBackButtonHidden(true)
-                    .navigationBarItems(
-                        trailing: Button(
-                            action: { self.model.isEditing = false },
-                            label: {
-                                Image(systemName: "xmark")
-                                    .padding(12)
-                                    .foregroundColor(.systemBlack)
-                            }
-                        )
-                    )
-                    .padding(.bottom, 50)
-            } else {
-                List(items, id: \.nameWithExtension) { item in
-                    if item.isDirectory {
-                        NavigationLink(
-                            destination:
-                                DocumentsExplorerListView(
-                                model: .init(
-                                    fileManager: self.model.fileManager,
-                                    url: item.url
-                                ),
-                                listener: self.listener
-                            ),
-                            label: {
-                                DocumentsExplorerRow(item: item)
-                            }
-                        )
-                    } else {
-                        DocumentsExplorerRow(item: item)
-                            .onTapGesture {
-                                self.listener?.onFileTapGesture?(item)
-                            }
-                    }
-                }
-                .lineSpacing(0)
-                .navigationBarBackButtonHidden(false)
-                .navigationBarItems(
-                    trailing: HStack {
-                        Button(
-                            action: { self.model.isEditing = true },
-                            label: {
-                                Image(systemName: "list.bullet")
-                                    .padding(12)
-                                    .foregroundColor(.systemBlack)
-                            }
-                        )
-                    }
-                )
-            }
-        }
     }
 }
 
@@ -86,17 +87,20 @@ extension DocumentsExplorerListView {
     class ViewModel: ObservableObject {
         let fileManager: DocumentsExplorerFileManager
         let url: URL
+        @Published var items: [DocumentsExplorerItem]
         @Published var isEditing: Bool
 
         init(fileManager: DocumentsExplorerFileManager, url: URL, isEditing: Bool = false) {
             self.fileManager = fileManager
             self.url = url
+            self.items = fileManager.getItems(in: url)
             self.isEditing = isEditing
         }
     }
 
     struct Listener {
         let onAppear: ((URL) -> Void)?
+        let onEditingTapGesture: ((Bool) -> Void)?
         let onFileTapGesture: ((DocumentsExplorerItem) -> Void)?
     }
 }

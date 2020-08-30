@@ -22,14 +22,14 @@ struct MultilineTextField: UIViewRepresentable {
     @Binding var text: String
     @Binding var calculatedHeight: CGFloat
     let inputAccessaryContent: UIView
-    let onDone: (() -> Void)?
+    let listener: Listener?
 
     init<Content: View>(
         text: Binding<String>,
         calculatedHeight: Binding<CGFloat>,
         @ViewBuilder inputAccessaryContent: (() -> Content),
         inputAccessaryContentHeight: CGFloat,
-        onDone: (() -> Void)?
+        listener: Listener?
     ) {
         self._text = text
         self._calculatedHeight = calculatedHeight
@@ -38,7 +38,7 @@ struct MultilineTextField: UIViewRepresentable {
         }.view!
         uiView.frame = CGRect(x: 0, y: 0, width: UIScreen.mainWidth, height: inputAccessaryContentHeight)
         self.inputAccessaryContent = uiView
-        self.onDone = onDone
+        self.listener = listener
     }
 
     func makeUIView(context: Context) -> UITextView {
@@ -51,7 +51,7 @@ struct MultilineTextField: UIViewRepresentable {
             $0.backgroundColor = .clear
             $0.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
             $0.inputAccessoryView = inputAccessaryContent
-            if onDone != nil {
+            if listener?.onDone != nil {
                 $0.returnKeyType = .done
             }
         }
@@ -65,20 +65,18 @@ struct MultilineTextField: UIViewRepresentable {
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(text: $text, height: $calculatedHeight, onDone: onDone)
+        Coordinator(text: $text, height: $calculatedHeight, listener: listener)
     }
 
     final class Coordinator: NSObject, UITextViewDelegate {
         var text: Binding<String>
         var calculatedHeight: Binding<CGFloat>
-        var onEndEditing: ((String) -> Void)?
-        var onDone: (() -> Void)?
+        let listener: MultilineTextField.Listener?
 
-        init(text: Binding<String>, height: Binding<CGFloat>, onEndEditing: ((String) -> Void)? = nil, onDone: (() -> Void)? = nil) {
+        init(text: Binding<String>, height: Binding<CGFloat>, listener: MultilineTextField.Listener? = nil) {
             self.text = text
             self.calculatedHeight = height
-            self.onEndEditing = onEndEditing
-            self.onDone = onDone
+            self.listener = listener
         }
 
         func textViewDidChange(_ textView: UITextView) {
@@ -87,17 +85,24 @@ struct MultilineTextField: UIViewRepresentable {
         }
 
         func textViewDidEndEditing(_ textView: UITextView) {
-            onEndEditing?(textView.text)
+            listener?.onEndEditing?(textView.text)
         }
 
         func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-            if let onDone = self.onDone, text == "\n" {
+            if let onDone = self.listener?.onDone, text == "\n" {
                 textView.resignFirstResponder()
                 onDone()
                 return false
             }
             return true
         }
+    }
+}
+
+extension MultilineTextField {
+    struct Listener {
+        var onEndEditing: ((String) -> Void)?
+        var onDone: (() -> Void)?
     }
 }
 
@@ -108,7 +113,7 @@ struct TextView_Previews: PreviewProvider {
             calculatedHeight: .constant(100),
             inputAccessaryContent: { EmptyView() },
             inputAccessaryContentHeight: 44,
-            onDone: nil
+            listener: nil
         )
     }
 }

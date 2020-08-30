@@ -6,7 +6,6 @@
 //
 
 import Combine
-import RealmSwift
 import SwiftUI
 import youtube_ios_player_helper
 
@@ -23,34 +22,43 @@ struct YouTubePlayerView: View {
                 if self.keyboardHeight ==  0 {
                     PlayerControlView(model: .init(player: self.model.player))
                 }
-                BookmarkListView(model: .init(player: self.model.player, bookmarks: self.model.bookmarks))
-                Spacer()
+                if self.model.isLoading {
+                    InfiniteLoadingView()
+                        .frame(width: 44, height: 44)
+                } else {
+                    BookmarkListView(model: .init(player: self.model.player, controller: self.model.webVTTController!))
+                }
             }
             .modifier(KeyboardHeightDetector(self.$keyboardHeight))
             .background(Color.systemGray6)
+            Spacer()
         }
     }
 }
 
 extension YouTubePlayerView {
     class ViewModel: ObservableObject {
+        @Published var isLoading: Bool = true
+
         let player: YouTubePlayer
         let item: PlayItem
-        var bookmarks: [Bookmark] {
-            if let realm = try? Realm() {
-                return realm.objects(BookmarkObject.self)
-                    .filter("relativePath = '\(URL.relativePathFromHome(url: item.url))'")
-                    .sorted(byKeyPath: "startMillis")
-                    .reduce([], { $0 + [Bookmark(object: $1)] })
-            } else {
-                return []
-            }
-        }
+        var webVTTController: WebVTTController?
+        var cancellables: [AnyCancellable] = []
 
         init(player: YouTubePlayer, item: PlayItem) {
             self.player = player
             self.item = item
             self.player.play(item: item)
+            self.player.durationSubject.sink { duration in
+                if duration > 0 {
+                    self.webVTTController = WebVTTController(
+                        url: item.url.deletingPathExtension().appendingPathExtension("vtt"),
+                        duration: Int(duration)
+                    )
+                    self.isLoading = false
+                }
+            }
+            .store(in: &cancellables)
         }
     }
 }

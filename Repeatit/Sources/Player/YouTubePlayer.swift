@@ -21,7 +21,7 @@ class YouTubePlayer: NSObject, YTPlayerViewDelegate {
 
     func playerViewDidBecomeReady(_ playerView: YTPlayerView) {
         stateSubject.send(.paused)
-        playerView.duration { [weak self] time, error in
+        playerView.duration { [weak self] time, _ in
             self?.durationSubject.send(time)
         }
     }

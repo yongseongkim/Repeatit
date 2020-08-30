@@ -9,6 +9,13 @@
 import Foundation
 
 extension String {
+    func substring(with range: NSRange) -> String {
+        guard range.location != NSNotFound else { return "" }
+        let start = self.index(self.startIndex, offsetBy: range.lowerBound)
+        let end = self.index(self.startIndex, offsetBy: range.upperBound)
+        return String(self[start..<end])
+    }
+
     func split(usingRegex pattern: String) -> [String] {
         guard let regex = try? NSRegularExpression(pattern: pattern) else { return []}
         let matches = regex.matches(in: self, range: NSRange(0..<utf16.count))

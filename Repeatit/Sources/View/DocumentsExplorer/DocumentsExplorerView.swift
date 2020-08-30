@@ -16,7 +16,10 @@ struct DocumentsExplorerView: View {
             ZStack {
                 DocumentsExplorerNavigationView(
                     model: self.model.navigationViewModel,
-                    listener: .init(onFileTapGesture: { self.model.handleSelectedItem($0) })
+                    listener: .init(
+                        onEditingTapGesture: { self.model.handleEditingTapGesture(isEditing: $0) },
+                        onFileTapGesture: { self.model.handleSelectedItem($0) }
+                    )
                 )
                     .onPreferenceChange(DocumentsExplorerSelectedItemsKey.self, perform: { self.model.selectedItems = $0 })
                 if self.model.isEditing {
@@ -53,6 +56,13 @@ struct DocumentsExplorerView: View {
                 }
             }
         }
+        .background(
+            EmptyView().sheet(
+                item: .init(get: { self.model.selectedSubtitleItem }, set: { self.model.selectedSubtitleItem = $0 }),
+                onDismiss: { self.model.selectedSubtitleItem = nil },
+                content: { TextContentsView(model: .init(item: $0)) }
+            )
+        )
         // Show players.
         .background(
             EmptyView().sheet(
@@ -121,9 +131,10 @@ extension DocumentsExplorerView {
         @Published var isDestinationViewShowingForCopy = false
         @Published var isDestinationViewShowingForMove = false
         @Published var isEditing: Bool = false
-        @Published var selectedAudioItem: DocumentsExplorerItem? = nil
-        @Published var selectedVideoItem: DocumentsExplorerItem? = nil
-        @Published var selectedYouTubeItem: DocumentsExplorerItem? = nil
+        @Published var selectedAudioItem: DocumentsExplorerItem?
+        @Published var selectedVideoItem: DocumentsExplorerItem?
+        @Published var selectedYouTubeItem: DocumentsExplorerItem?
+        @Published var selectedSubtitleItem: DocumentsExplorerItem?
         var selectedItems: Set<DocumentsExplorerItem> = []
 
         init(appComponent: AppComponent) {
@@ -144,7 +155,14 @@ extension DocumentsExplorerView {
                 selectedVideoItem = item
             } else if item.isYouTubeFile {
                 selectedYouTubeItem = item
+            } else if item.isSupportedSubtitleFile {
+                selectedSubtitleItem = item
             }
+        }
+
+        func handleEditingTapGesture(isEditing: Bool) {
+            self.isEditing = isEditing
+            self.navigationViewModel.isEditing = isEditing
         }
     }
 }
@@ -154,36 +172,3 @@ struct DocumentsExplorer_Previews: PreviewProvider {
         DocumentsExplorerView(model: .init(appComponent: AppComponent()))
     }
 }
-
-
-//guard let itemForRename = self.store.selectedItems.first else { return }
-//var attributes = EKAttributes()
-//attributes.name = "EntryForRename"
-//attributes.displayDuration = .infinity
-//attributes.screenBackground = .color(color: EKColor(UIColor.black.withAlphaComponent(0.6)))
-//attributes.position = .center
-//attributes.entranceAnimation = .init(
-//    scale: .init(from: 0.3, to: 1, duration: 0.15),
-//    fade: .init(from: 0.8, to: 1, duration: 0.1)
-//)
-//attributes.exitAnimation = .init(
-//    scale: .init(from: 1, to: 0.3, duration: 0.15),
-//    fade: .init(from: 1, to: 0.0, duration: 0.1)
-//)
-//let offset = EKAttributes.PositionConstraints.KeyboardRelation.Offset(bottom: 10, screenEdgeResistance: 20)
-//let keyboardRelation = EKAttributes.PositionConstraints.KeyboardRelation.bind(offset: offset)
-//attributes.positionConstraints.keyboardRelation = keyboardRelation
-//SwiftEntryKit.display(
-//    builder: {
-//        DocumentsExplorerRenamePopup(
-//            textInput: itemForRename.name,
-//            onPositiveButtonTapGesture: {
-//                self.store.isEditing = false
-//                self.store.rename(item: itemForRename, newName: $0)
-//                SwiftEntryKit.dismiss(.specific(entryName: "EntryForRename"))
-//            },
-//            onNegativeButtonTapGesture: { SwiftEntryKit.dismiss(.specific(entryName: "EntryForRename")) }
-//        )
-//    },
-//    using: attributes
-//)

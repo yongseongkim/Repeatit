@@ -8,33 +8,15 @@
 
 import Crashlytics
 import Fabric
-import Firebase
-import RealmSwift
 import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         if !FileManager.default.fileExists(atPath: URL.homeDirectory.path) {
-            try! FileManager.default.createDirectory(at: URL.homeDirectory, withIntermediateDirectories: true)
+            try? FileManager.default.createDirectory(at: URL.homeDirectory, withIntermediateDirectories: true)
         }
-
-        // Delete Realm files.
-//        let realmURL = Realm.Configuration.defaultConfiguration.fileURL!
-//        let realmURLs = [
-//            realmURL,
-//            realmURL.appendingPathExtension("lock"),
-//            realmURL.appendingPathExtension("note"),
-//            realmURL.appendingPathExtension("management")
-//        ]
-//        for URL in realmURLs {
-//            do {
-//                try FileManager.default.removeItem(at: URL)
-//            } catch {
-//                // handle error
-//            }
-//        }
 
         // Sample Media File
         do {
@@ -57,7 +39,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         // Report
-        FirebaseApp.configure()
         Fabric.with([Crashlytics.self])
 
         // View
@@ -80,4 +61,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
 }
-
