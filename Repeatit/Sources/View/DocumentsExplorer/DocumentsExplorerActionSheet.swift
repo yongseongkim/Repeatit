@@ -19,7 +19,9 @@ struct DocumentsExplorerActionSheet: View {
                 .foregroundColor(self.renameButtonColor)
                 .frame(width: 24, height: 24)
                 .padding(12)
-                .onTapGesture { self.listener?.onRenameButtonTapped?() }
+                .onTapGesture {
+                    self.listener?.onRenameButtonTapped?()
+                }
                 .disabled(self.model.isRenameButtonDisabled)
             Spacer()
             Image(systemName: "arrow.right.square")
@@ -27,7 +29,9 @@ struct DocumentsExplorerActionSheet: View {
                 .foregroundColor(Color.systemBlack)
                 .frame(width: 24, height: 24)
                 .padding(12)
-                .onTapGesture { self.listener?.onMoveButtonTapped?() }
+                .onTapGesture {
+                    self.listener?.onMoveButtonTapped?()
+                }
             Spacer()
             Image(systemName: "trash")
                 .resizable()
@@ -55,9 +59,6 @@ struct DocumentsExplorerActionSheet: View {
 extension DocumentsExplorerActionSheet {
     class ViewModel: ObservableObject {
         @Published var isRenameButtonDisabled: Bool = true
-
-        init() {
-        }
     }
 
     struct Listener {

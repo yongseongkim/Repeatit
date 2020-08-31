@@ -12,23 +12,27 @@ struct BookmarkListView: View {
     @ObservedObject var model: ViewModel
 
     var body: some View {
-        List {
-            ForEach(self.model.bookmarks, id: \.millis, content: { bookmark in
-                BookmarkEditItemView(
-                    model: .init(
-                        bookmark: bookmark,
-                        player: self.model.player
-                    ),
-                    listener: .init(
-                        onTapGesture: { self.model.player.move(to: Double($0 / 1000)) },
-                        onEndEditing: { self.model.handleTextChange(millis: $0, text: $1) },
-                        onDone: { self.model.handleTextChange(millis: $0, text: $1) }
+        GeometryReader { geometry in
+            List {
+                ForEach(self.model.bookmarks, id: \.millis, content: { bookmark in
+                    BookmarkEditItemView(
+                        model: .init(
+                            bookmark: bookmark,
+                            player: self.model.player
+                        ),
+                        listener: .init(
+                            onTapGesture: { self.model.player.move(to: Double($0 / 1000)) },
+                            onEndEditing: { self.model.handleTextChange(millis: $0, text: $1) },
+                            onDone: { self.model.handleTextChange(millis: $0, text: $1) }
+                        )
                     )
-                )
-            })
-            .onDelete { idxSet in idxSet.forEach { self.model.deleteBookmark(at: $0) } }
-            BookmarkAddItemView(listener: .init(onTapGesture: { self.model.addBookmark() }))
+                })
+                .onDelete { idxSet in idxSet.forEach { self.model.deleteBookmark(at: $0) } }
+                BookmarkAddItemView(listener: .init(onTapGesture: { self.model.addBookmark() }))
+                    .padding(.bottom, geometry.safeAreaInsets.bottom)
+            }
         }
+        .background(Color.systemGray6)
     }
 }
 

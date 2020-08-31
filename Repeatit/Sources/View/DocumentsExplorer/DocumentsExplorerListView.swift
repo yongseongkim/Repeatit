@@ -6,6 +6,7 @@
 //  Copyright © 2020 yongseongkim. All rights reserved.
 //
 
+import Combine
 import SwiftUI
 
 struct DocumentsExplorerListView: View {
@@ -23,10 +24,7 @@ struct DocumentsExplorerListView: View {
                         .navigationBarBackButtonHidden(true)
                         .navigationBarItems(
                             trailing: Button(
-                                action: {
-//                                    self.model.isEditing = false
-                                    self.listener?.onEditingTapGesture?(false)
-                                },
+                                action: { self.listener?.onEditingTapGesture?(false) },
                                 label: {
                                     Image(systemName: "xmark")
                                         .padding(12)
@@ -63,10 +61,7 @@ struct DocumentsExplorerListView: View {
                     .navigationBarItems(
                         trailing: HStack {
                             Button(
-                                action: {
-//                                    self.model.isEditing = true
-                                    self.listener?.onEditingTapGesture?(true)
-                                },
+                                action: { self.listener?.onEditingTapGesture?(true) },
                                 label: {
                                     Image(systemName: "list.bullet")
                                         .padding(12)
@@ -85,16 +80,24 @@ struct DocumentsExplorerListView: View {
 
 extension DocumentsExplorerListView {
     class ViewModel: ObservableObject {
+        @Published var items: [DocumentsExplorerItem]
+
         let fileManager: DocumentsExplorerFileManager
         let url: URL
-        @Published var items: [DocumentsExplorerItem]
-        @Published var isEditing: Bool
+        let isEditing: Bool
+        var cancellables: [AnyCancellable] = []
 
         init(fileManager: DocumentsExplorerFileManager, url: URL, isEditing: Bool = false) {
             self.fileManager = fileManager
             self.url = url
             self.items = fileManager.getItems(in: url)
             self.isEditing = isEditing
+            fileManager.changesPublisher
+                .filter { $0 == url}
+                .sink { [weak self] in
+                    self?.items = fileManager.getItems(in: $0)
+                }
+                .store(in: &cancellables)
         }
     }
 

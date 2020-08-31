@@ -17,6 +17,10 @@ Pods/
 # Swift Package Manager
 .build/
 
+# Fastlane
+fastlane/.env.secret
+fastlane/report.xml
+
 # Others
 *.pbxuser
 *.xcworkspacedata

@@ -29,9 +29,8 @@ struct AudioPlayerView: View {
             }
             .onTapGesture { UIApplication.hideKeyboard() }
             BookmarkListView(model: .init(player: self.model.player, controller: self.model.lrcController))
-            Spacer()
         }
-        .background(Color.systemGray6)
+        .edgesIgnoringSafeArea(.bottom)
         .modifier(KeyboardHeightDetector(self.$keyboardHeight))
         .onAppear { self.model.player.resume() }
         .onDisappear { self.model.player.pause() }

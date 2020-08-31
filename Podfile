@@ -4,6 +4,8 @@ platform :ios, '13.0'
 use_frameworks!
 target 'Repeatit' do
     pod 'youtube-ios-player-helper'
+    pod 'SwiftEntryKit'
+
     # Report
     pod 'Firebase/Analytics'
     pod 'Fabric'

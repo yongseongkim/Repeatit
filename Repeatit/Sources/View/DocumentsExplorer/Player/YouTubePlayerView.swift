@@ -29,10 +29,10 @@ struct YouTubePlayerView: View {
                     BookmarkListView(model: .init(player: self.model.player, controller: self.model.webVTTController!))
                 }
             }
-            .modifier(KeyboardHeightDetector(self.$keyboardHeight))
-            .background(Color.systemGray6)
             Spacer()
         }
+        .edgesIgnoringSafeArea(.bottom)
+        .modifier(KeyboardHeightDetector(self.$keyboardHeight))
     }
 }
 

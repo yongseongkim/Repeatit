@@ -82,10 +82,9 @@ class WebVTTController {
     }
 
     func removeCue(at millis: Int) {
-        for idx in 0..<_cues.count where millis == _cues[idx].startMillis {
-            _cues.remove(at: idx)
-            changesSubject.send(())
-        }
+        guard let idx = _cues.firstIndex(where: { $0.startMillis == millis }) else { return }
+        _cues.remove(at: idx)
+        changesSubject.send(())
         sync()
     }
 

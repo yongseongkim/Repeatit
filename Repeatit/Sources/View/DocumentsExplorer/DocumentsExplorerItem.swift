@@ -83,6 +83,6 @@ extension DocumentsExplorerItem: Identifiable {
 fileprivate extension URL {
     static let supportedFormats = URL.supportedAuidoFormats + URL.supportedVideoFormats
     static let supportedAuidoFormats = ["aac", "adts", "ac3", "aif", "aiff", "aifc", "caf", "mp3", "m4a", "snd", "au", "sd2", "wav"]
-    static let supportedVideoFormats = ["mpeg", "avi", "mp4"]
+    static let supportedVideoFormats = ["mpeg", "avi", "mp4", "mov"]
     static let supportedSubtitleFormats = ["lrc", "srt", "vtt"]
 }

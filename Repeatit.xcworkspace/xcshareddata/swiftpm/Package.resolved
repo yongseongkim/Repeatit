@@ -2,15 +2,6 @@
   "object": {
     "pins": [
       {
-        "package": "QuickLayout",
-        "repositoryURL": "https://github.com/huri000/QuickLayout",
-        "state": {
-          "branch": null,
-          "revision": "6be62decbe508d8fc8f9dbafc349d05bab03c38b",
-          "version": "3.0.1"
-        }
-      },
-      {
         "package": "RxSwift",
         "repositoryURL": "https://github.com/ReactiveX/RxSwift",
         "state": {
@@ -26,15 +17,6 @@
           "branch": null,
           "revision": "d458564516e5676af9c70b4f4b2a9178294f1bc6",
           "version": "5.0.1"
-        }
-      },
-      {
-        "package": "SwiftEntryKit",
-        "repositoryURL": "https://github.com/huri000/SwiftEntryKit",
-        "state": {
-          "branch": null,
-          "revision": "3cc32ac55323829f6099fbc512a8b8ea38e84f65",
-          "version": "1.1.4"
         }
       }
     ]

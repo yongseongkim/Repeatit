@@ -39,7 +39,7 @@ struct BookmarkEditItemView: View {
             MultilineTextField(
                 text: .init(get: { self.model.text }, set: { self.model.text = $0 }),
                 calculatedHeight: $textFieldHeight,
-                inputAccessaryContent: { BookmarkInputAccessaryView(player: self.model.player) },
+                inputAccessaryContent: { BookmarkInputAccessaryView(model: .init(player: self.model.player)) },
                 inputAccessaryContentHeight: BookmarkInputAccessaryView.height,
                 listener: .init(
                     onEndEditing: { self.listener?.onEndEditing?(self.model.millis, $0) },
@@ -57,11 +57,9 @@ struct BookmarkEditItemView: View {
 
     private var formattedTime: String {
         let time = Double(model.millis) / 1000
-        // let hour = Int(time / 3600)
         let minutes = Int(time.truncatingRemainder(dividingBy: 3600) / 60)
         let seconds = time.truncatingRemainder(dividingBy: 60)
         let remainder = Int((seconds * 10).truncatingRemainder(dividingBy: 10))
-        // return String.init(format: "%02d:%02d:%02d.%d", hour, minutes, Int(seconds), remainder)
         return String.init(format: "%02d:%02d.%d", minutes, Int(seconds), remainder)
     }
 }

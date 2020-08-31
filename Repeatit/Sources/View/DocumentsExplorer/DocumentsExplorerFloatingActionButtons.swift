@@ -21,9 +21,7 @@ struct DocumentsExplorerFloatingActionButtons: View {
                 VStack(spacing: 15) {
                     DocumentsExplorerFloatingActionButton(
                         imageSystemName: "music.note",
-                        onTapGesture: {
-                            self.model.isDocumentsPickerShowing = true
-                        }
+                        onTapGesture: { self.model.isDocumentsPickerShowing = true }
                     )
                     .sheet(
                         isPresented: .init(get: { self.model.isDocumentsPickerShowing }, set: { self.model.isDocumentsPickerShowing = $0 }),

@@ -65,12 +65,16 @@ PODS:
   - nanopb/decode (1.30905.0)
   - nanopb/encode (1.30905.0)
   - PromisesObjC (1.2.10)
+  - QuickLayout (3.0.0)
+  - SwiftEntryKit (1.2.3):
+    - QuickLayout (= 3.0.0)
   - youtube-ios-player-helper (1.0.2)
 
 DEPENDENCIES:
   - Crashlytics
   - Fabric
   - Firebase/Analytics
+  - SwiftEntryKit
   - youtube-ios-player-helper
 
 SPEC REPOS:
@@ -87,6 +91,8 @@ SPEC REPOS:
     - GoogleUtilities
     - nanopb
     - PromisesObjC
+    - QuickLayout
+    - SwiftEntryKit
     - youtube-ios-player-helper
 
 SPEC CHECKSUMS:
@@ -102,8 +108,10 @@ SPEC CHECKSUMS:
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
   PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
+  QuickLayout: 07b45a72b10083fee3f095990cfed1c1e7b27f0a
+  SwiftEntryKit: 340713c2e4a6662c5149629990bf1088bf5f0389
   youtube-ios-player-helper: 40b96e52c22445f0fdc43731cefa32c67075ff81
 
-PODFILE CHECKSUM: b192e14876c56f8ba31d0d24bdfea081c2405dd3
+PODFILE CHECKSUM: 52e6e62acc4d6080986514da41acc1b0ab6d0111
 
 COCOAPODS: 1.9.1

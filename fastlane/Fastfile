@@ -1,0 +1,49 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+# To avoid Apple 2 factor authenticate, use app specific password.
+fastlane_require 'dotenv'
+before_all do
+  Dotenv.overload '.env.secret'
+end
+puts "FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: #{ENV['FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD']}"
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Description of what the lane does"
+  # Build
+  lane :itc do
+    match(
+      type: "appstore", 
+      app_identifier: "kr.co.yongseongkim.Repeatit",
+      readonly: true
+    )
+    increment_build_number
+    build_app(
+      scheme: "Repeatit",
+      configuration: "Release",
+      clean: true,
+      output_directory: "./build/"
+    )
+    upload_to_testflight(
+      app_identifier: "kr.co.yongseongkim.Repeatit",
+      username: "yongseongkimm@gmail.com",
+      ipa: "./build/Repeatit.ipa",
+      beta_app_description: "Repeatit for iOS",
+      skip_waiting_for_build_processing: true
+    )
+  end
+end

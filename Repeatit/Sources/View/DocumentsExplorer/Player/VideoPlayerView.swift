@@ -10,6 +10,7 @@ import SwiftUI
 import UIKit
 
 struct VideoPlayerView: View {
+    @State var keyboardHeight: CGFloat = 0
     @ObservedObject var model: ViewModel
 
     var body: some View {
@@ -21,8 +22,10 @@ struct VideoPlayerView: View {
                 PlayerControlView(model: .init(player: self.model.player))
                 BookmarkListView(model: .init(player: self.model.player, controller: self.model.srtController))
             }
-            .background(Color.systemGray6)
+            Spacer()
         }
+        .edgesIgnoringSafeArea(.bottom)
+        .modifier(KeyboardHeightDetector(self.$keyboardHeight))
         .onAppear { self.model.player.resume() }
         .onDisappear { self.model.player.pause() }
     }

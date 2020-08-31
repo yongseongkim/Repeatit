@@ -42,7 +42,7 @@ class LRCController {
 
     func addLine(at millis: Int) {
         // Do not add same time line.
-        if _lines.contains(where: { $0.millis == millis}) {
+        if _lines.contains(where: { $0.millis == millis }) {
             return
         }
         let idx = _lines.firstIndex(where: { $0.millis > millis}) ?? _lines.count
@@ -52,10 +52,9 @@ class LRCController {
     }
 
     func removeLine(at millis: Int) {
-        for i in 0..<_lines.count where millis == _lines[i].millis {
-            _lines.remove(at: i)
-            changesSubject.send(())
-        }
+        guard let idx = _lines.firstIndex(where: { $0.millis == millis }) else { return }
+        _lines.remove(at: idx)
+        changesSubject.send(())
         sync()
     }
 

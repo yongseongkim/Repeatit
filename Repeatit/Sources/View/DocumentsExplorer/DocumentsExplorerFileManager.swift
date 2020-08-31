@@ -5,19 +5,30 @@
 //  Created by YongSeong Kim on 2020/07/13.
 //
 
+import Combine
 import Foundation
 
 class DocumentsExplorerFileManager {
+    private let changesSubject = PassthroughSubject<URL, Never>()
+    var changesPublisher: AnyPublisher<URL, Never> {
+        changesSubject.eraseToAnyPublisher()
+    }
+
     func getItems(in url: URL) -> [DocumentsExplorerItem] {
         return FileManager.default.getDocumentsItems(in: url)
     }
 
     func createNewDirectory(in url: URL, dirName: String) {
-        try? FileManager.default.createDirectory(
-            at: url.appendingPathComponent(dirName),
-            withIntermediateDirectories: true,
-            attributes: nil
-        )
+        do {
+            try FileManager.default.createDirectory(
+                at: url.appendingPathComponent(dirName),
+                withIntermediateDirectories: true,
+                attributes: nil
+            )
+            changesSubject.send(url)
+        } catch let exception {
+            print(exception)
+        }
     }
 
     func createYouTubeFile(url: URL, videoId: String, fileName: String) {
@@ -25,6 +36,7 @@ class DocumentsExplorerFileManager {
         do {
             let data = try JSONEncoder().encode(file)
             try data.write(to: url.appendingPathComponent("\(fileName).youtube"))
+            changesSubject.send(url)
         } catch let exception {
             print(exception)
         }
@@ -36,6 +48,7 @@ class DocumentsExplorerFileManager {
         let toURL = parentDirectoryURL.appendingPathComponent("\(newName).\(fromURL.pathExtension)")
         do {
             try FileManager.default.moveItem(at: fromURL, to: toURL)
+            changesSubject.send(parentDirectoryURL)
         } catch let exception {
             // TODO: handle exception
             print(exception)
@@ -43,16 +56,20 @@ class DocumentsExplorerFileManager {
     }
 
     func move(items: [DocumentsExplorerItem], to: URL) {
+        var urls = Set<URL>()
         items.forEach { item in
             let fromURL = item.url
             let toURL = to.appendingPathComponent(item.nameWithExtension)
             do {
                 try FileManager.default.moveItem(at: fromURL, to: toURL)
+                urls.insert(fromURL)
+                urls.insert(toURL)
             } catch let exception {
                 // TODO: handle exception
                 print(exception)
             }
         }
+        urls.forEach { changesSubject.send($0) }
     }
 
     func copy(items: [DocumentsExplorerItem], to: URL) {
@@ -64,6 +81,7 @@ class DocumentsExplorerFileManager {
             let toURL = to.appendingPathComponent(url.lastPathComponent)
             do {
                 try FileManager.default.copyItem(at: url, to: toURL)
+                changesSubject.send(to)
             } catch let exception {
                 // TODO: handle exception
                 print(exception)
@@ -72,14 +90,17 @@ class DocumentsExplorerFileManager {
     }
 
     func remove(items: [DocumentsExplorerItem]) {
+        var urls = Set<URL>()
         items.forEach { item in
             do {
                 try FileManager.default.removeItem(at: item.url)
+                urls.insert(item.url.deletingLastPathComponent())
             } catch let exception {
                 // TODO: handle exception
                 print(exception)
             }
         }
+        urls.forEach { changesSubject.send($0) }
     }
 }
 
