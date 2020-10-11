@@ -17,4 +17,13 @@ extension FileManager {
             return (url: fileURL, isDir: isDirectory.boolValue)
         }
     }
+
+    func getDocumentItems(in url: URL) -> [DocumentsExplorerItem] {
+        let files = getFiles(in: url)
+        return (
+            files.filter { $0.isDir }.sorted { $0.url.lastPathComponent < $1.url.lastPathComponent }
+                + files.filter { !$0.isDir }.sorted { $0.url.lastPathComponent < $1.url.lastPathComponent }
+            )
+            .map { DocumentsExplorerItem(url: $0.url, isDirectory: $0.isDir) }
+    }
 }

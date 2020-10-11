@@ -15,7 +15,7 @@ class DocumentsExplorerFileManager {
     }
 
     func getItems(in url: URL) -> [DocumentsExplorerItem] {
-        return FileManager.default.getDocumentsItems(in: url)
+        return FileManager.default.getDocumentItems(in: url)
     }
 
     func createNewDirectory(in url: URL, dirName: String) {
@@ -101,16 +101,5 @@ class DocumentsExplorerFileManager {
             }
         }
         urls.forEach { changesSubject.send($0) }
-    }
-}
-
-extension FileManager {
-    fileprivate func getDocumentsItems(in url: URL) -> [DocumentsExplorerItem] {
-        let files = getFiles(in: url)
-        return (
-            files.filter { $0.isDir }.sorted { $0.url.lastPathComponent < $1.url.lastPathComponent }
-                + files.filter { !$0.isDir }.sorted { $0.url.lastPathComponent < $1.url.lastPathComponent }
-            )
-            .map { DocumentsExplorerItem(url: $0.url, isDirectory: $0.isDir) }
     }
 }

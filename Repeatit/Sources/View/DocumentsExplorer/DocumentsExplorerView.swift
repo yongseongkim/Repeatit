@@ -5,8 +5,55 @@
 //  Created by yongseongkim on 2020/05/04.
 //
 
-import SwiftEntryKit
+import ComposableArchitecture
 import SwiftUI
+
+struct DocumentExplorerView: View {
+    let store: Store<AppState, AppAction>
+    let url: URL
+
+    var body: some View {
+        WithViewStore(self.store) { viewStore in
+            ZStack {
+                if viewStore.isEditing {
+                    DocumentExplorerMultiSelectableListView(
+                        store: store,
+                        items: viewStore.documentItems[url] ?? []
+                    )
+                    .navigationBarBackButtonHidden(true)
+                    .navigationBarItems(
+                        trailing: Button(
+                            action: { viewStore.send(.editButtonTap(false)) },
+                            label: {
+                                Image(systemName: "xmark")
+                                    .padding(12)
+                                    .foregroundColor(.systemBlack)
+                            }
+                        )
+                    )
+                } else {
+                    DocumentExplorerListView(
+                        items: viewStore.documentItems[url] ?? [],
+                        destinationViewBuilder: { DocumentExplorerView(store: store, url: $0) }
+                    )
+                    .navigationBarBackButtonHidden(false)
+                    .navigationBarItems(
+                        trailing: Button(
+                            action: { viewStore.send(.editButtonTap(true)) },
+                            label: {
+                                Image(systemName: "list.bullet")
+                                    .padding(12)
+                                    .foregroundColor(.systemBlack)
+                            }
+                        )
+                    )
+                }
+            }
+            .navigationBarTitle(url.lastPathComponent)
+            .onAppear { viewStore.send(.documentsExplorerAppear(url: url)) }
+        }
+    }
+}
 
 struct DocumentsExplorerView: View {
     @ObservedObject var model: ViewModel
@@ -64,85 +111,85 @@ struct DocumentsExplorerView: View {
                 }
             }
         }
-        .background(
-            EmptyView().sheet(
-                item: .init(get: { self.model.selectedSubtitleItem }, set: { self.model.selectedSubtitleItem = $0 }),
-                onDismiss: { self.model.selectedSubtitleItem = nil },
-                content: { TextContentsView(model: .init(item: $0)) }
-            )
-        )
-        // Show players.
-        .background(
-            EmptyView().sheet(
-                item: .init(get: { self.model.selectedAudioItem }, set: { self.model.selectedAudioItem = $0 }),
-                onDismiss: { self.model.selectedAudioItem = nil },
-                content: { AudioPlayerView(model: .init(player: self.model.mediaPlayer, item: $0)) }
-            )
-        )
-        .background(
-            EmptyView().sheet(
-                item: .init(get: { self.model.selectedVideoItem }, set: { self.model.selectedVideoItem = $0 }),
-                onDismiss: { self.model.selectedVideoItem = nil },
-                content: { VideoPlayerView(model: .init(player: self.model.mediaPlayer, item: $0)) }
-            )
-        )
-        .background(
-            EmptyView().sheet(
-                item: .init(get: { self.model.selectedYouTubeItem }, set: { self.model.selectedYouTubeItem = $0 }),
-                onDismiss: { self.model.selectedYouTubeItem = nil },
-                content: { YouTubePlayerView(model: .init(player: YouTubePlayer(), item: $0)) }
-            )
-        )
-        // Show View for copying files.
-        .background(
-            EmptyView().sheet(
-                isPresented: .init(get: { self.model.isDestinationViewShowingForCopy }, set: { self.model.isDestinationViewShowingForCopy = $0 }),
-                content: {
-                NavigationView {
-                    DocumentsExplorerDestinationView(
-                        model: .init(fileManager: self.model.fileManager, url: URL.homeDirectory),
-                        listener: .init(
-                            moveButtonAction: {
-                                self.model.fileManager.copy(items: Array(self.model.selectedItems), to: $0)
-                                self.model.isEditing = false
-                            },
-                            closeButtonAction: { self.model.isDestinationViewShowingForMove = false }
-                        )
-                    )
-                }
-            })
-        )
-        // Show View for moving files.
-        .background(
-            EmptyView().sheet(
-                isPresented: .init(get: { self.model.isDestinationViewShowingForMove }, set: { self.model.isDestinationViewShowingForMove = $0 }),
-                content: {
-                NavigationView {
-                    DocumentsExplorerDestinationView(
-                        model: .init(fileManager: self.model.fileManager, url: URL.homeDirectory),
-                        listener: .init(
-                            moveButtonAction: {
-                                self.model.fileManager.move(items: Array(self.model.selectedItems), to: $0)
-                                self.model.isEditing = false
-                            },
-                            closeButtonAction: { self.model.isDestinationViewShowingForMove = false }
-                        )
-                    )
-                }
-            })
-        )
-        // Show Alert for deleting files.
-        .alert(
-            isPresented: .init(get: { self.model.isAlertShowingForRemove }, set: { self.model.isAlertShowingForRemove = $0 }),
-            content: {
-                Alert(
-                    title: Text("Delete"),
-                    message: Text("Are you sure to delete the items?"),
-                    primaryButton: .default(Text("Confirm"), action: { self.model.handleRemoveTapped() }),
-                    secondaryButton: .cancel(Text("Cancel"), action: { self.model.isAlertShowingForRemove = false})
-                )
-            }
-        )
+//        .background(
+//            EmptyView().sheet(
+//                item: .init(get: { self.model.selectedSubtitleItem }, set: { self.model.selectedSubtitleItem = $0 }),
+//                onDismiss: { self.model.selectedSubtitleItem = nil },
+//                content: { TextContentsView(model: .init(item: $0)) }
+//            )
+//        )
+//        // Show players.
+//        .background(
+//            EmptyView().sheet(
+//                item: .init(get: { self.model.selectedAudioItem }, set: { self.model.selectedAudioItem = $0 }),
+//                onDismiss: { self.model.selectedAudioItem = nil },
+//                content: { AudioPlayerView(model: .init(player: self.model.mediaPlayer, item: $0)) }
+//            )
+//        )
+//        .background(
+//            EmptyView().sheet(
+//                item: .init(get: { self.model.selectedVideoItem }, set: { self.model.selectedVideoItem = $0 }),
+//                onDismiss: { self.model.selectedVideoItem = nil },
+//                content: { VideoPlayerView(model: .init(player: self.model.mediaPlayer, item: $0)) }
+//            )
+//        )
+//        .background(
+//            EmptyView().sheet(
+//                item: .init(get: { self.model.selectedYouTubeItem }, set: { self.model.selectedYouTubeItem = $0 }),
+//                onDismiss: { self.model.selectedYouTubeItem = nil },
+//                content: { YouTubePlayerView(model: .init(player: YouTubePlayer(), item: $0)) }
+//            )
+//        )
+//        // Show View for copying files.
+//        .background(
+//            EmptyView().sheet(
+//                isPresented: .init(get: { self.model.isDestinationViewShowingForCopy }, set: { self.model.isDestinationViewShowingForCopy = $0 }),
+//                content: {
+//                NavigationView {
+//                    DocumentsExplorerDestinationView(
+//                        model: .init(fileManager: self.model.fileManager, url: URL.homeDirectory),
+//                        listener: .init(
+//                            moveButtonAction: {
+//                                self.model.fileManager.copy(items: Array(self.model.selectedItems), to: $0)
+//                                self.model.isEditing = false
+//                            },
+//                            closeButtonAction: { self.model.isDestinationViewShowingForMove = false }
+//                        )
+//                    )
+//                }
+//            })
+//        )
+//        // Show View for moving files.
+//        .background(
+//            EmptyView().sheet(
+//                isPresented: .init(get: { self.model.isDestinationViewShowingForMove }, set: { self.model.isDestinationViewShowingForMove = $0 }),
+//                content: {
+//                NavigationView {
+//                    DocumentsExplorerDestinationView(
+//                        model: .init(fileManager: self.model.fileManager, url: URL.homeDirectory),
+//                        listener: .init(
+//                            moveButtonAction: {
+//                                self.model.fileManager.move(items: Array(self.model.selectedItems), to: $0)
+//                                self.model.isEditing = false
+//                            },
+//                            closeButtonAction: { self.model.isDestinationViewShowingForMove = false }
+//                        )
+//                    )
+//                }
+//            })
+//        )
+//        // Show Alert for deleting files.
+//        .alert(
+//            isPresented: .init(get: { self.model.isAlertShowingForRemove }, set: { self.model.isAlertShowingForRemove = $0 }),
+//            content: {
+//                Alert(
+//                    title: Text("Delete"),
+//                    message: Text("Are you sure to delete the items?"),
+//                    primaryButton: .default(Text("Confirm"), action: { self.model.handleRemoveTapped() }),
+//                    secondaryButton: .cancel(Text("Cancel"), action: { self.model.isAlertShowingForRemove = false})
+//                )
+//            }
+//        )
     }
 }
 
@@ -195,23 +242,23 @@ extension DocumentsExplorerView {
         }
 
         func handleRenameTapped() {
-            guard let firstItem = selectedItems.first else { return }
-            self.showPopup {
-                SingleTextFieldPopup(
-                    textInput: "",
-                    title: "Rename",
-                    message: "Please Enter a new name.",
-                    placeholder: firstItem.name,
-                    positiveButton: ("Confirm", { newName in
-                        self.fileManager.rename(item: firstItem, newName: newName)
-                        SwiftEntryKit.dismiss(.specific(entryName: "EntryForAction"))
-                        self.isEditing = false
-                    }),
-                    negativeButton: ("Cancel", {
-                        SwiftEntryKit.dismiss(.specific(entryName: "EntryForAction"))
-                    })
-                )
-            }
+//            guard let firstItem = selectedItems.first else { return }
+//            self.showPopup {
+//                SingleTextFieldPopup(
+//                    textInput: "",
+//                    title: "Rename",
+//                    message: "Please Enter a new name.",
+//                    placeholder: firstItem.name,
+//                    positiveButton: ("Confirm", { newName in
+//                        self.fileManager.rename(item: firstItem, newName: newName)
+//                        SwiftEntryKit.dismiss(.specific(entryName: "EntryForAction"))
+//                        self.isEditing = false
+//                    }),
+//                    negativeButton: ("Cancel", {
+//                        SwiftEntryKit.dismiss(.specific(entryName: "EntryForAction"))
+//                    })
+//                )
+//            }
         }
 
         func handleRemoveTapped() {
@@ -220,26 +267,26 @@ extension DocumentsExplorerView {
         }
 
         private func showPopup<Content: View>(@ViewBuilder builder: @escaping () -> Content) {
-            var attributes = EKAttributes()
-            attributes.name = "EntryForAction"
-            attributes.displayDuration = .infinity
-            attributes.screenBackground = .color(color: EKColor(UIColor.black.withAlphaComponent(0.6)))
-            attributes.position = .center
-            attributes.entranceAnimation = .init(
-                scale: .init(from: 0.3, to: 1, duration: 0.1),
-                fade: .init(from: 0.8, to: 1, duration: 0.1)
-            )
-            attributes.exitAnimation = .init(
-                scale: .init(from: 1, to: 0.3, duration: 0.1),
-                fade: .init(from: 1, to: 0.0, duration: 0.1)
-            )
-            let offset = EKAttributes.PositionConstraints.KeyboardRelation.Offset(bottom: 10, screenEdgeResistance: 20)
-            let keyboardRelation = EKAttributes.PositionConstraints.KeyboardRelation.bind(offset: offset)
-            attributes.positionConstraints.keyboardRelation = keyboardRelation
-            SwiftEntryKit.display(
-                builder: builder,
-                using: attributes
-            )
+//            var attributes = EKAttributes()
+//            attributes.name = "EntryForAction"
+//            attributes.displayDuration = .infinity
+//            attributes.screenBackground = .color(color: EKColor(UIColor.black.withAlphaComponent(0.6)))
+//            attributes.position = .center
+//            attributes.entranceAnimation = .init(
+//                scale: .init(from: 0.3, to: 1, duration: 0.1),
+//                fade: .init(from: 0.8, to: 1, duration: 0.1)
+//            )
+//            attributes.exitAnimation = .init(
+//                scale: .init(from: 1, to: 0.3, duration: 0.1),
+//                fade: .init(from: 1, to: 0.0, duration: 0.1)
+//            )
+//            let offset = EKAttributes.PositionConstraints.KeyboardRelation.Offset(bottom: 10, screenEdgeResistance: 20)
+//            let keyboardRelation = EKAttributes.PositionConstraints.KeyboardRelation.bind(offset: offset)
+//            attributes.positionConstraints.keyboardRelation = keyboardRelation
+//            SwiftEntryKit.display(
+//                builder: builder,
+//                using: attributes
+//            )
         }
     }
 }
