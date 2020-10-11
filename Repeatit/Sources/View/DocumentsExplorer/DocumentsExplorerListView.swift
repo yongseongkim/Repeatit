@@ -57,6 +57,7 @@ struct DocumentsExplorerListView: View {
                         }
                     }
                     .lineSpacing(0)
+                    .listStyle(PlainListStyle())
                     .navigationBarBackButtonHidden(false)
                     .navigationBarItems(
                         trailing: HStack {

@@ -31,6 +31,7 @@ struct BookmarkListView: View {
                 BookmarkAddItemView(listener: .init(onTapGesture: { self.model.addBookmark() }))
                     .padding(.bottom, geometry.safeAreaInsets.bottom)
             }
+            .listStyle(PlainListStyle())
         }
         .background(Color.systemGray6)
     }

@@ -6,11 +6,8 @@
 //  Copyright © 2017년 yongseongkim. All rights reserved.
 //
 
-import Crashlytics
-import Fabric
 import UIKit
 
-@UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
@@ -39,7 +36,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         // Report
-        Fabric.with([Crashlytics.self])
 
         // View
         UITableViewCell.appearance().backgroundColor = .clear

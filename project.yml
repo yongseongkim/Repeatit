@@ -11,22 +11,17 @@ settingGroups:
   CODE_SIGN_IDENTITY: "iPhone Developer"
   CODE_SIGN_STYLE: Automatic
 packages:
-  SnapKit:
-    url: https://github.com/SnapKit/SnapKit
-    from: 5.0.0
-  RxSwift:
-    url: https://github.com/ReactiveX/RxSwift
-    from: 5.0.0
+  swift-composable-architecture:
+    url: https://github.com/pointfreeco/swift-composable-architecture
+    from: 0.8.0
 targets:
   Repeatit:
     type: application
     platform: iOS
-    deploymentTarget: 13.0
+    deploymentTarget: 14.0
     dependencies:
-      - package: SnapKit
-      - package: RxSwift
-        product: RxSwift
-        product: RxCocoa
+      - package: swift-composable-architecture
+        product: ComposableArchitecture
     scheme:
       testTargets:
         - RepeatitTests
@@ -45,7 +40,7 @@ targets:
   RepeatitTests:
     type: bundle.unit-test
     platform: iOS
-    deploymentTarget: 13.0
+    deploymentTarget: 14.0
     sources:
       - Repeatit/Sources/Common
       - RepeatitTests

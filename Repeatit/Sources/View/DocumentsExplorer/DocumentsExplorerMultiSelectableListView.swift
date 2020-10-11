@@ -33,6 +33,7 @@ struct DocumentsExplorerMultiSelectableListView: View {
             })
         }
         .lineSpacing(0)
+        .listStyle(PlainListStyle())
         .preference(key: DocumentsExplorerSelectedItemsKey.self, value: selectedItems)
     }
 }

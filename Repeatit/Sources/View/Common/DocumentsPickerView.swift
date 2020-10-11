@@ -13,9 +13,9 @@ struct DocumentsPickerView: UIViewControllerRepresentable {
     let listener: Listener?
 
     func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
-        let documentPicker = UIDocumentPickerViewController(documentTypes: documentTypes, in: .import)
-        documentPicker.delegate = context.coordinator
-        return documentPicker
+        let pickerView = UIDocumentPickerViewController()
+        pickerView.delegate = context.coordinator
+        return pickerView
     }
 
     func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: Context) {

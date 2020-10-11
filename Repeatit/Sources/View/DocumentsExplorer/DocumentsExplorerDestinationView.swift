@@ -26,6 +26,7 @@ struct DocumentsExplorerDestinationView: View {
                         DocumentsExplorerRow(item: item).opacity(0.6)
                     }
                 }
+                .listStyle(PlainListStyle())
                 Button(
                     action: { self.listener?.moveButtonAction?(self.model.url) },
                     label: { Text("Confirm").foregroundColor(Color.white) }
