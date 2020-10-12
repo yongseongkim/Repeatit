@@ -5,39 +5,49 @@
 //  Created by YongSeong Kim on 2020/05/18.
 //
 
-import MobileCoreServices
+import ComposableArchitecture
 import SwiftEntryKit
 import SwiftUI
+import UniformTypeIdentifiers
 
-struct DocumentsExplorerFloatingActionButtons: View {
-    @ObservedObject var model: ViewModel
-    let listner: Listener?
+struct DocumentExplorerFloatingActionButtons: View {
+    let store: Store<AppState, AppAction>
+    let documentTypes = [
+        UTType.image,
+        UTType.mp3,
+        UTType.video,
+        UTType.mpeg4Movie,
+        UTType.movie
+    ]
+    @State var isDocumentPickerViewShowing: Bool = false
 
     var body: some View {
-        VStack {
-            Spacer()
-            HStack {
+        WithViewStore(self.store) { viewStore in
+            HStack(spacing: 0) {
                 Spacer()
-                VStack(spacing: 15) {
-                    DocumentsExplorerFloatingActionButton(
-                        imageSystemName: "music.note",
-                        onTapGesture: { self.model.isDocumentsPickerShowing = true }
+                VStack(spacing: 14) {
+                    Spacer()
+                    // size + space + (`+` button size - current button size)
+                    DocumentExplorerFloatingActionButton(
+                        // TODO: update image
+                        imageSystemName: "tray.full",
+                        onTapGesture: { self.isDocumentPickerViewShowing = true }
                     )
                     .sheet(
-                        isPresented: .init(get: { self.model.isDocumentsPickerShowing }, set: { self.model.isDocumentsPickerShowing = $0 }),
+                        isPresented: self.$isDocumentPickerViewShowing,
                         content: {
-                            DocumentsPickerView(
-                                documentTypes: [(kUTTypeAudio as String), (kUTTypeMovie as String), (kUTTypeVideo as String)],
+                            DocumentPickerView(
+                                documentTypes: documentTypes,
                                 listener: .init(
-                                    onPickDocuments: { self.listner?.onCopyDocumentFiles($0) },
-                                    onCancelPick: {}
+                                    onPickDocuments: { viewStore.send(.confirmImportURLs($0)) },
+                                    onCancel: { self.isDocumentPickerViewShowing = false }
                                 )
                             )
                         }
                     )
-                    .opacity(self.model.isFolding ? 0 : 1)
-                    .offset(x: 0, y: self.model.isFolding ? 188 : 0)
-                    DocumentsExplorerFloatingActionButton(
+                    .opacity(viewStore.isFloatingActionButtonsFolding ? 0 : 1)
+                    .offset(x: 0, y: viewStore.isFloatingActionButtonsFolding ? (46 + 14) * 3 + 5 : 0)
+                    DocumentExplorerFloatingActionButton(
                         imageSystemName: "play.rectangle",
                         onTapGesture: {
                             self.showPopup {
@@ -47,20 +57,19 @@ struct DocumentsExplorerFloatingActionButtons: View {
                                     message: "Please Enter a YouTube link.",
                                     placeholder: "ex) https://youtu.be/929plYk1lDc",
                                     positiveButton: ("Confirm", {
-                                        guard let youtubeId = $0.getYouTubeId() else { return }
-                                        self.listner?.onCreateYouTubeConfirm(youtubeId)
-                                        SwiftEntryKit.dismiss(.specific(entryName: "EntryForYouTube"))
+                                        if let youtubeId = $0.getYouTubeId() {
+                                            viewStore.send(.confirmCreatingYoutube(youtubeId))
+                                        }
+                                        hidePopup()
                                     }),
-                                    negativeButton: ("Cancel", {
-                                        SwiftEntryKit.dismiss(.specific(entryName: "EntryForYouTube"))
-                                    })
+                                    negativeButton: ("Cancel", { hidePopup() })
                                 )
                             }
                         }
                     )
-                    .opacity(self.model.isFolding ? 0 : 1)
-                    .offset(x: 0, y: self.model.isFolding ? 127 : 0)
-                    DocumentsExplorerFloatingActionButton(
+                    .opacity(viewStore.isFloatingActionButtonsFolding ? 0 : 1)
+                    .offset(x: 0, y: viewStore.isFloatingActionButtonsFolding ? (46 + 14) * 2 + 5 : 0)
+                    DocumentExplorerFloatingActionButton(
                         imageSystemName: "folder",
                         onTapGesture: {
                             self.showPopup {
@@ -70,22 +79,21 @@ struct DocumentsExplorerFloatingActionButtons: View {
                                     message: "Please Enter a new directory name.",
                                     placeholder: "ex) NewDirectory",
                                     positiveButton: ("Confirm", {
-                                        self.listner?.onCreateDirectoryConfirm($0)
-                                        SwiftEntryKit.dismiss(.specific(entryName: "EntryForYouTube"))
+                                        viewStore.send(.confirmCreatingNewFolder($0))
+                                        hidePopup()
                                     }),
-                                    negativeButton: ("Cancel", {
-                                        SwiftEntryKit.dismiss(.specific(entryName: "EntryForYouTube"))
-                                    })
+                                    negativeButton: ("Cancel", { hidePopup() })
                                 )
                             }
                         }
                     )
-                    .opacity(self.model.isFolding ? 0 : 1)
-                    .offset(x: 0, y: self.model.isFolding ? 66 : 0)
+                    .opacity(viewStore.isFloatingActionButtonsFolding ? 0 : 1)
+                    .offset(x: 0, y: viewStore.isFloatingActionButtonsFolding ? 46 + 14 + 5 : 0)
+                    // width: 56, height: 56
                     Button(
                         action: {
                             withAnimation(.easeIn(duration: 0.15)) {
-                                self.model.isFolding = !self.model.isFolding
+                                viewStore.send(.floatingButtonTapped)
                             }
                         },
                         label: {
@@ -97,19 +105,18 @@ struct DocumentsExplorerFloatingActionButtons: View {
                                 .padding(12)
                                 .background(Color.systemGray5)
                                 .cornerRadius(28)
-                                .rotationEffect(self.model.isFolding ? Angle(degrees: 0) : Angle(degrees: 135))
                                 .shadow(color: Color.black.opacity(0.35), radius: 5)
+                                .rotationEffect(viewStore.isFloatingActionButtonsFolding ? Angle(degrees: 0) : Angle(degrees: 135))
                         }
                     )
                 }
             }
         }
-        .padding([.bottom, .trailing], 20)
     }
 
     private func showPopup<Content: View>(@ViewBuilder builder: @escaping () -> Content) {
         var attributes = EKAttributes()
-        attributes.name = "EntryForYouTube"
+        attributes.name = "EntryForFloatingActionButtons"
         attributes.displayDuration = .infinity
         attributes.screenBackground = .color(color: EKColor(UIColor.black.withAlphaComponent(0.6)))
         attributes.position = .center
@@ -129,46 +136,42 @@ struct DocumentsExplorerFloatingActionButtons: View {
             using: attributes
         )
     }
-}
 
-extension DocumentsExplorerFloatingActionButtons {
-    class ViewModel: ObservableObject {
-        @Published var isFolding: Bool = true
-        @Published var isDocumentsPickerShowing: Bool = false
-    }
-
-    struct Listener {
-        let onCopyDocumentFiles: (([URL]) -> Void)
-        let onCreateDirectoryConfirm: ((String) -> Void)
-        let onCreateYouTubeConfirm: ((String) -> Void)
+    private func hidePopup() {
+        SwiftEntryKit.dismiss(.specific(entryName: "EntryForFloatingActionButtons"))
     }
 }
 
-struct DocumentsExplorerFloatingActionButtons_Previews: PreviewProvider {
+struct DocumentExplorerFloatingActionButton_Preview: PreviewProvider {
     static var previews: some View {
         Group {
-            DocumentsExplorerFloatingActionButtons(
-                model: .init(),
-                listner: .init(
-                    onCopyDocumentFiles: { _ in },
-                    onCreateDirectoryConfirm: { _ in },
-                    onCreateYouTubeConfirm: { _ in }
+            DocumentExplorerFloatingActionButtons(
+                store: Store(
+                    initialState: AppState(
+                        currentURL: URL.homeDirectory,
+                        documentItems: [URL.homeDirectory: FileManager.default.getDocumentItems(in: URL.homeDirectory)],
+                        selectedDocumentItems: []
+                    ),
+                    reducer: appReducer,
+                    environment: AppEnvironment()
                 )
             )
-                .background(Color.systemGray6)
                 .environment(\.colorScheme, .light)
-                .previewLayout(.fixed(width: 360, height: 300))
-            DocumentsExplorerFloatingActionButtons(
-                model: .init(),
-                listner: .init(
-                    onCopyDocumentFiles: { _ in },
-                    onCreateDirectoryConfirm: { _ in },
-                    onCreateYouTubeConfirm: { _ in }
+                .previewLayout(.fixed(width: 250, height: 320))
+
+            DocumentExplorerFloatingActionButtons(
+                store: Store(
+                    initialState: AppState(
+                        currentURL: URL.homeDirectory,
+                        documentItems: [URL.homeDirectory: FileManager.default.getDocumentItems(in: URL.homeDirectory)],
+                        selectedDocumentItems: []
+                    ),
+                    reducer: appReducer,
+                    environment: AppEnvironment()
                 )
             )
-                .background(Color.systemGray6)
                 .environment(\.colorScheme, .dark)
-                .previewLayout(.fixed(width: 360, height: 300))
+                .previewLayout(.fixed(width: 250, height: 320))
         }
     }
 }

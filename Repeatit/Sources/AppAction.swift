@@ -9,6 +9,10 @@ import Foundation
 
 enum AppAction: Equatable {
     case documentsExplorerAppear(url: URL)
-    case editButtonTap(Bool)
+    case editButtonTapped(Bool)
+    case floatingButtonTapped
     case documentItemTapWhileEditing(DocumentsExplorerItem)
+    case confirmImportURLs([URL])
+    case confirmCreatingNewFolder(String)
+    case confirmCreatingYoutube(String)
 }

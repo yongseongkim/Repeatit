@@ -11,5 +11,7 @@ struct AppState: Equatable {
     var currentURL: URL
     var documentItems: [URL: [DocumentsExplorerItem]]
     var selectedDocumentItems: [DocumentsExplorerItem]
-    var isEditing: Bool = false
+    var isDocumentExplorerEditing: Bool = false
+    var isFloatingActionButtonsVisible: Bool = true
+    var isFloatingActionButtonsFolding: Bool = true
 }

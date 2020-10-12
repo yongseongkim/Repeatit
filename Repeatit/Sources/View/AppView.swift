@@ -12,11 +12,19 @@ struct AppView: View {
     let store: Store<AppState, AppAction>
 
     var body: some View {
-        NavigationView {
-            DocumentExplorerView(
-                store: store,
-                url: URL.homeDirectory
-            )
+        WithViewStore(self.store) { viewStore in
+            ZStack {
+                NavigationView {
+                    DocumentExplorerView(
+                        store: store,
+                        url: URL.homeDirectory
+                    )
+                }
+                DocumentExplorerFloatingActionButtons(store: store)
+                    .visible(viewStore.isFloatingActionButtonsVisible)
+                    .padding(.bottom, 25)
+                    .padding(.trailing, 15)
+            }
         }
     }
 }

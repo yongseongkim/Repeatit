@@ -7,13 +7,16 @@
 
 import MobileCoreServices
 import SwiftUI
+import UniformTypeIdentifiers
 
-struct DocumentsPickerView: UIViewControllerRepresentable {
-    let documentTypes: [String]
+struct DocumentPickerView: UIViewControllerRepresentable {
+    let documentTypes: [UTType]
     let listener: Listener?
 
     func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
-        let pickerView = UIDocumentPickerViewController()
+        let pickerView = UIDocumentPickerViewController(
+            forOpeningContentTypes: documentTypes
+        )
         pickerView.delegate = context.coordinator
         return pickerView
     }
@@ -37,26 +40,23 @@ struct DocumentsPickerView: UIViewControllerRepresentable {
         }
 
         func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
-            listener?.onCancelPick?()
+            listener?.onCancel?()
         }
     }
 }
 
-extension DocumentsPickerView {
+extension DocumentPickerView {
     struct Listener {
         let onPickDocuments: (([URL]) -> Void)?
-        let onCancelPick: (() -> Void)?
+        let onCancel: (() -> Void)?
     }
 }
 
 struct DocumentsPickerView_Previews: PreviewProvider {
     static var previews: some View {
-        DocumentsPickerView(
-            documentTypes: [(kUTTypeImage as String), (kUTTypeMP3 as String)],
-            listener: .init(
-                onPickDocuments: { _ in },
-                onCancelPick: { }
-            )
+        DocumentPickerView(
+            documentTypes: [],
+            listener: nil
         )
     }
 }
