@@ -8,11 +8,14 @@
 import Foundation
 
 enum AppAction: Equatable {
-    case documentsExplorerAppear(url: URL)
+    case documentsExplorerAppeared(url: URL)
     case editButtonTapped(Bool)
     case floatingButtonTapped
-    case documentItemTapWhileEditing(DocumentsExplorerItem)
+    case documentItemTappedWhileEditing(DocumentsExplorerItem)
     case confirmImportURLs([URL])
     case confirmCreatingNewFolder(String)
     case confirmCreatingYoutube(String)
+    case confirmMovingFiles(URL)
+    case confirmCopyingFiles(URL)
+    case confirmDeletingFiles
 }

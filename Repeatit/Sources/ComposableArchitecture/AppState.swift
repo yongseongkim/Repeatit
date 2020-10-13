@@ -14,4 +14,5 @@ struct AppState: Equatable {
     var isDocumentExplorerEditing: Bool = false
     var isFloatingActionButtonsVisible: Bool = true
     var isFloatingActionButtonsFolding: Bool = true
+    var isActionSheetVisible: Bool = false
 }

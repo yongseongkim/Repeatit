@@ -8,8 +8,9 @@
 import ComposableArchitecture
 
 let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, action, environment in
+    // TODO: Make updating documentsItems simple. (There are many use case such as confirmMovingFiles, confirmDeletingFiles)
     switch action {
-    case .documentsExplorerAppear(let url):
+    case .documentsExplorerAppeared(let url):
         state.currentURL = url
         state.documentItems[url] = environment.fileManager.getDocumentItems(in: url)
     case .editButtonTapped(let isEditing):
@@ -17,12 +18,17 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, action, e
         // When editing, hidden floating buttons
         state.isFloatingActionButtonsVisible = !isEditing
         state.isFloatingActionButtonsFolding = true
+        state.isActionSheetVisible = isEditing
         // Clear selected items when editing ends.
         state.selectedDocumentItems = []
     case .floatingButtonTapped:
         state.isFloatingActionButtonsFolding = !state.isFloatingActionButtonsFolding
-    case .documentItemTapWhileEditing(let item):
-        state.selectedDocumentItems.append(item)
+    case .documentItemTappedWhileEditing(let item):
+        if let idx = state.selectedDocumentItems.firstIndex(of: item) {
+            state.selectedDocumentItems.remove(at: idx)
+        } else {
+            state.selectedDocumentItems.append(item)
+        }
     case .confirmImportURLs(let urls):
         let currentURL = state.currentURL
         urls.forEach { url in
@@ -57,6 +63,27 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, action, e
         } catch let exception {
             print(exception)
         }
+    case .confirmMovingFiles(let targetURL):
+        var fromURLs = Set<URL>()
+        state.selectedDocumentItems.forEach {
+            try? environment.fileManager.moveItem(at: $0.url, to: targetURL.appendingPathComponent($0.url.lastPathComponent))
+            fromURLs.insert($0.url.deletingLastPathComponent())
+        }
+        fromURLs.forEach { state.documentItems[$0] = environment.fileManager.getDocumentItems(in: $0) }
+        state.isDocumentExplorerEditing = false
+    case .confirmCopyingFiles(let targetURL):
+        state.selectedDocumentItems.forEach {
+            try? environment.fileManager.copyItem(at: $0.url, to: targetURL.appendingPathComponent($0.url.lastPathComponent))
+        }
+        state.isDocumentExplorerEditing = false
+    case .confirmDeletingFiles:
+        var targetURLs = Set<URL>()
+        state.selectedDocumentItems.forEach {
+            try? environment.fileManager.removeItem(at: $0.url)
+            targetURLs.insert($0.url.deletingLastPathComponent())
+        }
+        targetURLs.forEach { state.documentItems[$0] = environment.fileManager.getDocumentItems(in: $0) }
+        state.isDocumentExplorerEditing = false
     }
     return .none
 }

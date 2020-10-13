@@ -15,18 +15,7 @@ struct DocumentsExplorerNavigationView: View {
 
     var body: some View {
         NavigationView {
-            DocumentsExplorerListView(
-                model: .init(
-                    fileManager: self.model.fileManager,
-                    url: URL.homeDirectory,
-                    isEditing: self.model.isEditing
-                ),
-                listener: .init(
-                    onAppear: { self.model.visibleURL = $0 },
-                    onEditingTapGesture: { self.listener?.onEditingTapGesture?($0) },
-                    onFileTapGesture: { self.listener?.onFileTapGesture?($0) }
-                )
-            )
+            Text("")
         }
     }
 }

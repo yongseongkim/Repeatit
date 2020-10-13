@@ -12,18 +12,28 @@ struct AppView: View {
     let store: Store<AppState, AppAction>
 
     var body: some View {
-        WithViewStore(self.store) { viewStore in
-            ZStack {
-                NavigationView {
-                    DocumentExplorerView(
-                        store: store,
-                        url: URL.homeDirectory
-                    )
+        GeometryReader { geometry in
+            WithViewStore(self.store) { viewStore in
+                ZStack {
+                    VStack(spacing: 0) {
+                        NavigationView {
+                            DocumentExplorerView(
+                                store: store,
+                                url: URL.homeDirectory
+                            )
+                        }
+                        .padding(.bottom, viewStore.isActionSheetVisible ? 0 : geometry.safeAreaInsets.bottom)
+                        DocumentExplorerActionSheet(store: store)
+                            .visibleOrGone(viewStore.isActionSheetVisible)
+                            .padding(.bottom, geometry.safeAreaInsets.bottom)
+                            .background(Color.systemGray6)
+                    }
+                    .edgesIgnoringSafeArea(.bottom)
+                    DocumentExplorerFloatingActionButtons(store: store)
+                        .visibleOrInvisible(viewStore.isFloatingActionButtonsVisible)
+                        .padding(.bottom, 25)
+                        .padding(.trailing, 15)
                 }
-                DocumentExplorerFloatingActionButtons(store: store)
-                    .visible(viewStore.isFloatingActionButtonsVisible)
-                    .padding(.bottom, 25)
-                    .padding(.trailing, 15)
             }
         }
     }
@@ -35,8 +45,13 @@ struct AppView_Previews: PreviewProvider {
             store: Store(
                 initialState: AppState(
                     currentURL: URL.homeDirectory,
-                    documentItems: [URL.homeDirectory: FileManager.default.getDocumentItems(in: URL.homeDirectory)],
-                    selectedDocumentItems: []
+                    documentItems: [
+                        URL.homeDirectory: FileManager.default.getDocumentItems(in: URL.homeDirectory)
+                    ],
+                    selectedDocumentItems: [],
+                    isDocumentExplorerEditing: false,
+                    isFloatingActionButtonsVisible: true,
+                    isActionSheetVisible: false
                 ),
                 reducer: appReducer,
                 environment: AppEnvironment()

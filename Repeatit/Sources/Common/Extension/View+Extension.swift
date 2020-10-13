@@ -8,11 +8,17 @@
 import SwiftUI
 
 extension View {
-    @ViewBuilder func visible(_ isVisible: Bool) -> some View {
+    @ViewBuilder func visibleOrInvisible(_ isVisible: Bool) -> some View {
         if isVisible {
             self
         } else {
             self.hidden()
+        }
+    }
+
+    @ViewBuilder func visibleOrGone(_ isVisible: Bool) -> some View {
+        if isVisible {
+            self
         }
     }
 }

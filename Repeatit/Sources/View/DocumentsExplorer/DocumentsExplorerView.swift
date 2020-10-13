@@ -25,9 +25,7 @@ struct DocumentExplorerView: View {
                         trailing: Image(systemName: "xmark")
                             .padding(12)
                             .foregroundColor(.systemBlack)
-                            .onTapGesture {
-                                viewStore.send(.editButtonTapped(false))
-                            }
+                            .onTapGesture { viewStore.send(.editButtonTapped(false)) }
                     )
                 } else {
                     DocumentExplorerListView(
@@ -39,14 +37,12 @@ struct DocumentExplorerView: View {
                         trailing: Image(systemName: "list.bullet")
                             .padding(12)
                             .foregroundColor(.systemBlack)
-                            .onTapGesture {
-                                viewStore.send(.editButtonTapped(true))
-                            }
+                            .onTapGesture { viewStore.send(.editButtonTapped(true)) }
                     )
                 }
             }
             .navigationBarTitle(url.lastPathComponent)
-            .onAppear { viewStore.send(.documentsExplorerAppear(url: url)) }
+            .onAppear { viewStore.send(.documentsExplorerAppeared(url: url)) }
         }
     }
 }
