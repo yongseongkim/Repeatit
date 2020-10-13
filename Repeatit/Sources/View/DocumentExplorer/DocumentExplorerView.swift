@@ -1,5 +1,5 @@
 //
-//  DocumentsExplorerView.swift
+//  DocumentExplorerView.swift
 //  Repeatit
 //
 //  Created by yongseongkim on 2020/05/04.
@@ -47,7 +47,7 @@ struct DocumentExplorerView: View {
     }
 }
 
-struct DocumentExplorer_Preview: PreviewProvider {
+struct DocumentExplorerView_Preview: PreviewProvider {
     static var previews: some View {
         DocumentExplorerView(
             store: Store(

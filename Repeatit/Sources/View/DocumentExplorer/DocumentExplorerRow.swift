@@ -1,5 +1,5 @@
 //
-//  DocumentsExplorerRow.swift
+//  DocumentExplorerRow.swift
 //  Repeatit
 //
 //  Created by yongseongkim on 2020/01/16.
@@ -8,10 +8,29 @@
 
 import SwiftUI
 
-struct DocumentsExplorerSelectableRow: View {
-    var item: DocumentsExplorerItem
+struct DocumentExplorerRow: View {
+    var item: Document
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack(alignment: .center) {
+                Image(systemName: item.imageName)
+                    .foregroundColor(.systemBlack)
+                Text(item.nameWithExtension)
+                    .foregroundColor(.systemBlack)
+                    .padding(.leading, 5)
+                Spacer()
+            }
+            .padding(EdgeInsets(top: 10, leading: 15, bottom: 10, trailing: 15))
+        }
+        .contentShape(Rectangle())
+    }
+}
+
+struct DocumentExplorerSelectableRow: View {
+    var item: Document
     var isSelected: Bool
-    let onTapGesture: (DocumentsExplorerItem) -> Void
+    let onTapGesture: (Document) -> Void
 
     var body: some View {
         VStack(spacing: 0) {
@@ -32,30 +51,11 @@ struct DocumentsExplorerSelectableRow: View {
     }
 }
 
-struct DocumentsExplorerRow: View {
-    var item: DocumentsExplorerItem
-
-    var body: some View {
-        VStack(spacing: 0) {
-            HStack(alignment: .center) {
-                Image(systemName: item.imageName)
-                    .foregroundColor(.systemBlack)
-                Text(item.nameWithExtension)
-                    .foregroundColor(.systemBlack)
-                    .padding(.leading, 5)
-                Spacer()
-            }
-            .padding(EdgeInsets(top: 10, leading: 15, bottom: 10, trailing: 15))
-        }
-        .contentShape(Rectangle())
-    }
-}
-
-struct DocumentsExplorerRow_Preview: PreviewProvider {
+struct DocumentExplorer_Preview: PreviewProvider {
     static var previews: some View {
         Group {
-            DocumentsExplorerSelectableRow(
-                item: DocumentsExplorerItem(
+            DocumentExplorerSelectableRow(
+                item: Document(
                     url: URL.homeDirectory.appendingPathComponent("If file name is too looooooooooooong."),
                     isDirectory: true
                 ),
@@ -63,8 +63,8 @@ struct DocumentsExplorerRow_Preview: PreviewProvider {
                 onTapGesture: { _ in }
             )
                 .previewLayout(.fixed(width: 320, height: 50))
-            DocumentsExplorerSelectableRow(
-                item: DocumentsExplorerItem(
+            DocumentExplorerSelectableRow(
+                item: Document(
                     url: URL.homeDirectory.appendingPathComponent("name"),
                     isDirectory: false
                 ),
@@ -72,8 +72,8 @@ struct DocumentsExplorerRow_Preview: PreviewProvider {
                 onTapGesture: { _ in }
             )
                 .previewLayout(.fixed(width: 320, height: 50))
-            DocumentsExplorerSelectableRow(
-                item: DocumentsExplorerItem(
+            DocumentExplorerSelectableRow(
+                item: Document(
                     url: URL.homeDirectory.appendingPathComponent("If file name is too looooooooooooong."),
                     isDirectory: false
                 ),
@@ -81,15 +81,15 @@ struct DocumentsExplorerRow_Preview: PreviewProvider {
                 onTapGesture: { _ in }
             )
                 .previewLayout(.fixed(width: 320, height: 50))
-            DocumentsExplorerRow(
-                item: DocumentsExplorerItem(
+            DocumentExplorerRow(
+                item: Document(
                     url: URL.homeDirectory.appendingPathComponent("name"),
                     isDirectory: true
                 )
             )
                 .previewLayout(.fixed(width: 320, height: 50))
-            DocumentsExplorerRow(
-                item: DocumentsExplorerItem(
+            DocumentExplorerRow(
+                item: Document(
                     url: URL.homeDirectory.appendingPathComponent("If file name is too looooooooooooong."),
                     isDirectory: false
                 )

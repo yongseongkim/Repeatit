@@ -1,5 +1,5 @@
 //
-//  DocumentsExplorerList.swift
+//  DocumentExplorerListView.swift
 //  Repeatit
 //
 //  Created by yongseongkim on 2020/01/19.
@@ -11,12 +11,12 @@ import SwiftUI
 
 struct DocumentExplorerMultiSelectableListView: View {
     let store: Store<AppState, AppAction>
-    let items: [DocumentsExplorerItem]
+    let items: [Document]
 
     var body: some View {
         WithViewStore(self.store) { viewStore in
             List(items, id: \.nameWithExtension) { item in
-                DocumentsExplorerSelectableRow(
+                DocumentExplorerSelectableRow(
                     item: item,
                     isSelected: viewStore.selectedDocumentItems.contains(item),
                     onTapGesture: { viewStore.send(.documentItemTappedWhileEditing($0)) }
@@ -28,7 +28,7 @@ struct DocumentExplorerMultiSelectableListView: View {
 }
 
 struct DocumentExplorerListView<Content: View>: View {
-    let items: [DocumentsExplorerItem]
+    let items: [Document]
     let destinationViewBuilder: (_ url: URL) -> Content
 
     var body: some View {
@@ -36,10 +36,10 @@ struct DocumentExplorerListView<Content: View>: View {
             if item.isDirectory {
                 NavigationLink(
                     destination: destinationViewBuilder(item.url),
-                    label: { DocumentsExplorerRow(item: item) }
+                    label: { DocumentExplorerRow(item: item) }
                 )
             } else {
-                DocumentsExplorerRow(item: item)
+                DocumentExplorerRow(item: item)
             }
         }
         .listStyle(PlainListStyle())
@@ -55,15 +55,15 @@ struct DocumentExplorerMultiSelectableListView_Previews: PreviewProvider {
                         currentURL: URL.homeDirectory,
                         documentItems: [URL.homeDirectory: FileManager.default.getDocumentItems(in: URL.homeDirectory)],
                         selectedDocumentItems: [
-                            DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3"))
+                            Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3"))
                         ]
                     ),
                     reducer: appReducer,
                     environment: AppEnvironment()
                 ),
                 items: [
-                    DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3")),
-                    DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.youtube"))
+                    Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3")),
+                    Document(url: URL.homeDirectory.appendingPathComponent("sample.youtube"))
                 ]
             )
             .environment(\.colorScheme, .light)
@@ -74,15 +74,15 @@ struct DocumentExplorerMultiSelectableListView_Previews: PreviewProvider {
                         currentURL: URL.homeDirectory,
                         documentItems: [URL.homeDirectory: FileManager.default.getDocumentItems(in: URL.homeDirectory)],
                         selectedDocumentItems: [
-                            DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3"))
+                            Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3"))
                         ]
                     ),
                     reducer: appReducer,
                     environment: AppEnvironment()
                 ),
                 items: [
-                    DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3")),
-                    DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.youtube"))
+                    Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3")),
+                    Document(url: URL.homeDirectory.appendingPathComponent("sample.youtube"))
                 ]
             )
             .environment(\.colorScheme, .dark)
@@ -96,8 +96,8 @@ struct DocumentExplorerListView_Previews: PreviewProvider {
         Group {
             DocumentExplorerListView(
                 items: [
-                    DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3")),
-                    DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.youtube"))
+                    Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3")),
+                    Document(url: URL.homeDirectory.appendingPathComponent("sample.youtube"))
                 ],
                 destinationViewBuilder: { _ in EmptyView() }
             )
@@ -105,8 +105,8 @@ struct DocumentExplorerListView_Previews: PreviewProvider {
             .previewLayout(.fixed(width: 320, height: 300))
             DocumentExplorerListView(
                 items: [
-                    DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3")),
-                    DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.youtube"))
+                    Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3")),
+                    Document(url: URL.homeDirectory.appendingPathComponent("sample.youtube"))
                 ],
                 destinationViewBuilder: { _ in EmptyView() }
             )

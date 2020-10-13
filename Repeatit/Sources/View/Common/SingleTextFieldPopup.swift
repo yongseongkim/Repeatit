@@ -8,10 +8,9 @@
 import SwiftUI
 
 struct SingleTextFieldPopup: View {
-    @State var textInput: String
+    @State var textInput: String = ""
     let title: String
     let message: String
-    let placeholder: String
     let positiveButton: (name: String, action: (String) -> Void)
     let negativeButton: (name: String, action: () -> Void)
 
@@ -27,7 +26,7 @@ struct SingleTextFieldPopup: View {
                     .foregroundColor(Color.systemBlack)
                     .padding(EdgeInsets(top: 5, leading: 25, bottom: 0, trailing: 25))
                     .font(.system(size: 15))
-                TextField(placeholder, text: $textInput)
+                TextField(textInput, text: $textInput)
                     .padding(8)
                     .background(Color(UIColor.systemGray5))
                     .padding(EdgeInsets(top: 15, leading: 25, bottom: 30, trailing: 25))
@@ -72,7 +71,6 @@ struct SingleTextFieldPopup_Previews: PreviewProvider {
             textInput: "first init",
             title: "YouTube",
             message: "Please Enter a YouTube link.",
-            placeholder: "",
             positiveButton: ("Confirm", { _ in }),
             negativeButton: ("Cancel", { })
         )

@@ -68,7 +68,7 @@ struct YouTubePlayerView_Previews: PreviewProvider {
         YouTubePlayerView(
             model: .init(
                 player: YouTubePlayer(),
-                item: DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.youtube"))
+                item: Document(url: URL.homeDirectory.appendingPathComponent("sample.youtube"))
             )
         )
     }

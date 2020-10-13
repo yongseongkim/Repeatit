@@ -29,6 +29,7 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, action, e
         } else {
             state.selectedDocumentItems.append(item)
         }
+        state.isActionSheetRenameButtonEnabled = state.selectedDocumentItems.count == 1
     case .confirmImportURLs(let urls):
         let currentURL = state.currentURL
         urls.forEach { url in
@@ -63,6 +64,14 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, action, e
         } catch let exception {
             print(exception)
         }
+    case .confirmRenaming(let newName):
+        if let target = state.selectedDocumentItems.first {
+            let parentDir = target.url.deletingLastPathComponent()
+            let newURL = parentDir.appendingPathComponent(newName).appendingPathExtension(target.pathExtension)
+            try? environment.fileManager.moveItem(at: target.url, to: newURL)
+            state.documentItems[parentDir] = environment.fileManager.getDocumentItems(in: parentDir)
+        }
+        state.isDocumentExplorerEditing = false
     case .confirmMovingFiles(let targetURL):
         var fromURLs = Set<URL>()
         state.selectedDocumentItems.forEach {

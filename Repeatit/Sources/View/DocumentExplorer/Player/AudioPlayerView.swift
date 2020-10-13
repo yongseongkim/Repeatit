@@ -58,14 +58,14 @@ struct PlayerView_Previews: PreviewProvider {
             AudioPlayerView(
                 model: .init(
                     player: MediaPlayer(),
-                    item: DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3"))
+                    item: Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3"))
                 )
             )
             .environment(\.colorScheme, .light)
             AudioPlayerView(
                 model: .init(
                     player: MediaPlayer(),
-                    item: DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3"))
+                    item: Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3"))
                 )
             )
             .environment(\.colorScheme, .dark)

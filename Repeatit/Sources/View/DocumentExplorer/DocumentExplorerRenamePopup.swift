@@ -1,5 +1,5 @@
 //
-//  DocumentsExplorerRenamePopup.swift
+//  DocumentExplorerRenamePopup.swift
 //  Repeatit
 //
 //  Created by yongseongkim on 2020/05/04.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DocumentsExplorerRenamePopup: View {
+struct DocumentExplorerRenamePopup: View {
     @State var textInput: String
     let onPositiveButtonTapGesture: (String) -> Void
     let onNegativeButtonTapGesture: () -> Void
@@ -58,9 +58,9 @@ struct DocumentsExplorerRenamePopup: View {
     }
 }
 
-struct DocumentsExplorerRenamePopup_Previews: PreviewProvider {
+struct DocumentExplorerRenamePopup_Previews: PreviewProvider {
     static var previews: some View {
-        DocumentsExplorerRenamePopup(
+        DocumentExplorerRenamePopup(
             textInput: "first init",
             onPositiveButtonTapGesture: { _ in },
             onNegativeButtonTapGesture: {}

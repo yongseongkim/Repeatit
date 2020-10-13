@@ -1,5 +1,5 @@
 //
-//  DocumentsExplorerItem.swift
+//  Document.swift
 //  Repeatit
 //
 //  Created by yongseongkim on 2020/01/19.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct DocumentsExplorerItem: Hashable, Codable {
+struct Document: Hashable, Codable {
     let url: URL
     let isDirectory: Bool
 
@@ -18,10 +18,10 @@ struct DocumentsExplorerItem: Hashable, Codable {
     }
 }
 
-extension DocumentsExplorerItem: PlayItem {
+extension Document: PlayItem {
 }
 
-extension DocumentsExplorerItem: Identifiable {
+extension Document: Identifiable {
     var id: String {
         return url.absoluteString
     }

@@ -31,7 +31,7 @@ extension TextContentsView {
         let title: String
         let contents: String
 
-        init(item: DocumentsExplorerItem) {
+        init(item: Document) {
             self.title = item.url.lastPathComponent
             let contents = (try? String(contentsOf: item.url, encoding: .utf8)) ?? ""
             self.contents = contents.isEmpty ? "There is no contents." : contents

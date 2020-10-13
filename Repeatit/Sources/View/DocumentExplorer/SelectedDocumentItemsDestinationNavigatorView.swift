@@ -11,8 +11,8 @@ import SwiftUI
 
 struct SelectedDocumentItemsDestinationNavigatiorState: Equatable {
     var currentURL: URL
-    var documentItems: [URL: [DocumentsExplorerItem]]
-    var selectedDocumentItems: [DocumentsExplorerItem]
+    var documentItems: [URL: [Document]]
+    var selectedDocumentItems: [Document]
 }
 
 enum SelectedDocumentItemsDestinationNavigatiorAction: Equatable {
@@ -87,10 +87,10 @@ struct SelectedDocumentDestinationView: View {
                 if item.isDirectory && !viewStore.selectedDocumentItems.contains(item) {
                     NavigationLink(
                         destination: SelectedDocumentDestinationView(store: store, url: item.url),
-                        label: { DocumentsExplorerRow(item: item) }
+                        label: { DocumentExplorerRow(item: item) }
                     )
                 } else {
-                    DocumentsExplorerRow(item: item).opacity(0.6)
+                    DocumentExplorerRow(item: item).opacity(0.6)
                 }
             }
             .listStyle(PlainListStyle())
@@ -100,7 +100,7 @@ struct SelectedDocumentDestinationView: View {
     }
 }
 
-struct DocumentExplorerDestinationView_Previews: PreviewProvider {
+struct SelectedDocumentItemsDestinationNavigatorView_Previews: PreviewProvider {
     static var previews: some View {
         SelectedDocumentItemsDestinationNavigatorView(
             store: .init(
@@ -108,7 +108,7 @@ struct DocumentExplorerDestinationView_Previews: PreviewProvider {
                     currentURL: URL.homeDirectory,
                     documentItems: [:],
                     selectedDocumentItems: [
-                        DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3"))
+                        Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3"))
                     ]
                 ),
                 reducer: selectedDocumentItemsDestinationNavigatorReducer,

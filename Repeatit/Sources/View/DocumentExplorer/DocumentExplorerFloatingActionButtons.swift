@@ -1,5 +1,5 @@
 //
-//  DocumentsExplorerFloatingActionButtons.swift
+//  DocumentExplorerFloatingActionButtons.swift
 //  Repeatit
 //
 //  Created by YongSeong Kim on 2020/05/18.
@@ -52,10 +52,9 @@ struct DocumentExplorerFloatingActionButtons: View {
                         onTapGesture: {
                             self.showPopup {
                                 SingleTextFieldPopup(
-                                    textInput: "",
+                                    textInput: "ex) https://youtu.be/929plYk1lDc",
                                     title: "YouTube",
                                     message: "Please Enter a YouTube link.",
-                                    placeholder: "ex) https://youtu.be/929plYk1lDc",
                                     positiveButton: ("Confirm", {
                                         if let youtubeId = $0.getYouTubeId() {
                                             viewStore.send(.confirmCreatingYoutube(youtubeId))
@@ -74,10 +73,8 @@ struct DocumentExplorerFloatingActionButtons: View {
                         onTapGesture: {
                             self.showPopup {
                                 SingleTextFieldPopup(
-                                    textInput: "",
                                     title: "Directory",
                                     message: "Please Enter a new directory name.",
-                                    placeholder: "ex) NewDirectory",
                                     positiveButton: ("Confirm", {
                                         viewStore.send(.confirmCreatingNewFolder($0))
                                         hidePopup()

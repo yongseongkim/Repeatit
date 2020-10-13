@@ -84,7 +84,7 @@ struct VideoPlayerView_Previews: PreviewProvider {
         VideoPlayerView(
             model: .init(
                 player: MediaPlayer(),
-                item: DocumentsExplorerItem(url: URL.homeDirectory.appendingPathComponent("sample.mp3"))
+                item: Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3"))
             )
         )
     }
