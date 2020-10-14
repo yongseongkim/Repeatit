@@ -22,6 +22,7 @@ struct DocumentExplorerView: View {
                     )
                     .navigationBarBackButtonHidden(true)
                     .navigationBarItems(
+                        leading: EmptyView(),
                         trailing: Image(systemName: "xmark")
                             .padding(12)
                             .foregroundColor(.systemBlack)
@@ -34,6 +35,7 @@ struct DocumentExplorerView: View {
                     )
                     .navigationBarBackButtonHidden(false)
                     .navigationBarItems(
+                        leading: EmptyView(),
                         trailing: Image(systemName: "list.bullet")
                             .padding(12)
                             .foregroundColor(.systemBlack)

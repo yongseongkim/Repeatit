@@ -22,6 +22,7 @@ struct AppView: View {
                                 url: URL.homeDirectory
                             )
                         }
+                        .accentColor(.systemBlack)
                         .padding(.bottom, viewStore.isActionSheetVisible ? 0 : geometry.safeAreaInsets.bottom)
                         DocumentExplorerActionSheet(store: store)
                             .visibleOrGone(viewStore.isActionSheetVisible)
