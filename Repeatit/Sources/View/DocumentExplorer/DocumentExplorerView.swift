@@ -18,7 +18,7 @@ struct DocumentExplorerView: View {
                 if viewStore.isDocumentExplorerEditing {
                     DocumentExplorerMultiSelectableListView(
                         store: store,
-                        items: viewStore.documentItems[url] ?? []
+                        items: viewStore.documents[url] ?? []
                     )
                     .navigationBarBackButtonHidden(true)
                     .navigationBarItems(
@@ -30,7 +30,7 @@ struct DocumentExplorerView: View {
                     )
                 } else {
                     DocumentExplorerListView(
-                        items: viewStore.documentItems[url] ?? [],
+                        items: viewStore.documents[url] ?? [],
                         destinationViewBuilder: { DocumentExplorerView(store: store, url: $0) }
                     )
                     .navigationBarBackButtonHidden(false)
@@ -55,8 +55,8 @@ struct DocumentExplorerView_Preview: PreviewProvider {
             store: Store(
                 initialState: AppState(
                     currentURL: URL.homeDirectory,
-                    documentItems: [URL.homeDirectory: FileManager.default.getDocumentItems(in: URL.homeDirectory)],
-                    selectedDocumentItems: []
+                    documents: [URL.homeDirectory: FileManager.default.getDocuments(in: URL.homeDirectory)],
+                    selectedDocuments: []
                 ),
                 reducer: appReducer,
                 environment: AppEnvironment()

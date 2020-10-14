@@ -18,8 +18,8 @@ struct Repeatit: App {
                 store: Store(
                     initialState: AppState(
                         currentURL: URL.homeDirectory,
-                        documentItems: [URL.homeDirectory: FileManager.default.getDocumentItems(in: URL.homeDirectory)],
-                        selectedDocumentItems: []
+                        documents: [URL.homeDirectory: FileManager.default.getDocuments(in: URL.homeDirectory)],
+                        selectedDocuments: []
                     ),
                     reducer: appReducer,
                     environment: AppEnvironment()

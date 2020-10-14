@@ -12,7 +12,7 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, action, e
     switch action {
     case .documentsExplorerAppeared(let url):
         state.currentURL = url
-        state.documentItems[url] = environment.fileManager.getDocumentItems(in: url)
+        state.documents[url] = environment.fileManager.getDocuments(in: url)
     case .editButtonTapped(let isEditing):
         state.isDocumentExplorerEditing = isEditing
         // When editing, hidden floating buttons
@@ -20,16 +20,16 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, action, e
         state.isFloatingActionButtonsFolding = true
         state.isActionSheetVisible = isEditing
         // Clear selected items when editing ends.
-        state.selectedDocumentItems = []
+        state.selectedDocuments = []
     case .floatingButtonTapped:
         state.isFloatingActionButtonsFolding = !state.isFloatingActionButtonsFolding
     case .documentItemTappedWhileEditing(let item):
-        if let idx = state.selectedDocumentItems.firstIndex(of: item) {
-            state.selectedDocumentItems.remove(at: idx)
+        if let idx = state.selectedDocuments.firstIndex(of: item) {
+            state.selectedDocuments.remove(at: idx)
         } else {
-            state.selectedDocumentItems.append(item)
+            state.selectedDocuments.append(item)
         }
-        state.isActionSheetRenameButtonEnabled = state.selectedDocumentItems.count == 1
+        state.isActionSheetRenameButtonEnabled = state.selectedDocuments.count == 1
     case .confirmImportURLs(let urls):
         let currentURL = state.currentURL
         urls.forEach { url in
@@ -41,7 +41,7 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, action, e
                 print(error)
             }
         }
-        state.documentItems[currentURL] = environment.fileManager.getDocumentItems(in: currentURL)
+        state.documents[currentURL] = environment.fileManager.getDocuments(in: currentURL)
     case .confirmCreatingNewFolder(let newName):
         do {
             let currentURL = state.currentURL
@@ -49,7 +49,7 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, action, e
                 at: currentURL.appendingPathComponent(newName),
                 withIntermediateDirectories: true
             )
-            state.documentItems[currentURL] = environment.fileManager.getDocumentItems(in: currentURL)
+            state.documents[currentURL] = environment.fileManager.getDocuments(in: currentURL)
         } catch let error {
             // TODO: handle error
             print(error)
@@ -60,38 +60,38 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, action, e
         do {
             let data = try JSONEncoder().encode(file)
             try data.write(to: state.currentURL.appendingPathComponent("\(youtubeId).youtube"))
-            state.documentItems[currentURL] = environment.fileManager.getDocumentItems(in: currentURL)
+            state.documents[currentURL] = environment.fileManager.getDocuments(in: currentURL)
         } catch let exception {
             print(exception)
         }
     case .confirmRenaming(let newName):
-        if let target = state.selectedDocumentItems.first {
+        if let target = state.selectedDocuments.first {
             let parentDir = target.url.deletingLastPathComponent()
             let newURL = parentDir.appendingPathComponent(newName).appendingPathExtension(target.pathExtension)
             try? environment.fileManager.moveItem(at: target.url, to: newURL)
-            state.documentItems[parentDir] = environment.fileManager.getDocumentItems(in: parentDir)
+            state.documents[parentDir] = environment.fileManager.getDocuments(in: parentDir)
         }
         state.isDocumentExplorerEditing = false
     case .confirmMovingFiles(let targetURL):
         var fromURLs = Set<URL>()
-        state.selectedDocumentItems.forEach {
+        state.selectedDocuments.forEach {
             try? environment.fileManager.moveItem(at: $0.url, to: targetURL.appendingPathComponent($0.url.lastPathComponent))
             fromURLs.insert($0.url.deletingLastPathComponent())
         }
-        fromURLs.forEach { state.documentItems[$0] = environment.fileManager.getDocumentItems(in: $0) }
+        fromURLs.forEach { state.documents[$0] = environment.fileManager.getDocuments(in: $0) }
         state.isDocumentExplorerEditing = false
     case .confirmCopyingFiles(let targetURL):
-        state.selectedDocumentItems.forEach {
+        state.selectedDocuments.forEach {
             try? environment.fileManager.copyItem(at: $0.url, to: targetURL.appendingPathComponent($0.url.lastPathComponent))
         }
         state.isDocumentExplorerEditing = false
     case .confirmDeletingFiles:
         var targetURLs = Set<URL>()
-        state.selectedDocumentItems.forEach {
+        state.selectedDocuments.forEach {
             try? environment.fileManager.removeItem(at: $0.url)
             targetURLs.insert($0.url.deletingLastPathComponent())
         }
-        targetURLs.forEach { state.documentItems[$0] = environment.fileManager.getDocumentItems(in: $0) }
+        targetURLs.forEach { state.documents[$0] = environment.fileManager.getDocuments(in: $0) }
         state.isDocumentExplorerEditing = false
     }
     return .none

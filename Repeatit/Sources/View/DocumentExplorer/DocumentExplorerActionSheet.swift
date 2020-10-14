@@ -30,7 +30,7 @@ struct DocumentExplorerActionSheet: View {
                     .onTapGesture {
                         showPopup {
                             SingleTextFieldPopup(
-                                textInput: viewStore.selectedDocumentItems.first?.name ?? "",
+                                textInput: viewStore.selectedDocuments.first?.name ?? "",
                                 title: "Rename",
                                 message: "Please Enter a new name",
                                 positiveButton: ("Confirm", {
@@ -74,15 +74,15 @@ struct DocumentExplorerActionSheet: View {
                 EmptyView().sheet(
                     isPresented: $isDestinationViewShowingForMove,
                     content: {
-                        SelectedDocumentItemsDestinationNavigatorView(
+                        SelectedDocumentsDestinationNavigatorView(
                             store: .init(
                                 initialState: .init(
                                     currentURL: URL.homeDirectory,
-                                    documentItems: [:],
-                                    selectedDocumentItems: viewStore.selectedDocumentItems
+                                    documents: [:],
+                                    selectedDocuments: viewStore.selectedDocuments
                                 ),
-                                reducer: selectedDocumentItemsDestinationNavigatorReducer,
-                                environment: SelectedDocumentItemsDestinationNavigatiorEnvironment()
+                                reducer: selectedDocumentsDestinationNavigatorReducer,
+                                environment: SelectedDocumentsDestinationNavigatiorEnvironment()
                             ),
                             onConfirmTapped: {
                                 viewStore.send(.confirmMovingFiles($0))
@@ -98,15 +98,15 @@ struct DocumentExplorerActionSheet: View {
                 EmptyView().sheet(
                     isPresented: $isDestinationViewShowingForCopy,
                     content: {
-                        SelectedDocumentItemsDestinationNavigatorView(
+                        SelectedDocumentsDestinationNavigatorView(
                             store: .init(
                                 initialState: .init(
                                     currentURL: URL.homeDirectory,
-                                    documentItems: [:],
-                                    selectedDocumentItems: viewStore.selectedDocumentItems
+                                    documents: [:],
+                                    selectedDocuments: viewStore.selectedDocuments
                                 ),
-                                reducer: selectedDocumentItemsDestinationNavigatorReducer,
-                                environment: SelectedDocumentItemsDestinationNavigatiorEnvironment()
+                                reducer: selectedDocumentsDestinationNavigatorReducer,
+                                environment: SelectedDocumentsDestinationNavigatiorEnvironment()
                             ),
                             onConfirmTapped: {
                                 viewStore.send(.confirmCopyingFiles($0))
@@ -168,8 +168,8 @@ struct DocumentExplorerActionSheet_Previews: PreviewProvider {
             store: Store(
                 initialState: AppState(
                     currentURL: URL.homeDirectory,
-                    documentItems: [URL.homeDirectory: FileManager.default.getDocumentItems(in: URL.homeDirectory)],
-                    selectedDocumentItems: []
+                    documents: [URL.homeDirectory: FileManager.default.getDocuments(in: URL.homeDirectory)],
+                    selectedDocuments: []
                 ),
                 reducer: appReducer,
                 environment: AppEnvironment()

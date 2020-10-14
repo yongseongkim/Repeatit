@@ -18,7 +18,7 @@ extension FileManager {
         }
     }
 
-    func getDocumentItems(in url: URL) -> [Document] {
+    func getDocuments(in url: URL) -> [Document] {
         let files = getFiles(in: url)
         return (
             files.filter { $0.isDir }.sorted { $0.url.lastPathComponent < $1.url.lastPathComponent }

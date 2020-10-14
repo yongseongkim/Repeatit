@@ -9,8 +9,8 @@ import Foundation
 
 struct AppState: Equatable {
     var currentURL: URL
-    var documentItems: [URL: [Document]]
-    var selectedDocumentItems: [Document]
+    var documents: [URL: [Document]]
+    var selectedDocuments: [Document]
     var isDocumentExplorerEditing: Bool = false
     var isFloatingActionButtonsVisible: Bool = true
     var isFloatingActionButtonsFolding: Bool = true

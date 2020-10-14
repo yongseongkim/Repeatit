@@ -18,7 +18,7 @@ struct DocumentExplorerMultiSelectableListView: View {
             List(items, id: \.nameWithExtension) { item in
                 DocumentExplorerSelectableRow(
                     item: item,
-                    isSelected: viewStore.selectedDocumentItems.contains(item),
+                    isSelected: viewStore.selectedDocuments.contains(item),
                     onTapGesture: { viewStore.send(.documentItemTappedWhileEditing($0)) }
                 )
             }
@@ -53,8 +53,8 @@ struct DocumentExplorerMultiSelectableListView_Previews: PreviewProvider {
                 store: Store(
                     initialState: AppState(
                         currentURL: URL.homeDirectory,
-                        documentItems: [URL.homeDirectory: FileManager.default.getDocumentItems(in: URL.homeDirectory)],
-                        selectedDocumentItems: [
+                        documents: [URL.homeDirectory: FileManager.default.getDocuments(in: URL.homeDirectory)],
+                        selectedDocuments: [
                             Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3"))
                         ]
                     ),
@@ -72,8 +72,8 @@ struct DocumentExplorerMultiSelectableListView_Previews: PreviewProvider {
                 store: Store(
                     initialState: AppState(
                         currentURL: URL.homeDirectory,
-                        documentItems: [URL.homeDirectory: FileManager.default.getDocumentItems(in: URL.homeDirectory)],
-                        selectedDocumentItems: [
+                        documents: [URL.homeDirectory: FileManager.default.getDocuments(in: URL.homeDirectory)],
+                        selectedDocuments: [
                             Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3"))
                         ]
                     ),

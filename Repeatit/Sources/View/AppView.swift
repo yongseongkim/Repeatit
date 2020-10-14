@@ -46,10 +46,10 @@ struct AppView_Previews: PreviewProvider {
             store: Store(
                 initialState: AppState(
                     currentURL: URL.homeDirectory,
-                    documentItems: [
-                        URL.homeDirectory: FileManager.default.getDocumentItems(in: URL.homeDirectory)
+                    documents: [
+                        URL.homeDirectory: FileManager.default.getDocuments(in: URL.homeDirectory)
                     ],
-                    selectedDocumentItems: [],
+                    selectedDocuments: [],
                     isDocumentExplorerEditing: false,
                     isFloatingActionButtonsVisible: true,
                     isActionSheetVisible: false

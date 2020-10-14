@@ -1,5 +1,5 @@
 //
-//  DocumentExplorerDestinationView.swift
+//  SelectedDocumentsDestinationNavigatorView.swift
 //  Repeatit
 //
 //  Created by yongseongkim on 2020/05/03.
@@ -8,35 +8,8 @@
 import ComposableArchitecture
 import SwiftUI
 
-
-struct SelectedDocumentItemsDestinationNavigatiorState: Equatable {
-    var currentURL: URL
-    var documentItems: [URL: [Document]]
-    var selectedDocumentItems: [Document]
-}
-
-enum SelectedDocumentItemsDestinationNavigatiorAction: Equatable {
-    case destinationViewAppeared(url: URL)
-}
-
-struct SelectedDocumentItemsDestinationNavigatiorEnvironment {
-    let fileManager: FileManager = .default
-}
-
-let selectedDocumentItemsDestinationNavigatorReducer = Reducer<
-    SelectedDocumentItemsDestinationNavigatiorState,
-    SelectedDocumentItemsDestinationNavigatiorAction,
-    SelectedDocumentItemsDestinationNavigatiorEnvironment> { state, action, environment in
-    switch action {
-    case .destinationViewAppeared(let url):
-        state.currentURL = url
-        state.documentItems[url] = environment.fileManager.getDocumentItems(in: url)
-    }
-    return .none
-}
-
-struct SelectedDocumentItemsDestinationNavigatorView: View {
-    let store: Store<SelectedDocumentItemsDestinationNavigatiorState, SelectedDocumentItemsDestinationNavigatiorAction>
+struct SelectedDocumentsDestinationNavigatorView: View {
+    let store: Store<SelectedDocumentsDestinationNavigatiorState, SelectedDocumentsDestinationNavigatiorAction>
     let onConfirmTapped: ((URL) -> Void)
     let onCancelTapped: (() -> Void)
 
@@ -78,13 +51,13 @@ struct SelectedDocumentItemsDestinationNavigatorView: View {
 }
 
 struct SelectedDocumentDestinationView: View {
-    let store: Store<SelectedDocumentItemsDestinationNavigatiorState, SelectedDocumentItemsDestinationNavigatiorAction>
+    let store: Store<SelectedDocumentsDestinationNavigatiorState, SelectedDocumentsDestinationNavigatiorAction>
     let url: URL
 
     var body: some View {
         WithViewStore(self.store) { viewStore in
-            List(viewStore.documentItems[url] ?? [], id: \.nameWithExtension) { item in
-                if item.isDirectory && !viewStore.selectedDocumentItems.contains(item) {
+            List(viewStore.documents[url] ?? [], id: \.nameWithExtension) { item in
+                if item.isDirectory && !viewStore.selectedDocuments.contains(item) {
                     NavigationLink(
                         destination: SelectedDocumentDestinationView(store: store, url: item.url),
                         label: { DocumentExplorerRow(item: item) }
@@ -100,19 +73,19 @@ struct SelectedDocumentDestinationView: View {
     }
 }
 
-struct SelectedDocumentItemsDestinationNavigatorView_Previews: PreviewProvider {
+struct SelectedDocumentsDestinationNavigatorView_Previews: PreviewProvider {
     static var previews: some View {
-        SelectedDocumentItemsDestinationNavigatorView(
+        SelectedDocumentsDestinationNavigatorView(
             store: .init(
                 initialState: .init(
                     currentURL: URL.homeDirectory,
-                    documentItems: [:],
-                    selectedDocumentItems: [
+                    documents: [:],
+                    selectedDocuments: [
                         Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3"))
                     ]
                 ),
-                reducer: selectedDocumentItemsDestinationNavigatorReducer,
-                environment: SelectedDocumentItemsDestinationNavigatiorEnvironment()
+                reducer: selectedDocumentsDestinationNavigatorReducer,
+                environment: SelectedDocumentsDestinationNavigatiorEnvironment()
             ),
             onConfirmTapped: { _ in },
             onCancelTapped: { }
