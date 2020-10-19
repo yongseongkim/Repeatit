@@ -9,14 +9,14 @@
 import SwiftUI
 
 struct DocumentExplorerRow: View {
-    var item: Document
+    var document: Document
 
     var body: some View {
         VStack(spacing: 0) {
             HStack(alignment: .center) {
-                Image(systemName: item.imageName)
+                Image(systemName: document.imageName)
                     .foregroundColor(.systemBlack)
-                Text(item.nameWithExtension)
+                Text(document.nameWithExtension)
                     .foregroundColor(.systemBlack)
                     .padding(.leading, 5)
                 Spacer()
@@ -28,16 +28,16 @@ struct DocumentExplorerRow: View {
 }
 
 struct DocumentExplorerSelectableRow: View {
-    var item: Document
+    var document: Document
     var isSelected: Bool
     let onTapGesture: (Document) -> Void
 
     var body: some View {
         VStack(spacing: 0) {
             HStack(alignment: .center) {
-                Image(systemName: item.imageName)
+                Image(systemName: document.imageName)
                     .foregroundColor(.systemBlack)
-                Text(item.nameWithExtension)
+                Text(document.nameWithExtension)
                     .foregroundColor(.systemBlack)
                     .padding(.leading, 5)
                     .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
@@ -47,7 +47,7 @@ struct DocumentExplorerSelectableRow: View {
             .padding(EdgeInsets(top: 10, leading: 15, bottom: 10, trailing: 15))
         }
         .contentShape(Rectangle())
-        .onTapGesture { self.onTapGesture(self.item) }
+        .onTapGesture { self.onTapGesture(self.document) }
     }
 }
 
@@ -55,7 +55,7 @@ struct DocumentExplorer_Preview: PreviewProvider {
     static var previews: some View {
         Group {
             DocumentExplorerSelectableRow(
-                item: Document(
+                document: Document(
                     url: URL.homeDirectory.appendingPathComponent("If file name is too looooooooooooong."),
                     isDirectory: true
                 ),
@@ -64,7 +64,7 @@ struct DocumentExplorer_Preview: PreviewProvider {
             )
                 .previewLayout(.fixed(width: 320, height: 50))
             DocumentExplorerSelectableRow(
-                item: Document(
+                document: Document(
                     url: URL.homeDirectory.appendingPathComponent("name"),
                     isDirectory: false
                 ),
@@ -73,7 +73,7 @@ struct DocumentExplorer_Preview: PreviewProvider {
             )
                 .previewLayout(.fixed(width: 320, height: 50))
             DocumentExplorerSelectableRow(
-                item: Document(
+                document: Document(
                     url: URL.homeDirectory.appendingPathComponent("If file name is too looooooooooooong."),
                     isDirectory: false
                 ),
@@ -82,14 +82,14 @@ struct DocumentExplorer_Preview: PreviewProvider {
             )
                 .previewLayout(.fixed(width: 320, height: 50))
             DocumentExplorerRow(
-                item: Document(
+                document: Document(
                     url: URL.homeDirectory.appendingPathComponent("name"),
                     isDirectory: true
                 )
             )
                 .previewLayout(.fixed(width: 320, height: 50))
             DocumentExplorerRow(
-                item: Document(
+                document: Document(
                     url: URL.homeDirectory.appendingPathComponent("If file name is too looooooooooooong."),
                     isDirectory: false
                 )

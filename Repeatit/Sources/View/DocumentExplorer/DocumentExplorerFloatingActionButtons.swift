@@ -11,7 +11,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct DocumentExplorerFloatingActionButtons: View {
-    let store: Store<AppState, AppAction>
+    let store: Store<DocumentExplorerState, DocumentExplorerAction>
     let documentTypes = [
         UTType.image,
         UTType.mp3,
@@ -52,9 +52,8 @@ struct DocumentExplorerFloatingActionButtons: View {
                         onTapGesture: {
                             self.showPopup {
                                 SingleTextFieldPopup(
-                                    textInput: "ex) https://youtu.be/929plYk1lDc",
                                     title: "YouTube",
-                                    message: "Please Enter a YouTube link.",
+                                    message: "Please Enter a YouTube link.\nex) https://youtu.be/929plYk1lDc",
                                     positiveButton: ("Confirm", {
                                         if let youtubeId = $0.getYouTubeId() {
                                             viewStore.send(.confirmCreatingYoutube(youtubeId))
@@ -116,6 +115,7 @@ struct DocumentExplorerFloatingActionButtons: View {
         attributes.name = "EntryForFloatingActionButtons"
         attributes.displayDuration = .infinity
         attributes.screenBackground = .color(color: EKColor(UIColor.black.withAlphaComponent(0.6)))
+        attributes.entryInteraction = .absorbTouches
         attributes.position = .center
         attributes.entranceAnimation = .init(
             scale: .init(from: 0.3, to: 1, duration: 0.1),
@@ -143,32 +143,31 @@ struct DocumentExplorerFloatingActionButton_Preview: PreviewProvider {
     static var previews: some View {
         Group {
             DocumentExplorerFloatingActionButtons(
-                store: Store(
-                    initialState: AppState(
+                store: .init(
+                    initialState: .init(
                         currentURL: URL.homeDirectory,
-                        documents: [URL.homeDirectory: FileManager.default.getDocuments(in: URL.homeDirectory)],
+                        documents: [.homeDirectory: FileManager.default.getDocuments(in: .homeDirectory)],
                         selectedDocuments: []
                     ),
-                    reducer: appReducer,
-                    environment: AppEnvironment()
+                    reducer: documentExplorerReducer,
+                    environment: DocumentExplorerEnvironment(fileManager: .default)
                 )
             )
-                .environment(\.colorScheme, .light)
-                .previewLayout(.fixed(width: 250, height: 320))
-
+            .environment(\.colorScheme, .light)
+            .previewLayout(.fixed(width: 250, height: 320))
             DocumentExplorerFloatingActionButtons(
-                store: Store(
-                    initialState: AppState(
+                store: .init(
+                    initialState: .init(
                         currentURL: URL.homeDirectory,
-                        documents: [URL.homeDirectory: FileManager.default.getDocuments(in: URL.homeDirectory)],
+                        documents: [.homeDirectory: FileManager.default.getDocuments(in: .homeDirectory)],
                         selectedDocuments: []
                     ),
-                    reducer: appReducer,
-                    environment: AppEnvironment()
+                    reducer: documentExplorerReducer,
+                    environment: DocumentExplorerEnvironment(fileManager: .default)
                 )
             )
-                .environment(\.colorScheme, .dark)
-                .previewLayout(.fixed(width: 250, height: 320))
+            .environment(\.colorScheme, .dark)
+            .previewLayout(.fixed(width: 250, height: 320))
         }
     }
 }

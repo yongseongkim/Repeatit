@@ -10,39 +10,49 @@ import ComposableArchitecture
 import SwiftUI
 
 struct DocumentExplorerMultiSelectableListView: View {
-    let store: Store<AppState, AppAction>
-    let items: [Document]
+    let store: Store<DocumentExplorerState, DocumentExplorerAction>
+    let documents: [Document]
 
     var body: some View {
         WithViewStore(self.store) { viewStore in
-            List(items, id: \.nameWithExtension) { item in
-                DocumentExplorerSelectableRow(
-                    item: item,
-                    isSelected: viewStore.selectedDocuments.contains(item),
-                    onTapGesture: { viewStore.send(.documentItemTappedWhileEditing($0)) }
-                )
+            if documents.isEmpty {
+                Text("There is no items")
+            } else {
+                List(documents, id: \.nameWithExtension) { document in
+                    DocumentExplorerSelectableRow(
+                        document: document,
+                        isSelected: viewStore.selectedDocuments.contains(document),
+                        onTapGesture: { viewStore.send(.documentTappedWhileEditing($0)) }
+                    )
+                }
+                .listStyle(PlainListStyle())
             }
-            .listStyle(PlainListStyle())
         }
     }
 }
 
 struct DocumentExplorerListView<Content: View>: View {
-    let items: [Document]
+    let documents: [Document]
     let destinationViewBuilder: (_ url: URL) -> Content
+    let documentTapped: (Document) -> Void
 
     var body: some View {
-        List(items, id: \.nameWithExtension) { item in
-            if item.isDirectory {
-                NavigationLink(
-                    destination: destinationViewBuilder(item.url),
-                    label: { DocumentExplorerRow(item: item) }
-                )
-            } else {
-                DocumentExplorerRow(item: item)
+        if documents.isEmpty {
+            Text("There is no items")
+        } else {
+            List(documents, id: \.nameWithExtension) { document in
+                if document.isDirectory {
+                    NavigationLink(
+                        destination: destinationViewBuilder(document.url),
+                        label: { DocumentExplorerRow(document: document) }
+                    )
+                } else {
+                    DocumentExplorerRow(document: document)
+                        .onTapGesture { documentTapped(document) }
+                }
             }
+            .listStyle(PlainListStyle())
         }
-        .listStyle(PlainListStyle())
     }
 }
 
@@ -50,18 +60,17 @@ struct DocumentExplorerMultiSelectableListView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             DocumentExplorerMultiSelectableListView(
-                store: Store(
-                    initialState: AppState(
+                store: .init(
+                    initialState: .init(
                         currentURL: URL.homeDirectory,
                         documents: [URL.homeDirectory: FileManager.default.getDocuments(in: URL.homeDirectory)],
                         selectedDocuments: [
                             Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3"))
-                        ]
-                    ),
-                    reducer: appReducer,
-                    environment: AppEnvironment()
+                        ]),
+                    reducer: documentExplorerReducer,
+                    environment: DocumentExplorerEnvironment(fileManager: .default)
                 ),
-                items: [
+                documents: [
                     Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3")),
                     Document(url: URL.homeDirectory.appendingPathComponent("sample.youtube"))
                 ]
@@ -69,18 +78,17 @@ struct DocumentExplorerMultiSelectableListView_Previews: PreviewProvider {
             .environment(\.colorScheme, .light)
             .previewLayout(.fixed(width: 320, height: 300))
             DocumentExplorerMultiSelectableListView(
-                store: Store(
-                    initialState: AppState(
+                store: .init(
+                    initialState: .init(
                         currentURL: URL.homeDirectory,
                         documents: [URL.homeDirectory: FileManager.default.getDocuments(in: URL.homeDirectory)],
                         selectedDocuments: [
                             Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3"))
-                        ]
-                    ),
-                    reducer: appReducer,
-                    environment: AppEnvironment()
+                        ]),
+                    reducer: documentExplorerReducer,
+                    environment: DocumentExplorerEnvironment(fileManager: .default)
                 ),
-                items: [
+                documents: [
                     Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3")),
                     Document(url: URL.homeDirectory.appendingPathComponent("sample.youtube"))
                 ]
@@ -95,20 +103,22 @@ struct DocumentExplorerListView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             DocumentExplorerListView(
-                items: [
+                documents: [
                     Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3")),
                     Document(url: URL.homeDirectory.appendingPathComponent("sample.youtube"))
                 ],
-                destinationViewBuilder: { _ in EmptyView() }
+                destinationViewBuilder: { _ in EmptyView() },
+                documentTapped: { _ in }
             )
             .environment(\.colorScheme, .light)
             .previewLayout(.fixed(width: 320, height: 300))
             DocumentExplorerListView(
-                items: [
+                documents: [
                     Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3")),
                     Document(url: URL.homeDirectory.appendingPathComponent("sample.youtube"))
                 ],
-                destinationViewBuilder: { _ in EmptyView() }
+                destinationViewBuilder: { _ in EmptyView() },
+                documentTapped: { _ in }
             )
             .environment(\.colorScheme, .dark)
             .previewLayout(.fixed(width: 320, height: 300))

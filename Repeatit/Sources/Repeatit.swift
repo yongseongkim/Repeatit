@@ -17,9 +17,17 @@ struct Repeatit: App {
             AppView(
                 store: Store(
                     initialState: AppState(
-                        currentURL: URL.homeDirectory,
-                        documents: [URL.homeDirectory: FileManager.default.getDocuments(in: URL.homeDirectory)],
-                        selectedDocuments: []
+                        documentExplorer: .init(
+                            currentURL: URL.homeDirectory,
+                            documents: [:],
+                            selectedDocuments: [],
+                            selectedDocumentsDestinationNavigator: .init(
+                                mode: .move,
+                                currentURL: URL.homeDirectory,
+                                documents: [:],
+                                selectedDocuments: []
+                            )
+                        )
                     ),
                     reducer: appReducer,
                     environment: AppEnvironment()
@@ -28,3 +36,4 @@ struct Repeatit: App {
         }
     }
 }
+

@@ -9,9 +9,7 @@ import ComposableArchitecture
 import SwiftUI
 
 struct SelectedDocumentsDestinationNavigatorView: View {
-    let store: Store<SelectedDocumentsDestinationNavigatiorState, SelectedDocumentsDestinationNavigatiorAction>
-    let onConfirmTapped: ((URL) -> Void)
-    let onCancelTapped: (() -> Void)
+    let store: Store<SelectedDocumentsDestinationNavigatiorState, SelectedDocumentsDestinationNavigatorAction>
 
     var body: some View {
         WithViewStore(self.store) { viewStore in
@@ -19,11 +17,12 @@ struct SelectedDocumentsDestinationNavigatorView: View {
                 VStack {
                     ZStack {
                         NavigationView { SelectedDocumentDestinationView(store: store, url: URL.homeDirectory) }
+                            .accentColor(.systemBlack)
                         VStack(spacing: 0) {
                             HStack(spacing: 0) {
                                 Spacer()
                                 Button(
-                                    action: { onCancelTapped() },
+                                    action: { viewStore.send(.cancelButtonTapped) },
                                     label: {
                                         Image(systemName: "xmark")
                                             .padding(12)
@@ -36,7 +35,7 @@ struct SelectedDocumentsDestinationNavigatorView: View {
                         }
                     }
                     Button(
-                        action: { onConfirmTapped(viewStore.currentURL) },
+                        action: { viewStore.send(.confirmButtonTapped) },
                         label: { Text("Confirm").foregroundColor(Color.white) }
                     )
                     .frame(minWidth: 0, maxWidth: .infinity)
@@ -51,7 +50,7 @@ struct SelectedDocumentsDestinationNavigatorView: View {
 }
 
 struct SelectedDocumentDestinationView: View {
-    let store: Store<SelectedDocumentsDestinationNavigatiorState, SelectedDocumentsDestinationNavigatiorAction>
+    let store: Store<SelectedDocumentsDestinationNavigatiorState, SelectedDocumentsDestinationNavigatorAction>
     let url: URL
 
     var body: some View {
@@ -60,10 +59,10 @@ struct SelectedDocumentDestinationView: View {
                 if item.isDirectory && !viewStore.selectedDocuments.contains(item) {
                     NavigationLink(
                         destination: SelectedDocumentDestinationView(store: store, url: item.url),
-                        label: { DocumentExplorerRow(item: item) }
+                        label: { DocumentExplorerRow(document: item) }
                     )
                 } else {
-                    DocumentExplorerRow(item: item).opacity(0.6)
+                    DocumentExplorerRow(document: item).opacity(0.6)
                 }
             }
             .listStyle(PlainListStyle())
@@ -78,17 +77,14 @@ struct SelectedDocumentsDestinationNavigatorView_Previews: PreviewProvider {
         SelectedDocumentsDestinationNavigatorView(
             store: .init(
                 initialState: .init(
+                    mode: .move,
                     currentURL: URL.homeDirectory,
-                    documents: [:],
-                    selectedDocuments: [
-                        Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3"))
-                    ]
+                    documents: [URL.homeDirectory: FileManager.default.getDocuments(in: URL.homeDirectory)],
+                    selectedDocuments: [Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3"))]
                 ),
                 reducer: selectedDocumentsDestinationNavigatorReducer,
-                environment: SelectedDocumentsDestinationNavigatiorEnvironment()
-            ),
-            onConfirmTapped: { _ in },
-            onCancelTapped: { }
+                environment: SelectedDocumentsDestinationNavigatiorEnvironment(fileManager: .default)
+            )
         )
     }
 }
