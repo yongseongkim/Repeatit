@@ -1,16 +1,14 @@
 //
-//  AudioItem.swift
+//  DocumentMetadata.swift
 //  Repeatit
 //
-//  Created by yongseongkim on 2020/01/30.
-//  Copyright © 2020 yongseongkim. All rights reserved.
+//  Created by YongSeong Kim on 2020/10/25.
 //
 
-import AVFoundation
 import UIKit
+import AVFoundation
 
-struct AudioItem: Equatable {
-    let url: URL
+struct MediaMetadata {
     let title: String
     let artist: String
     let albumTitle: String
@@ -18,8 +16,7 @@ struct AudioItem: Equatable {
     let lyrics: String
 
     init(url: URL) {
-        self.url = url
-        let playerItem = AVPlayerItem(url: self.url)
+        let playerItem = AVPlayerItem(url: url)
         let metadataList = playerItem.asset.metadata
         title = metadataList.first { $0.commonKey?.rawValue == "title"}?.stringValue ?? url.lastPathComponent
         artist = metadataList.first { $0.commonKey?.rawValue == "artist"}?.stringValue ?? "Unknown Artist"

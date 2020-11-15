@@ -90,7 +90,10 @@ struct DocumentExplorerView: View {
                 }
             }
             .navigationBarTitle(url.lastPathComponent)
-            .onAppear { viewStore.send(.documentExplorerAppeared(url: url)) }
+            .onAppear {
+                print("onAppear: \(url)")
+                viewStore.send(.documentExplorerAppeared(url: url))
+            }
         }
     }
 }

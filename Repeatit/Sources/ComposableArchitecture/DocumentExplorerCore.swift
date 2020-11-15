@@ -186,4 +186,3 @@ let documentExplorerReducer = Reducer<DocumentExplorerState, DocumentExplorerAct
         }
     }
 )
-.debug()

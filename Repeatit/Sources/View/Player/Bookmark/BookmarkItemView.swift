@@ -28,22 +28,27 @@ extension BookmarkAddItemView {
 }
 
 struct BookmarkEditItemView: View {
-    @ObservedObject var model: ViewModel
+    let millis: Millis
     let listener: BookmarkEditItemView.Listener?
+
+    @State var text: String
     @State private var textFieldHeight: CGFloat = 35
 
     var body: some View {
         HStack {
             Text(formattedTime)
-                .onTapGesture { self.listener?.onTapGesture?(self.model.millis) }
+                .onTapGesture { /* update text */ }
             MultilineTextField(
-                text: .init(get: { self.model.text }, set: { self.model.text = $0 }),
+                text: .init(get: { self.text }, set: { self.text = $0 }),
                 calculatedHeight: $textFieldHeight,
-                inputAccessaryContent: { BookmarkInputAccessaryView(model: .init(player: self.model.player)) },
+                inputAccessaryContent: {
+                    // TODO: bind player client
+                    BookmarkInputAccessaryView(isPlaying: .init(false))
+                },
                 inputAccessaryContentHeight: BookmarkInputAccessaryView.height,
                 listener: .init(
-                    onEndEditing: { self.listener?.onEndEditing?(self.model.millis, $0) },
-                    onDone: { self.listener?.onDone?(self.model.millis, self.model.text) }
+                    onEndEditing: { _ in /* on end editing */ },
+                    onDone: { /* on done */ }
                 )
             )
                 .frame(height: textFieldHeight)
@@ -56,7 +61,7 @@ struct BookmarkEditItemView: View {
     }
 
     private var formattedTime: String {
-        let time = Double(model.millis) / 1000
+        let time = Double(millis) / 1000
         let minutes = Int(time.truncatingRemainder(dividingBy: 3600) / 60)
         let seconds = time.truncatingRemainder(dividingBy: 60)
         let remainder = Int((seconds * 10).truncatingRemainder(dividingBy: 10))
@@ -65,18 +70,6 @@ struct BookmarkEditItemView: View {
 }
 
 extension BookmarkEditItemView {
-    class ViewModel: ObservableObject {
-        fileprivate let millis: Int
-        fileprivate var text: String
-        let player: Player
-
-        init(bookmark: Bookmark, player: Player) {
-            self.millis = bookmark.millis
-            self.text = bookmark.text
-            self.player = player
-        }
-    }
-
     struct Listener {
         let onTapGesture: ((Int) -> Void)?
         let onEndEditing: ((Int, String) -> Void)?

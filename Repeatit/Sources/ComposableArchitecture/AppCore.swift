@@ -5,12 +5,15 @@
 //  Created by YongSeong Kim on 2020/10/13.
 //
 
+import Combine
 import ComposableArchitecture
 
 enum AppAction: Equatable {
     // Integrate other reducers
     case documentExplorer(DocumentExplorerAction)
-    case player(PlayerAction)
+    case audioPlayer(LifecycleAction<AudioPlayerAction>)
+    case videoPlayer(LifecycleAction<VideoPlayerAction>)
+    case youtubePlayer(LifecycleAction<YouTubePlayerAction>)
 
     // Set presntation of sheets
     case setPlayerSheet(isPresented: Bool)
@@ -18,11 +21,17 @@ enum AppAction: Equatable {
 
 struct AppState: Equatable {
     var documentExplorer: DocumentExplorerState
-    var player: PlayerState?
+    var audioPlayer: AudioPlayerState?
+    var videoPlayer: VideoPlayerState?
+    var youtubePlayer: YouTubePlayerState?
 }
 
 struct AppEnvironment {
-    let fileManager: FileManager = .default
+    static let production = AppEnvironment(
+        fileManager: .default
+    )
+
+    let fileManager: FileManager
 }
 
 let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
@@ -32,36 +41,69 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
             action: /AppAction.documentExplorer,
             environment: { DocumentExplorerEnvironment(fileManager: $0.fileManager) }
         ),
-    playerReducer
-        .optional()
+    audioPlayerReducer
         .pullback(
-            state: \.player,
-            action: /AppAction.player,
-            environment: { _ in PlayerEnvironment(player: MediaPlayer()) }
+            state: \.audioPlayer,
+            action: /AppAction.audioPlayer,
+            environment: { _ in
+                AudioPlayerEnvironment(
+                    audioClient: .production,
+                    waveformClient: .production,
+                    bookmarkClient: .production
+                )
+            }
+        ),
+    videoPlayerReducer
+        .pullback(
+            state: \.videoPlayer,
+            action: /AppAction.videoPlayer,
+            environment: { _ in
+                VideoPlayerEnvironment(videoClient: .production)
+            }
+        ),
+    youtubePlayerReducer
+        .pullback(
+            state: \.youtubePlayer,
+            action: /AppAction.youtubePlayer,
+            environment: { _ in
+                YouTubePlayerEnvironment(youtubeClient: .production)
+            }
         ),
     Reducer<AppState, AppAction, AppEnvironment> { state, action, environment in
         switch action {
         case .documentExplorer(let action):
             switch action {
             case .documentTapped(let document):
-                state.player = PlayerState(
-                    current: document,
-                    isPlaying: false,
-                    playTime: 0,
-                    duration: 0
-                )
+                if document.isAudioFile {
+                    state.audioPlayer = .init(
+                        current: document,
+                        playerControl: .init(
+                            id: AudioClientID()
+                        )
+                    )
+                } else if document.isVideoFile {
+                    state.videoPlayer = .init(
+                        current: document,
+                        playerControl: .init(id: VideoClientID())
+                    )
+                } else if document.isYouTubeFile {
+                    state.youtubePlayer = .init(
+                        current: document,
+                        playerView: nil,
+                        playerControl: .init(id: YouTubeClientID())
+                    )
+                }
             default:
                 break
             }
             return .none
-        case .player(let action):
-            return .none
         case .setPlayerSheet(false):
-            state.player = nil
+            state.audioPlayer = nil
+            state.videoPlayer = nil
+            state.youtubePlayer = nil
             return .none
         default:
             return .none
         }
     }
-    .debug()
 )

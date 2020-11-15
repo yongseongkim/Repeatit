@@ -39,10 +39,9 @@ extension AudioPlayerSimpleHeaderView {
         let title: String
         let artist: String
 
-        init(item: PlayItem) {
-            let audioItem = AudioItem(url: item.url)
-            self.title = audioItem.title
-            self.artist = audioItem.artist
+        init(metadata: MediaMetadata) {
+            self.title = metadata.title
+            self.artist = metadata.artist
         }
 
         init(title: String, artist: String) {

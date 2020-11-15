@@ -18,14 +18,13 @@ struct Document: Hashable, Codable {
     }
 }
 
-extension Document: PlayItem {
-}
-
 extension Document: Identifiable {
     var id: String {
         return url.absoluteString
     }
+}
 
+extension Document {
     var isAudioFile: Bool {
         return URL.supportedAuidoFormats.contains(pathExtension)
     }
@@ -52,6 +51,10 @@ extension Document: Identifiable {
 
     var pathExtension: String {
         return (nameWithExtension as NSString).pathExtension.lowercased()
+    }
+
+    var metadata: MediaMetadata {
+        return MediaMetadata(url: url)
     }
 
     var imageName: String {
@@ -85,4 +88,10 @@ fileprivate extension URL {
     static let supportedAuidoFormats = ["aac", "adts", "ac3", "aif", "aiff", "aifc", "caf", "mp3", "m4a", "snd", "au", "sd2", "wav"]
     static let supportedVideoFormats = ["mpeg", "avi", "mp4", "mov"]
     static let supportedSubtitleFormats = ["lrc", "srt", "vtt"]
+}
+
+extension YouTubeItem {
+    static func from(document: Document) -> YouTubeItem? {
+        return try? JSONDecoder().decode(YouTubeItem.self, from: Data(contentsOf: document.url))
+    }
 }

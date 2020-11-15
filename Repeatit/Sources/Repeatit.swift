@@ -30,7 +30,7 @@ struct Repeatit: App {
                         )
                     ),
                     reducer: appReducer,
-                    environment: AppEnvironment()
+                    environment: .production
                 )
             )
         }

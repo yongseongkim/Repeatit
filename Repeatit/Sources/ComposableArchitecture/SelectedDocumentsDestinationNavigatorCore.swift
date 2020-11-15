@@ -61,4 +61,3 @@ let selectedDocumentsDestinationNavigatorReducer = Reducer<
         return .none
     }
 }
-.debug()

@@ -3,6 +3,7 @@ options:
   bundleIdPrefix: kr.co.yongseongkim
   postGenCommand:
     pod install
+  groupSortPosition: top
 settings:
   DEVELOPMENT_TEAM: 4S8J2466NG
   VERSIONING_SYSTEM: "apple-generic"
