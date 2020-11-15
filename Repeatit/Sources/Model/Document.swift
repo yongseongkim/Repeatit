@@ -78,8 +78,16 @@ extension Document {
     }
 
     func toYouTubeItem() -> YouTubeItem {
-        guard let item = try? JSONDecoder().decode(YouTubeItem.self, from: Data(contentsOf: url)) else { return YouTubeItem(videoId: "") }
-        return item
+        // TODO: When launching, It can be removed.
+        let data = (try? Data(contentsOf: url)) ?? Data()
+        if let item = try? JSONDecoder().decode(YouTubeItem.self, from: data) {
+            return item
+        }
+        if let json = (try? JSONSerialization.jsonObject(with: data, options: .allowFragments)) as? [String: Any],
+           let id = json["videoId"] as? String {
+            return YouTubeItem(id: id)
+        }
+        return YouTubeItem(id: "")
     }
 }
 

@@ -9,5 +9,5 @@ import Foundation
 
 // https://www.youtube.com/watch?v=bNpBoNeGtoA
 struct YouTubeItem: Codable {
-    let videoId: String
+    let id: String
 }

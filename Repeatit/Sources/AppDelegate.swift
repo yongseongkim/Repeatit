@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         try FileManager.default.copyItem(atPath: path, toPath: URL.homeDirectory.appendingPathComponent("sample.mp3").path)
                     }
                     let sampleYouTubeURL = URL.homeDirectory.appendingPathComponent("sample.youtube")
-                    let data = try JSONEncoder().encode(YouTubeItem(videoId: "VuavFEzN6oA"))
+                    let data = try JSONEncoder().encode(YouTubeItem(id: "VuavFEzN6oA"))
                     try data.write(to: sampleYouTubeURL)
                 } catch let exception {
                     print(exception)

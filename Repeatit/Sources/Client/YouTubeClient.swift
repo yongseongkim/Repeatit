@@ -31,20 +31,17 @@ extension YouTubeClient: PlayerControlClient {
 
 extension YouTubeClient {
     static let production = YouTubeClient(
-        load: { id, videoId in
+        load: { id, videoID in
             Effect.run { subscriber in
                 let cancellable = AnyCancellable {
                     dependencies[id]?.pause()
                     dependencies[id] = nil
                 }
                 let client = YouTubeClientDependencies(
-                    videoId: videoId,
+                    videoID: videoID,
                     durationDidLoad: { subscriber.send(.durationDidChange($0)) },
                     playTimeDidChange: { subscriber.send(.playTimeDidChange($0)) },
-                    playingDidChange: {
-                        print($0)
-                        subscriber.send(.playingDidChange($0))
-                    }
+                    playingDidChange: { subscriber.send(.playingDidChange($0)) }
                 )
                 dependencies[id] = client
                 subscriber.send(.layerDidLoad(client.view))
@@ -77,7 +74,7 @@ private class YouTubeClientDependencies: NSObject {
     let view = YTPlayerView()
 
     init(
-        videoId: String,
+        videoID: String,
         durationDidLoad: @escaping(Seconds) -> Void,
         playTimeDidChange: @escaping (Seconds) -> Void,
         playingDidChange: @escaping (Bool) -> Void
@@ -88,7 +85,7 @@ private class YouTubeClientDependencies: NSObject {
         super.init()
         // https://developers.google.com/youtube/player_parameters?hl=ko#Parameters
         view.load(
-            withVideoId: videoId,
+            withVideoId: videoID,
             playerVars: [
                 "controls": 1,
                 "playsinline": 1,

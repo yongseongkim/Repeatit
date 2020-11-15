@@ -120,11 +120,11 @@ let documentExplorerReducer = Reducer<DocumentExplorerState, DocumentExplorerAct
                 print(error)
             }
             return Effect(value: .refreshAndEditingOff)
-        case .confirmCreatingYoutube(let youtubeId):
-            let file = YouTubeItem(videoId: youtubeId)
+        case .confirmCreatingYoutube(let youtubeID):
+            let file = YouTubeItem(id: youtubeID)
             do {
                 let data = try JSONEncoder().encode(file)
-                try data.write(to: state.currentURL.appendingPathComponent("\(youtubeId).youtube"))
+                try data.write(to: state.currentURL.appendingPathComponent("\(youtubeID).youtube"))
             } catch let exception {
                 print(exception)
             }

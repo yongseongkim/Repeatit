@@ -30,7 +30,7 @@ struct YouTubePlayerEnvironment {
 let youtubePlayerReducer = Reducer<YouTubePlayerState, YouTubePlayerAction, YouTubePlayerEnvironment> { state, action, environment in
     switch action {
     case .load:
-        let id = state.current.toYouTubeItem().videoId
+        let id = state.current.toYouTubeItem().id
         return environment.youtubeClient.load(YouTubeClientID(), id)
             .receive(on: DispatchQueue.main)
             .catchToEffect()

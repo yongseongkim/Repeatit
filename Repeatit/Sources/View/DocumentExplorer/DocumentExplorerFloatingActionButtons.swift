@@ -55,8 +55,8 @@ struct DocumentExplorerFloatingActionButtons: View {
                                     title: "YouTube",
                                     message: "Please Enter a YouTube link.\nex) https://youtu.be/929plYk1lDc",
                                     positiveButton: ("Confirm", {
-                                        if let youtubeId = $0.getYouTubeId() {
-                                            viewStore.send(.confirmCreatingYoutube(youtubeId))
+                                        if let id = $0.parseYouTubeID() {
+                                            viewStore.send(.confirmCreatingYoutube(id))
                                         }
                                         hidePopup()
                                     }),
