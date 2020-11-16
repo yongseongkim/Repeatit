@@ -8,29 +8,52 @@
 import Combine
 import Foundation
 
-protocol Bookmark {
-    var millis: Int { get }
-    var text: String { get }
+struct Bookmark: Equatable {
+    let millis: Int
+    let text: String
 }
 
-protocol BookmarkController {
+extension Bookmark {
+    static func from(line: LRCLine) -> Bookmark {
+        return .init(
+            millis: line.millis,
+            text: line.lyrics
+        )
+    }
+
+    static func from(component: SRTComponent) -> Bookmark {
+        return .init(
+            millis: component.startMillis,
+            text: component.caption
+        )
+    }
+
+    static func from(cue: WebVTTCue) -> Bookmark {
+        return .init(
+            millis: cue.startMillis,
+            text: cue.payload
+        )
+    }
+}
+
+protocol BookmarkController: AnyObject {
     var bookmarks: [Bookmark] { get }
-    var bookmarkChangesPublisher: AnyPublisher<Void, Never> { get }
+    var bookmarkChangesPublisher: AnyPublisher<[Bookmark], Never> { get }
 
     func addBookmark(at millis: Int)
     func removeBookmark(at millis: Int)
     func updateBookmark(at millis: Int, text: String)
 }
 
-extension LRCLine: Bookmark {
-    var text: String { lyrics }
-}
-
 extension LRCController: BookmarkController {
-    var bookmarks: [Bookmark] { self.lines }
+    var bookmarks: [Bookmark] {
+        lines.map { Bookmark.from(line: $0) }
+    }
 
-    var bookmarkChangesPublisher: AnyPublisher<Void, Never> {
-        self.changesPublisher
+    var bookmarkChangesPublisher: AnyPublisher<[Bookmark], Never> {
+        changesPublisher
+            .compactMap { [weak self] in self?.bookmarks }
+            .eraseToAnyPublisher()
     }
 
     func addBookmark(at millis: Int) {
@@ -46,16 +69,15 @@ extension LRCController: BookmarkController {
     }
 }
 
-extension SRTComponent: Bookmark {
-    var millis: Int { startMillis }
-    var text: String { caption }
-}
-
 extension SRTController: BookmarkController {
-    var bookmarks: [Bookmark] { self.components }
+    var bookmarks: [Bookmark] {
+        components.map { Bookmark.from(component: $0) }
+    }
 
-    var bookmarkChangesPublisher: AnyPublisher<Void, Never> {
-        self.changesPublisher
+    var bookmarkChangesPublisher: AnyPublisher<[Bookmark], Never> {
+        changesPublisher
+            .compactMap { [weak self] in self?.bookmarks }
+            .eraseToAnyPublisher()
     }
 
     func addBookmark(at millis: Int) {
@@ -71,16 +93,15 @@ extension SRTController: BookmarkController {
     }
 }
 
-extension WebVTTCue: Bookmark {
-    var millis: Int { startMillis }
-    var text: String { payload }
-}
-
 extension WebVTTController: BookmarkController {
-    var bookmarks: [Bookmark] { self.cues }
+    var bookmarks: [Bookmark] {
+        cues.map { Bookmark.from(cue: $0)}
+    }
 
-    var bookmarkChangesPublisher: AnyPublisher<Void, Never> {
-        self.changesPublisher
+    var bookmarkChangesPublisher: AnyPublisher<[Bookmark], Never> {
+        changesPublisher
+            .compactMap { [weak self] in self?.bookmarks }
+            .eraseToAnyPublisher()
     }
 
     func addBookmark(at millis: Int) {

@@ -45,12 +45,14 @@ extension Reducer {
                     state.isPlaying
                         ? environment.client.pause(state.id)
                         : environment.client.resume(state.id)
+                    return .none
                 case .moveForward(let seconds):
                     environment.client.move(state.id, state.playTime + seconds)
+                    return .none
                 case .moveBackward(let seconds):
                     environment.client.move(state.id, state.playTime - seconds)
+                    return .none
                 }
-                return .none
             }
             .pullback(state: state, action: action, environment: environment)
         )

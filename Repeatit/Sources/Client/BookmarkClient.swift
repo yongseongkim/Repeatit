@@ -5,29 +5,64 @@
 //  Created by YongSeong Kim on 2020/11/14.
 //
 
+import Combine
 import ComposableArchitecture
 
 struct BookmarkClient {
     typealias Millis = Int
 
-    let add: (Millis) -> Effect<[Bookmark], Failure>
-    let update: (Millis, String) -> Effect<Bookmark, Failure>
-    let remove: (Millis) -> Effect<[Bookmark], Failure>
+    let load: (Document) -> Effect<Action, Failure>
+    let add: (URL, Millis) -> Void
+    let update: (URL, Millis, String) -> Void
+    let remove: (URL, Millis) -> Void
 
-    enum Failure: Error {
+    enum Action: Equatable {
+        case bookmarkDidChange
+        case bookmarksDidChange([Bookmark])
+    }
+
+    enum Failure: Error, Equatable {
+        case couldntLoadBookmarks
     }
 }
 
 extension BookmarkClient {
     static let production = BookmarkClient(
-        add: { millis in
-            return .none
+        load: { document in
+            let url = document.url
+            let controller: BookmarkController
+            if document.isYouTubeFile {
+                controller = WebVTTController(url: url.deletingPathExtension().appendingPathExtension("vtt"), duration: 100000)
+            } else if document.isVideoFile {
+                controller = SRTController(url: url.deletingPathExtension().appendingPathExtension("srt"), duration: 100000)
+            } else {
+                controller = LRCController(url: url.deletingPathExtension().appendingPathExtension("lrc"))
+            }
+            dependencies[url] = controller
+            return controller.bookmarkChangesPublisher
+                .prepend(controller.bookmarks)
+                .mapError { _ in BookmarkClient.Failure.couldntLoadBookmarks }
+                .handleEvents(receiveCompletion: { _ in
+                    dependencies[url] = nil
+                })
+                .eraseToAnyPublisher()
+                .map(BookmarkClient.Action.bookmarksDidChange)
+                .eraseToEffect()
         },
-        update: { millis, text in
-            return .none
+        add: { url, millis in
+            guard let controller = dependencies[url] else { return }
+            controller.addBookmark(at: millis)
         },
-        remove: { millis in
-            return .none
+        update: { url, millis, text in
+            guard let controller = dependencies[url] else { return }
+            print(url, millis, text)
+            controller.updateBookmark(at: millis, text: text)
+        },
+        remove: { url, millis in
+            guard let controller = dependencies[url] else { return }
+            controller.removeBookmark(at: millis)
         }
     )
 }
+
+private var dependencies: [AnyHashable: BookmarkController] = [:]

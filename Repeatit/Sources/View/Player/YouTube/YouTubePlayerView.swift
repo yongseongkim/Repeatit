@@ -11,6 +11,8 @@ import SwiftUI
 struct YouTubePlayerView: View {
     let store: Store<YouTubePlayerState, LifecycleAction<YouTubePlayerAction>>
 
+    @State var keyboardHeight: CGFloat = 0
+
     var body: some View {
         WithViewStore(self.store) { viewStore in
             GeometryReader { geometry in
@@ -26,10 +28,17 @@ struct YouTubePlayerView: View {
                             action: { LifecycleAction.action(YouTubePlayerAction.playerControl($0)) }
                         )
                     )
+                    BookmarkListView(
+                        store: store.scope(
+                            state: { $0.bookmark },
+                            action: { LifecycleAction.action(YouTubePlayerAction.bookmark($0)) }
+                        )
+                    )
                 }
             }
             .onAppear { viewStore.send(.onAppear) }
             .onDisappear { viewStore.send(.onDisappear) }
         }
+        .modifier(KeyboardHeightDetector(self.$keyboardHeight))
     }
 }

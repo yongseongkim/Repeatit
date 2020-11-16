@@ -58,7 +58,10 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
             state: \.videoPlayer,
             action: /AppAction.videoPlayer,
             environment: { _ in
-                VideoPlayerEnvironment(videoClient: .production)
+                VideoPlayerEnvironment(
+                    videoClient: .production,
+                    bookmarkClient: .production
+                )
             }
         ),
     youtubePlayerReducer
@@ -66,7 +69,10 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
             state: \.youtubePlayer,
             action: /AppAction.youtubePlayer,
             environment: { _ in
-                YouTubePlayerEnvironment(youtubeClient: .production)
+                YouTubePlayerEnvironment(
+                    youtubeClient: .production,
+                    bookmarkClient: .production
+                )
             }
         ),
     Reducer<AppState, AppAction, AppEnvironment> { state, action, environment in
@@ -79,18 +85,21 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
                         current: document,
                         playerControl: .init(
                             id: AudioClientID()
-                        )
+                        ),
+                        bookmark: .init(current: document)
                     )
                 } else if document.isVideoFile {
                     state.videoPlayer = .init(
                         current: document,
-                        playerControl: .init(id: VideoClientID())
+                        playerControl: .init(id: VideoClientID()),
+                        bookmark: .init(current: document)
                     )
                 } else if document.isYouTubeFile {
                     state.youtubePlayer = .init(
                         current: document,
                         playerView: nil,
-                        playerControl: .init(id: YouTubeClientID())
+                        playerControl: .init(id: YouTubeClientID()),
+                        bookmark: .init(current: document)
                     )
                 }
             default:

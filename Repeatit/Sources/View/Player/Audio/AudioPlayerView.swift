@@ -41,6 +41,12 @@ struct AudioPlayerView: View {
                         action: { LifecycleAction.action(AudioPlayerAction.playerControl($0)) }
                     )
                 )
+                BookmarkListView(
+                    store: store.scope(
+                        state: { $0.bookmark },
+                        action: { LifecycleAction.action(AudioPlayerAction.bookmark($0)) }
+                    )
+                )
             }
             .onAppear { viewStore.send(.onAppear) }
             .onDisappear { viewStore.send(.onDisappear) }

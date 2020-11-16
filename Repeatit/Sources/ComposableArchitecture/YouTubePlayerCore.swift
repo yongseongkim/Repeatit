@@ -10,22 +10,28 @@ import youtube_ios_player_helper
 
 struct YouTubeClientID: Hashable {}
 
+// MARK: - Composable Architecture Components
 enum YouTubePlayerAction: Equatable {
     case load
 
     case player(Result<YouTubeClient.Action, YouTubeClient.Failure>)
     case playerControl(PlayerControlAction)
+    case bookmark(BookmarkAction)
 }
 
 struct YouTubePlayerState: Equatable {
     let current: Document
     var playerView: YTPlayerView?
+
     var playerControl: PlayerControlState
+    var bookmark: BookmarkState
 }
 
 struct YouTubePlayerEnvironment {
     let youtubeClient: YouTubeClient
+    let bookmarkClient: BookmarkClient
 }
+//MARK: -
 
 let youtubePlayerReducer = Reducer<YouTubePlayerState, YouTubePlayerAction, YouTubePlayerEnvironment> { state, action, environment in
     switch action {
@@ -51,8 +57,13 @@ let youtubePlayerReducer = Reducer<YouTubePlayerState, YouTubePlayerAction, YouT
         state.playerControl = state
             .playerControl
             .updated(playTime: seconds)
+        state.bookmark = state
+            .bookmark
+            .updated(playTime: seconds)
         return .none
     case .playerControl:
+        return .none
+    case .bookmark:
         return .none
     }
 }
@@ -60,6 +71,11 @@ let youtubePlayerReducer = Reducer<YouTubePlayerState, YouTubePlayerAction, YouT
     state: \.playerControl,
     action: /YouTubePlayerAction.playerControl,
     environment: { PlayerControlEnvironment(client: $0.youtubeClient) }
+)
+.bookmark(
+    state: \.bookmark,
+    action: /YouTubePlayerAction.bookmark,
+    environment: { BookmarkEnvironment(bookmarkClient: $0.bookmarkClient) }
 )
 .lifecycle(
     onAppear: { _ in Effect(value: .load) },

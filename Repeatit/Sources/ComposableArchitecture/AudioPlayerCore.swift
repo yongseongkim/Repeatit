@@ -24,6 +24,7 @@ enum AudioPlayerAction: Equatable {
     case player(Result<AudioClient.Action, AudioClient.Failure>)
     case waveform(Result<UIImage, WaveformClient.Failure>)
     case playerControl(PlayerControlAction)
+    case bookmark(BookmarkAction)
 }
 
 struct AudioPlayerState: Equatable {
@@ -32,7 +33,9 @@ struct AudioPlayerState: Equatable {
     var isPlaying: Bool = false
     var playTimeSeconds: Double = 0
     var durationSeconds: Double = 0
+
     var playerControl: PlayerControlState
+    var bookmark: BookmarkState
 }
 
 struct AudioPlayerEnvironment {
@@ -41,6 +44,7 @@ struct AudioPlayerEnvironment {
     let bookmarkClient: BookmarkClient
 }
 // MARK: -
+
 let audioPlayerReducer = Reducer<AudioPlayerState, AudioPlayerAction, AudioPlayerEnvironment> {
     state, action, environment in
     switch action {
@@ -82,6 +86,9 @@ let audioPlayerReducer = Reducer<AudioPlayerState, AudioPlayerAction, AudioPlaye
         state.playerControl = state
             .playerControl
             .updated(playTime: seconds)
+        state.bookmark = state
+            .bookmark
+            .updated(playTime: seconds)
         return .none
     case .waveform(.success(let waveformImage)):
         state.waveformImage = waveformImage
@@ -91,12 +98,19 @@ let audioPlayerReducer = Reducer<AudioPlayerState, AudioPlayerAction, AudioPlaye
         return .none
     case .playerControl:
         return .none
+    case .bookmark:
+        return .none
     }
 }
 .playerControl(
     state: \.playerControl,
     action: /AudioPlayerAction.playerControl,
     environment: { PlayerControlEnvironment(client: $0.audioClient) }
+)
+.bookmark(
+    state: \.bookmark,
+    action: /AudioPlayerAction.bookmark,
+    environment: { BookmarkEnvironment(bookmarkClient: $0.bookmarkClient) }
 )
 .lifecycle(
     onAppear: { _ in Effect(value: .play) },

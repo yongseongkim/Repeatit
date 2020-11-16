@@ -12,12 +12,14 @@ import UIKit
 
 struct VideoClientID: Hashable {}
 
+// MARK: - Composable Architecture Components
 enum VideoPlayerAction: Equatable {
     case play
     case move(to: Seconds)
 
     case player(Result<VideoClient.Action, VideoClient.Failure>)
     case playerControl(PlayerControlAction)
+    case bookmark(BookmarkAction)
 }
 
 struct VideoPlayerState: Equatable {
@@ -26,12 +28,16 @@ struct VideoPlayerState: Equatable {
     var isPlaying: Bool = false
     var playTimeSeconds: Double = 0
     var durationSeconds: Double = 0
+
     var playerControl: PlayerControlState
+    var bookmark: BookmarkState
 }
 
 struct VideoPlayerEnvironment {
     let videoClient: VideoClient
+    let bookmarkClient: BookmarkClient
 }
+// MARK: -
 
 let videoPlayerReducer = Reducer<VideoPlayerState, VideoPlayerAction, VideoPlayerEnvironment> {
     state, action, environment in
@@ -64,8 +70,13 @@ let videoPlayerReducer = Reducer<VideoPlayerState, VideoPlayerAction, VideoPlaye
         state.playerControl = state
             .playerControl
             .updated(playTime: seconds)
+        state.bookmark = state
+            .bookmark
+            .updated(playTime: seconds)
         return .none
     case .playerControl:
+        return .none
+    case .bookmark:
         return .none
     }
 }
@@ -73,6 +84,11 @@ let videoPlayerReducer = Reducer<VideoPlayerState, VideoPlayerAction, VideoPlaye
     state: \.playerControl,
     action: /VideoPlayerAction.playerControl,
     environment: { PlayerControlEnvironment(client: $0.videoClient) }
+)
+.bookmark(
+    state: \.bookmark,
+    action: /VideoPlayerAction.bookmark,
+    environment: { BookmarkEnvironment(bookmarkClient: $0.bookmarkClient) }
 )
 .lifecycle(
     onAppear: { _ in Effect(value: .play) },

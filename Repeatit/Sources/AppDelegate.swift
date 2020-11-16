@@ -34,8 +34,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print(error)
         }
 
-        // Report
-
         // View
         UITableViewCell.appearance().backgroundColor = .clear
         UITableView.appearance().backgroundColor = .clear

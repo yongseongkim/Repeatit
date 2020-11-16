@@ -38,23 +38,8 @@ struct BookmarkEditItemView: View {
         HStack {
             Text(formattedTime)
                 .onTapGesture { /* update text */ }
-            MultilineTextField(
-                text: .init(get: { self.text }, set: { self.text = $0 }),
-                calculatedHeight: $textFieldHeight,
-                inputAccessaryContent: {
-                    // TODO: bind player client
-                    BookmarkInputAccessaryView(isPlaying: .init(false))
-                },
-                inputAccessaryContentHeight: BookmarkInputAccessaryView.height,
-                listener: .init(
-                    onEndEditing: { _ in /* on end editing */ },
-                    onDone: { /* on done */ }
-                )
-            )
-                .frame(height: textFieldHeight)
-                .background(Color.systemGray5)
-                .cornerRadius(8)
-                .padding(.leading, 15)
+            // TODO: Apply multiline textfield
+            TextField("", text: $text)
         }
         .background(Color.systemGray6)
         .padding(EdgeInsets(top: 5, leading: 15, bottom: 5, trailing: 15))

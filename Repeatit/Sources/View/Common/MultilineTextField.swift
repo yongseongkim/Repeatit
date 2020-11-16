@@ -10,13 +10,13 @@ import UIKit
 
 struct MultilineTextField: UIViewRepresentable {
     private static func recalculateHeight(view: UIView, result: Binding<CGFloat>) {
-        let newSize = view.sizeThatFits(CGSize(width: view.frame.width, height: CGFloat.greatestFiniteMagnitude))
-        if result.wrappedValue != newSize.height {
-            // Call in next render cycle.
-            DispatchQueue.main.async {
-                result.wrappedValue = newSize.height
-            }
-        }
+//        let newSize = view.sizeThatFits(CGSize(width: view.frame.width, height: CGFloat.greatestFiniteMagnitude))
+//        if result.wrappedValue != newSize.height {
+//            // Call in next render cycle.
+//            DispatchQueue.main.async {
+//                result.wrappedValue = newSize.height
+//            }
+//        }
     }
 
     @Binding var text: String

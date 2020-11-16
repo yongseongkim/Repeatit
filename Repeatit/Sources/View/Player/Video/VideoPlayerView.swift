@@ -28,10 +28,17 @@ struct VideoPlayerView: View {
                             action: { LifecycleAction.action(VideoPlayerAction.playerControl($0)) }
                         )
                     )
+                    BookmarkListView(
+                        store: store.scope(
+                            state: { $0.bookmark },
+                            action: { LifecycleAction.action(VideoPlayerAction.bookmark($0)) }
+                        )
+                    )
                 }
             }
             .onAppear { viewStore.send(.onAppear) }
             .onDisappear { viewStore.send(.onDisappear) }
         }
+        .modifier(KeyboardHeightDetector(self.$keyboardHeight))
     }
 }

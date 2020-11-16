@@ -84,6 +84,7 @@ private class YouTubeClientDependencies: NSObject {
         self.playingDidChange = playingDidChange
         super.init()
         // https://developers.google.com/youtube/player_parameters?hl=ko#Parameters
+        view.delegate = self
         view.load(
             withVideoId: videoID,
             playerVars: [
