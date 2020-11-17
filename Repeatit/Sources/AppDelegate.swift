@@ -37,6 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // View
         UITableViewCell.appearance().backgroundColor = .clear
         UITableView.appearance().backgroundColor = .clear
+        UITextView.appearance().backgroundColor = .clear
         return true
     }
 

@@ -53,13 +53,7 @@ let youtubePlayerReducer = Reducer<YouTubePlayerState, YouTubePlayerAction, YouT
             .playerControl
             .updated(isPlaying: isPlaying)
         return .none
-    case .player(.success(.playTimeDidChange(let seconds))):
-        state.playerControl = state
-            .playerControl
-            .updated(playTime: seconds)
-        state.bookmark = state
-            .bookmark
-            .updated(playTime: seconds)
+    case .player(.success(.playTimeDidChange)):
         return .none
     case .playerControl:
         return .none
@@ -75,7 +69,12 @@ let youtubePlayerReducer = Reducer<YouTubePlayerState, YouTubePlayerAction, YouT
 .bookmark(
     state: \.bookmark,
     action: /YouTubePlayerAction.bookmark,
-    environment: { BookmarkEnvironment(bookmarkClient: $0.bookmarkClient) }
+    environment: {
+        BookmarkEnvironment(
+            bookmarkClient: $0.bookmarkClient,
+            player: $0.youtubeClient
+        )
+    }
 )
 .lifecycle(
     onAppear: { _ in Effect(value: .load) },

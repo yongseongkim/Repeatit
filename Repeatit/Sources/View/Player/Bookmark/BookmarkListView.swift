@@ -30,13 +30,9 @@ struct BookmarkListView: View {
                         .onDelete { idxSet in idxSet.forEach { _ in /* delete the bookmark */ } }
                     BookmarkAddItemView(
                         listener: .init(
-                            onTapGesture: {
-                                /* add bookmark on the time */
-                                viewStore.send(.add)
-                            }
+                            onTapGesture: { viewStore.send(.add) }
                         )
                     )
-                    .padding(.bottom, geometry.safeAreaInsets.bottom)
                 }
                 .listStyle(PlainListStyle())
             }
@@ -45,9 +41,3 @@ struct BookmarkListView: View {
         }
     }
 }
-
-//struct BookmarkListView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        BookmarkListView(bookmarks: [])
-//    }
-//}

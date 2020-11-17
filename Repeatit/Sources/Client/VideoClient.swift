@@ -14,6 +14,7 @@ struct VideoClient {
     let resume: (AnyHashable) -> Void
     let pause: (AnyHashable) -> Void
     let move: (AnyHashable, Seconds) -> Void
+    let playTimeMillis: (AnyHashable) -> Millis
 
     enum Action: Equatable {
         case layerDidLoad(AVPlayerLayer)
@@ -26,8 +27,9 @@ struct VideoClient {
     }
 }
 
-extension VideoClient: PlayerControlClient {
-}
+extension VideoClient: PlayerControlClient { }
+
+extension VideoClient: BookmarkPlayer { }
 
 extension VideoClient {
     static let production = VideoClient(
@@ -60,6 +62,10 @@ extension VideoClient {
         move: { id, seconds in
             guard let player = dependencies[id] else { return }
             player.move(to: seconds)
+        },
+        playTimeMillis: { id in
+            guard let player = dependencies[id] else { return 0 }
+            return Int(player.playTime * 1000)
         }
     )
 }

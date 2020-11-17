@@ -79,6 +79,7 @@ private class WaveformClientDependencies: NSObject {
                 let samples = try self?.loadSamples(url: url) ?? []
                 let downSamples = self?.down(samples: samples, unit: 3000) ?? []
                 let waveformImage = self?.createImage(samples: downSamples, option: option)
+                // TODO: lock
                 self?.images[key] = waveformImage
                 completion(waveformImage, nil)
             } catch let error {

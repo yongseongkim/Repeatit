@@ -26,8 +26,8 @@ struct VideoPlayerState: Equatable {
     let current: Document
     var videoLayer: AVPlayerLayer? = nil
     var isPlaying: Bool = false
-    var playTimeSeconds: Double = 0
-    var durationSeconds: Double = 0
+    var playTime: Seconds = 0
+    var duration: Seconds = 0
 
     var playerControl: PlayerControlState
     var bookmark: BookmarkState
@@ -57,7 +57,7 @@ let videoPlayerReducer = Reducer<VideoPlayerState, VideoPlayerAction, VideoPlaye
         state.videoLayer = layer
         return .none
     case .player(.success(.durationDidChange(let seconds))):
-        state.durationSeconds = seconds
+        state.duration = seconds
         return .none
     case .player(.success(.playingDidChange(let isPlaying))):
         state.isPlaying = isPlaying
@@ -66,13 +66,7 @@ let videoPlayerReducer = Reducer<VideoPlayerState, VideoPlayerAction, VideoPlaye
             .updated(isPlaying: isPlaying)
         return .none
     case .player(.success(.playTimeDidChange(let seconds))):
-        state.playTimeSeconds = seconds
-        state.playerControl = state
-            .playerControl
-            .updated(playTime: seconds)
-        state.bookmark = state
-            .bookmark
-            .updated(playTime: seconds)
+        state.playTime = seconds
         return .none
     case .playerControl:
         return .none
@@ -88,7 +82,12 @@ let videoPlayerReducer = Reducer<VideoPlayerState, VideoPlayerAction, VideoPlaye
 .bookmark(
     state: \.bookmark,
     action: /VideoPlayerAction.bookmark,
-    environment: { BookmarkEnvironment(bookmarkClient: $0.bookmarkClient) }
+    environment: {
+        BookmarkEnvironment(
+            bookmarkClient: $0.bookmarkClient,
+            player: $0.videoClient
+        )
+    }
 )
 .lifecycle(
     onAppear: { _ in Effect(value: .play) },

@@ -14,6 +14,7 @@ struct YouTubeClient {
     let resume: (AnyHashable) -> Void
     let pause: (AnyHashable) -> Void
     let move: (AnyHashable, Seconds) -> Void
+    let playTimeMillis: (AnyHashable) -> Millis
 
     enum Action: Equatable {
         case layerDidLoad(YTPlayerView)
@@ -26,8 +27,9 @@ struct YouTubeClient {
     }
 }
 
-extension YouTubeClient: PlayerControlClient {
-}
+extension YouTubeClient: PlayerControlClient { }
+
+extension YouTubeClient: BookmarkPlayer { }
 
 extension YouTubeClient {
     static let production = YouTubeClient(
@@ -59,6 +61,10 @@ extension YouTubeClient {
         move: { id, seconds in
             guard let client = dependencies[id] else { return }
             client.move(to: seconds)
+        },
+        playTimeMillis: { id in
+            guard let player = dependencies[id] else { return 0 }
+            return Int(player.playTime * 1000)
         }
     )
 }
@@ -70,6 +76,7 @@ private class YouTubeClientDependencies: NSObject {
     private let durationDidLoad: (Seconds) -> Void
     private let playTimeDidChange: (Seconds) -> Void
     private let playingDidChange: (Bool) -> Void
+    fileprivate var playTime: Double = 0
     // MARK: -
     let view = YTPlayerView()
 
@@ -127,6 +134,7 @@ extension YouTubeClientDependencies: YTPlayerViewDelegate {
     }
 
     func playerView(_ playerView: YTPlayerView, didPlayTime playTime: Float) {
-        playTimeDidChange(Double(playTime))
+        self.playTime = Double(playTime)
+        playTimeDidChange(self.playTime)
     }
 }

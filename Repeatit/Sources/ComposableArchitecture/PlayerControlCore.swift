@@ -8,15 +8,13 @@
 import ComposableArchitecture
 
 struct PlayerControlState: Equatable {
-    var id: AnyHashable
+    var playerID: AnyHashable
     var isPlaying: Bool = false
-    var playTime: Seconds = 0
 
-    func updated(isPlaying: Bool? = nil, playTime: Seconds? = nil) -> PlayerControlState {
+    func updated(isPlaying: Bool? = nil) -> PlayerControlState {
         return .init(
-            id: id,
-            isPlaying: isPlaying ?? self.isPlaying,
-            playTime: playTime ?? self.playTime
+            playerID: playerID,
+            isPlaying: isPlaying ?? self.isPlaying
         )
     }
 }
@@ -43,14 +41,16 @@ extension Reducer {
                 switch action {
                 case .togglePlay:
                     state.isPlaying
-                        ? environment.client.pause(state.id)
-                        : environment.client.resume(state.id)
+                        ? environment.client.pause(state.playerID)
+                        : environment.client.resume(state.playerID)
                     return .none
                 case .moveForward(let seconds):
-                    environment.client.move(state.id, state.playTime + seconds)
+                    let millis = environment.client.playTimeMillis(state.playerID)
+                    environment.client.move(state.playerID, (Double(millis) / 1000) + seconds)
                     return .none
                 case .moveBackward(let seconds):
-                    environment.client.move(state.id, state.playTime - seconds)
+                    let millis = environment.client.playTimeMillis(state.playerID)
+                    environment.client.move(state.playerID, (Double(millis) / 1000) - seconds)
                     return .none
                 }
             }

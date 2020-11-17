@@ -7,20 +7,19 @@
 
 import ComposableArchitecture
 
+protocol BookmarkPlayer {
+    var move: (AnyHashable, Seconds) -> Void { get }
+    var playTimeMillis: (AnyHashable) -> Millis { get }
+}
+
 struct BookmarkClientID: Hashable {}
 
 struct BookmarkState: Equatable {
+    // At the beginning, the state had playTime of player and player reducer updated that.
+    // But it made performance issues, so remove the property from the state.
+    let playerID: AnyHashable
     let current: Document
     var bookmarks: [Bookmark] = []
-    var playTime: Seconds = 0
-
-    func updated(playTime: Seconds? = nil) -> BookmarkState {
-        return .init(
-            current: self.current,
-            bookmarks: self.bookmarks,
-            playTime: playTime ?? self.playTime
-        )
-    }
 }
 
 enum BookmarkAction: Equatable {
@@ -34,6 +33,7 @@ enum BookmarkAction: Equatable {
 
 struct BookmarkEnvironment {
     let bookmarkClient: BookmarkClient
+    let player: BookmarkPlayer
 }
 
 extension Reducer {
@@ -54,7 +54,7 @@ extension Reducer {
                         .eraseToEffect()
                         .cancellable(id: BookmarkClientID())
                 case .add:
-                    let millis = Int(state.playTime * 1000)
+                    let millis = environment.player.playTimeMillis(state.playerID)
                     environment.bookmarkClient.add(state.current.url, millis)
                     return .none
                 case .update(let millis, let text):
@@ -66,7 +66,7 @@ extension Reducer {
                 case .bookmarkControl(.success(.bookmarkDidChange)):
                     return .none
                 case .bookmarkControl(.success(.bookmarksDidChange(let bookmarks))):
-                     state.bookmarks = bookmarks
+                    state.bookmarks = bookmarks
                     return .none
                 default:
                     return .none

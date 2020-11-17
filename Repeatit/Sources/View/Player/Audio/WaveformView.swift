@@ -77,10 +77,10 @@ extension WaveformView {
 
         Publishers.CombineLatest(
             viewStore.publisher
-                .map { $0.durationSeconds }
+                .map { $0.duration }
                 .removeDuplicates(),
             viewStore.publisher
-                .map { $0.playTimeSeconds }
+                .map { $0.playTime }
                 .removeDuplicates()
         )
         .map { duration, playTime in duration == 0 ? 0 : playTime / duration }
@@ -114,7 +114,7 @@ extension WaveformView {
                 let contentOffsetX = self.scrollView.contentOffset.x
                 let contentWidth = self.waveformImageView.image?.size.width ?? 0
                 let progress = Double(contentOffsetX / contentWidth)
-                let targetSeconds = self.viewStore.durationSeconds * progress
+                let targetSeconds = self.viewStore.duration * progress
                 self.viewStore.send(.move(to: targetSeconds))
                 if wasPlayingBeforeDragging {
                     self.viewStore.send(.resume)

@@ -38,8 +38,18 @@ struct BookmarkEditItemView: View {
         HStack {
             Text(formattedTime)
                 .onTapGesture { /* update text */ }
-            // TODO: Apply multiline textfield
-            TextField("", text: $text)
+            ZStack(alignment: Alignment(horizontal: .leading, vertical: .top)) {
+                TextEditor(text: $text)
+                    .font(.system(size: 17))
+                // Invisible Text for expanding text editor.
+                Text(text.isEmpty ? "Enter your thoughts." : text)
+                    .foregroundColor(Color.systemGray2)
+                    .opacity(text.isEmpty ? 0.7 : 0)
+                    .font(.system(size: 17))
+                    .padding(.all, 8)
+            }
+            .background(Color.systemGray5)
+            .cornerRadius(4)
         }
         .background(Color.systemGray6)
         .padding(EdgeInsets(top: 5, leading: 15, bottom: 5, trailing: 15))

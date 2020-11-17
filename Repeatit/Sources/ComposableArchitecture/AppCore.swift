@@ -84,22 +84,35 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
                     state.audioPlayer = .init(
                         current: document,
                         playerControl: .init(
-                            id: AudioClientID()
+                            playerID: AudioClientID()
                         ),
-                        bookmark: .init(current: document)
+                        bookmark: .init(
+                            playerID: AudioClientID(),
+                            current: document
+                        )
                     )
                 } else if document.isVideoFile {
                     state.videoPlayer = .init(
                         current: document,
-                        playerControl: .init(id: VideoClientID()),
-                        bookmark: .init(current: document)
+                        playerControl: .init(
+                            playerID: VideoClientID()
+                        ),
+                        bookmark: .init(
+                            playerID: VideoClientID(),
+                            current: document
+                        )
                     )
                 } else if document.isYouTubeFile {
                     state.youtubePlayer = .init(
                         current: document,
                         playerView: nil,
-                        playerControl: .init(id: YouTubeClientID()),
-                        bookmark: .init(current: document)
+                        playerControl: .init(
+                            playerID: YouTubeClientID()
+                        ),
+                        bookmark: .init(
+                            playerID: YouTubeClientID(),
+                            current: document
+                        )
                     )
                 }
             default:

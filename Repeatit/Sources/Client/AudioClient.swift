@@ -14,6 +14,7 @@ struct AudioClient {
     let resume: (AnyHashable) -> Void
     let pause: (AnyHashable) -> Void
     let move: (AnyHashable, Seconds) -> Void
+    let playTimeMillis: (AnyHashable) -> Millis
 
     enum Action: Equatable {
         case durationDidChange(Seconds)
@@ -25,8 +26,9 @@ struct AudioClient {
     }
 }
 
-extension AudioClient: PlayerControlClient {
-}
+extension AudioClient: PlayerControlClient { }
+
+extension AudioClient: BookmarkPlayer { }
 
 extension AudioClient {
     static let production = AudioClient(
@@ -58,6 +60,10 @@ extension AudioClient {
         move: { id, seconds in
             guard let player = dependencies[id] else { return }
             player.move(to: seconds)
+        },
+        playTimeMillis: { id in
+            guard let player = dependencies[id] else { return 0 }
+            return Int(player.playTime * 1000)
         }
     )
 
@@ -65,7 +71,8 @@ extension AudioClient {
         play: { _, _ in .none },
         resume: { _ in },
         pause: { _ in },
-        move: { _, _ in }
+        move: { _, _ in },
+        playTimeMillis: { _ in 0 }
     )
 }
 

@@ -58,7 +58,7 @@ struct PlayerControlView_Previews: PreviewProvider {
         Group {
             PlayerControlView(
                 store: .init(
-                    initialState: .init(id: PlayerControlPreviewID()),
+                    initialState: .init(playerID: PlayerControlPreviewID()),
                     reducer: .empty,
                     environment: PlayerControlEnvironment(client: MockPlayerControlClient()))
             )
@@ -66,7 +66,7 @@ struct PlayerControlView_Previews: PreviewProvider {
             .previewLayout(.sizeThatFits)
             PlayerControlView(
                 store: .init(
-                    initialState: .init(id: PlayerControlPreviewID()),
+                    initialState: .init(playerID: PlayerControlPreviewID()),
                     reducer: .empty,
                     environment: PlayerControlEnvironment(client: MockPlayerControlClient()))
             )

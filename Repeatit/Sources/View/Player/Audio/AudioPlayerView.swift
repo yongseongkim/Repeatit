@@ -14,7 +14,7 @@ struct AudioPlayerView: View {
     @State var keyboardHeight: CGFloat = 0
 
     var body: some View {
-        WithViewStore(self.store) { viewStore in
+        WithViewStore(store) { viewStore in
             VStack(spacing: 0) {
                 if keyboardHeight > 0 {
                     AudioPlayerSimpleHeaderView(

@@ -31,8 +31,8 @@ struct AudioPlayerState: Equatable {
     let current: Document
     var waveformImage: UIImage? = nil
     var isPlaying: Bool = false
-    var playTimeSeconds: Double = 0
-    var durationSeconds: Double = 0
+    var playTime: Seconds = 0
+    var duration: Seconds = 0
 
     var playerControl: PlayerControlState
     var bookmark: BookmarkState
@@ -47,9 +47,9 @@ struct AudioPlayerEnvironment {
 
 let audioPlayerReducer = Reducer<AudioPlayerState, AudioPlayerAction, AudioPlayerEnvironment> {
     state, action, environment in
+    let url = state.current.url
     switch action {
     case .play:
-        let url = state.current.url
         return environment.audioClient.play(AudioClientID(), state.current.url)
             .receive(on: DispatchQueue.main)
             .catchToEffect()
@@ -64,16 +64,16 @@ let audioPlayerReducer = Reducer<AudioPlayerState, AudioPlayerAction, AudioPlaye
             .map(AudioPlayerAction.waveform)
             .cancellable(id: WaveformClientID())
     case .resume:
-        environment.audioClient.resume(AudioClientID())
+        environment.audioClient.resume(url)
         return .none
     case .pause:
-        environment.audioClient.pause(AudioClientID())
+        environment.audioClient.pause(url)
         return .none
     case .move(let seconds):
-        environment.audioClient.move(AudioClientID(), seconds)
+        environment.audioClient.move(url, seconds)
         return .none
     case .player(.success(.durationDidChange(let seconds))):
-        state.durationSeconds = seconds
+        state.duration = seconds
         return .none
     case .player(.success(.playingDidChange(let isPlaying))):
         state.isPlaying = isPlaying
@@ -82,13 +82,7 @@ let audioPlayerReducer = Reducer<AudioPlayerState, AudioPlayerAction, AudioPlaye
             .updated(isPlaying: isPlaying)
         return .none
     case .player(.success(.playTimeDidChange(let seconds))):
-        state.playTimeSeconds = seconds
-        state.playerControl = state
-            .playerControl
-            .updated(playTime: seconds)
-        state.bookmark = state
-            .bookmark
-            .updated(playTime: seconds)
+        state.playTime = seconds
         return .none
     case .waveform(.success(let waveformImage)):
         state.waveformImage = waveformImage
@@ -110,7 +104,12 @@ let audioPlayerReducer = Reducer<AudioPlayerState, AudioPlayerAction, AudioPlaye
 .bookmark(
     state: \.bookmark,
     action: /AudioPlayerAction.bookmark,
-    environment: { BookmarkEnvironment(bookmarkClient: $0.bookmarkClient) }
+    environment: {
+        BookmarkEnvironment(
+            bookmarkClient: $0.bookmarkClient,
+            player: $0.audioClient
+        )
+    }
 )
 .lifecycle(
     onAppear: { _ in Effect(value: .play) },

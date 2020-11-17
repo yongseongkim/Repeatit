@@ -15,12 +15,12 @@ struct WaveformTimeView: View {
     var body: some View {
         WithViewStore(store) { viewStore in
             HStack(spacing: 0) {
-                Text(secondsToFormat(time: viewStore.playTimeSeconds))
+                Text(secondsToFormat(time: viewStore.playTime))
                     .padding(9)
                     .foregroundColor(Color.systemBlack)
                     .background(Color.systemGray6.opacity(0.95))
                 Spacer()
-                Text(secondsToFormat(time: viewStore.durationSeconds))
+                Text(secondsToFormat(time: viewStore.duration))
                     .padding(9)
                     .foregroundColor(Color.systemBlack)
                     .background(Color.systemGray6.opacity(0.95))
@@ -36,16 +36,3 @@ struct WaveformTimeView: View {
         return String.init(format: "%02d:%02d.%02d", minutes, Int(seconds), remainder)
     }
 }
-
-//struct WaveformTimeView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        Group {
-//            WaveformTimeView(model: .init(player: MediaPlayer()))
-//                .previewLayout(.sizeThatFits)
-//                .environment(\.colorScheme, .light)
-//            WaveformTimeView(model: .init(player: MediaPlayer()))
-//                .previewLayout(.sizeThatFits)
-//                .environment(\.colorScheme, .dark)
-//        }
-//    }
-//}
