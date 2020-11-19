@@ -21,6 +21,8 @@ enum AppAction: Equatable {
 
 struct AppState: Equatable {
     var documentExplorer: DocumentExplorerState
+
+    var textContents: TextContents?
     var audioPlayer: AudioPlayerState?
     var videoPlayer: VideoPlayerState?
     var youtubePlayer: YouTubePlayerState?
@@ -114,6 +116,8 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
                             current: document
                         )
                     )
+                } else {
+                    state.textContents = TextContents.from(document: document)
                 }
             default:
                 break
@@ -123,6 +127,7 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
             state.audioPlayer = nil
             state.videoPlayer = nil
             state.youtubePlayer = nil
+            state.textContents = nil
             return .none
         default:
             return .none

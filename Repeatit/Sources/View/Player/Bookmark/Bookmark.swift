@@ -52,7 +52,7 @@ extension LRCController: BookmarkController {
 
     var bookmarkChangesPublisher: AnyPublisher<[Bookmark], Never> {
         changesPublisher
-            .compactMap { [weak self] in self?.bookmarks }
+            .map { lines in lines.map { Bookmark.from(line: $0) } }
             .eraseToAnyPublisher()
     }
 
@@ -76,7 +76,7 @@ extension SRTController: BookmarkController {
 
     var bookmarkChangesPublisher: AnyPublisher<[Bookmark], Never> {
         changesPublisher
-            .compactMap { [weak self] in self?.bookmarks }
+            .map { components in components.map { Bookmark.from(component: $0) } }
             .eraseToAnyPublisher()
     }
 
@@ -99,8 +99,8 @@ extension WebVTTController: BookmarkController {
     }
 
     var bookmarkChangesPublisher: AnyPublisher<[Bookmark], Never> {
-        changesPublisher
-            .compactMap { [weak self] in self?.bookmarks }
+        cuesChangesPublisher
+            .map { cues in cues.map { Bookmark.from(cue: $0) } }
             .eraseToAnyPublisher()
     }
 

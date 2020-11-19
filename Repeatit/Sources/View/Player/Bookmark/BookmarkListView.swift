@@ -21,11 +21,15 @@ struct BookmarkListView: View {
                             BookmarkEditItemView(
                                 millis: bookmark.millis,
                                 listener: .init(
-                                    onTapGesture: { _ in /* move to bookmark millis */ },
-                                    onEndEditing: { _, _ in /* update bookmark */ },
-                                    onDone: { _, _ in /* update bookmark */ }
+                                    onTapGesture: { _ in
+                                        viewStore.send(.play(at: bookmark.millis))
+                                    },
+                                    onTextChange: {
+                                        viewStore.send(.update($0, $1))
+                                    }
                                 ),
-                                text: bookmark.text)
+                                text: bookmark.text
+                            )
                         })
                         .onDelete { idxSet in idxSet.forEach { _ in /* delete the bookmark */ } }
                     BookmarkAddItemView(

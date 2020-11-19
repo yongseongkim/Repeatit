@@ -10,7 +10,9 @@ import Foundation
 
 class WebVTTController {
     var cues: [WebVTTCue] { _cues }
-    var changesPublisher: AnyPublisher<Void, Never> { changesSubject.eraseToAnyPublisher() }
+    var cuesChangesPublisher: AnyPublisher<[WebVTTCue], Never> {
+        cuesChangesSubject.eraseToAnyPublisher()
+    }
     var notes: [WebVTTNote] { _notes.map { $0.1 } }
     var components: [WebVTTComponent] {
         var cmps: [WebVTTComponent] = _cues
@@ -31,7 +33,7 @@ class WebVTTController {
 
     private var _cues: [WebVTTCue]
     private var _notes: [(Int, WebVTTNote)]
-    private let changesSubject = PassthroughSubject<Void, Never>()
+    private let cuesChangesSubject = PassthroughSubject<[WebVTTCue], Never>()
 
     init(url: URL, duration: Int) {
         self.url = url
@@ -77,14 +79,14 @@ class WebVTTController {
                 _cues[idx - 1] = prev.update(endMillis: new.startMillis)
             }
         }
-        changesSubject.send(())
+        cuesChangesSubject.send(_cues)
         sync()
     }
 
     func removeCue(at millis: Int) {
         guard let idx = _cues.firstIndex(where: { $0.startMillis == millis }) else { return }
         _cues.remove(at: idx)
-        changesSubject.send(())
+        cuesChangesSubject.send(_cues)
         sync()
     }
 
@@ -97,7 +99,7 @@ class WebVTTController {
                     return
                 }
                 _cues[idx] = cue.update(payload: payload)
-                changesSubject.send(())
+                cuesChangesSubject.send(_cues)
                 break
             }
         }
@@ -110,7 +112,9 @@ class WebVTTController {
             do {
                 let result = self.writer.convert(title: self.title, components: self.components)
                 try result.write(toFile: self.url.path, atomically: true, encoding: .utf8)
-                print("sync success: \(result)")
+                if BuildConfig.isDebug {
+                    print("WebVTTController saved the result: \n\(result)")
+                }
             } catch let exception {
                 print(exception)
             }

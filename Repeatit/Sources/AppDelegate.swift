@@ -27,10 +27,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     let data = try JSONEncoder().encode(YouTubeItem(id: "VuavFEzN6oA"))
                     try data.write(to: sampleYouTubeURL)
                 } catch let exception {
+                    // TODO: Report
                     print(exception)
                 }
             }
         } catch let error {
+            // TODO: Report
             print(error)
         }
 

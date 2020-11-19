@@ -27,6 +27,7 @@ enum BookmarkAction: Equatable {
     case add
     case update(Millis, String)
     case remove(Millis)
+    case play(at: Millis)
 
     case bookmarkControl(Result<BookmarkClient.Action, BookmarkClient.Failure>)
 }
@@ -63,12 +64,16 @@ extension Reducer {
                 case .remove(let millis):
                     environment.bookmarkClient.remove(state.current.url, millis)
                     return .none
+                case .play(let millis):
+                    environment.player.move(state.playerID, Double(millis) / 1000)
+                    return .none
                 case .bookmarkControl(.success(.bookmarkDidChange)):
                     return .none
                 case .bookmarkControl(.success(.bookmarksDidChange(let bookmarks))):
+                    print(bookmarks)
                     state.bookmarks = bookmarks
                     return .none
-                default:
+                case .bookmarkControl(.failure):
                     return .none
                 }
             }

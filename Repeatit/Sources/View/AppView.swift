@@ -19,6 +19,19 @@ struct AppView: View {
             .background(
                 EmptyView().sheet(
                     isPresented: viewStore.binding(
+                        get: { $0.textContents != nil },
+                        send: AppAction.setPlayerSheet(isPresented:)
+                    ),
+                    content: {
+                        TextContentsView(
+                            value: viewStore.textContents ?? .empty
+                        )
+                    }
+                )
+            )
+            .background(
+                EmptyView().sheet(
+                    isPresented: viewStore.binding(
                         get: { $0.audioPlayer != nil },
                         send: AppAction.setPlayerSheet(isPresented:)
                     ),
@@ -39,7 +52,8 @@ struct AppView: View {
                         IfLetStore(
                             store.scope(
                                 state: { $0.videoPlayer },
-                                action: AppAction.videoPlayer)
+                                action: AppAction.videoPlayer
+                            )
                         ) {
                             VideoPlayerView(store: $0)
                         }

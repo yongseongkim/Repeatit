@@ -37,16 +37,30 @@ struct BookmarkEditItemView: View {
     var body: some View {
         HStack {
             Text(formattedTime)
-                .onTapGesture { /* update text */ }
+                .onTapGesture {
+                    listener?.onTapGesture?(millis)
+                }
             ZStack(alignment: Alignment(horizontal: .leading, vertical: .top)) {
-                TextEditor(text: $text)
-                    .font(.system(size: 17))
                 // Invisible Text for expanding text editor.
                 Text(text.isEmpty ? "Enter your thoughts." : text)
                     .foregroundColor(Color.systemGray2)
                     .opacity(text.isEmpty ? 0.7 : 0)
                     .font(.system(size: 17))
                     .padding(.all, 8)
+                TextEditor(
+                    text: .init(
+                        get: { text },
+                        set: {
+                            // There is no way to change return key type.
+                            // So prevent entering new line.
+                            text = $0.trimmingCharacters(in: .whitespacesAndNewlines)
+                        }
+                    )
+                )
+                .font(.system(size: 17))
+                .onChange(of: text) { value in
+                    listener?.onTextChange?(millis, text)
+                }
             }
             .background(Color.systemGray5)
             .cornerRadius(4)
@@ -67,7 +81,6 @@ struct BookmarkEditItemView: View {
 extension BookmarkEditItemView {
     struct Listener {
         let onTapGesture: ((Int) -> Void)?
-        let onEndEditing: ((Int, String) -> Void)?
-        let onDone: ((Int, String) -> Void)?
+        let onTextChange: ((_ millis: Int, _ text: String) -> Void)?
     }
 }

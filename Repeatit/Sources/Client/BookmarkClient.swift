@@ -31,6 +31,7 @@ extension BookmarkClient {
         load: { document in
             let url = document.url
             let controller: BookmarkController
+            // TODO: duration 반영하기
             if document.isYouTubeFile {
                 controller = WebVTTController(url: url.deletingPathExtension().appendingPathExtension("vtt"), duration: 100000)
             } else if document.isVideoFile {
@@ -42,9 +43,10 @@ extension BookmarkClient {
             return controller.bookmarkChangesPublisher
                 .prepend(controller.bookmarks)
                 .mapError { _ in BookmarkClient.Failure.couldntLoadBookmarks }
-                .handleEvents(receiveCompletion: { _ in
-                    dependencies[url] = nil
-                })
+                .handleEvents(
+                    receiveCompletion: { _ in dependencies[url] = nil },
+                    receiveCancel: { dependencies[url] = nil }
+                )
                 .eraseToAnyPublisher()
                 .map(BookmarkClient.Action.bookmarksDidChange)
                 .eraseToEffect()
@@ -55,7 +57,6 @@ extension BookmarkClient {
         },
         update: { url, millis, text in
             guard let controller = dependencies[url] else { return }
-            print(url, millis, text)
             controller.updateBookmark(at: millis, text: text)
         },
         remove: { url, millis in

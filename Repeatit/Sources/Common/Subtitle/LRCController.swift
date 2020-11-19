@@ -10,7 +10,9 @@ import Foundation
 
 class LRCController {
     var lines: [LRCLine] { _lines }
-    var changesPublisher: AnyPublisher<Void, Never> { changesSubject.eraseToAnyPublisher() }
+    var changesPublisher: AnyPublisher<[LRCLine], Never> {
+        changesSubject.eraseToAnyPublisher()
+    }
 
     private let parser = LRCParser()
     private let writer = LRCWriter()
@@ -21,7 +23,7 @@ class LRCController {
     private let metadata: LRCMetadata
 
     private var _lines: [LRCLine]
-    private let changesSubject = PassthroughSubject<Void, Never>()
+    private let changesSubject = PassthroughSubject<[LRCLine], Never>()
 
     init(url: URL) {
         self.url = url
@@ -33,6 +35,9 @@ class LRCController {
             FileManager.default.createFile(atPath: url.path, contents: Data(), attributes: nil)
             metadata = LRCMetadata()
             _lines = []
+        }
+        for line in lines {
+            print(line)
         }
     }
 
@@ -47,14 +52,14 @@ class LRCController {
         }
         let idx = _lines.firstIndex(where: { $0.millis > millis}) ?? _lines.count
         _lines.insert(LRCLine(millis: millis, lyrics: ""), at: idx)
-        changesSubject.send(())
+        changesSubject.send(_lines)
         sync()
     }
 
     func removeLine(at millis: Int) {
         guard let idx = _lines.firstIndex(where: { $0.millis == millis }) else { return }
         _lines.remove(at: idx)
-        changesSubject.send(())
+        changesSubject.send(_lines)
         sync()
     }
 
@@ -67,7 +72,7 @@ class LRCController {
                     return
                 }
                 _lines[i] = line.update(lyrics: lyrics)
-                changesSubject.send(())
+                changesSubject.send(_lines)
                 break
             }
         }
@@ -80,7 +85,9 @@ class LRCController {
             do {
                 let result = self.writer.convert(metadata: self.metadata, lines: self._lines)
                 try result.write(toFile: self.url.path, atomically: true, encoding: .utf8)
-                print("sync success: \(result)")
+                if BuildConfig.isDebug {
+                    print("LRCController saved the result: \n\(result)")
+                }
             } catch let exception {
                 print(exception)
             }
