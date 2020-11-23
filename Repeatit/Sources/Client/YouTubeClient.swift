@@ -96,9 +96,7 @@ private class YouTubeClientDependencies: NSObject {
         view.load(
             withVideoId: videoID,
             playerVars: [
-                "controls": 1,
                 "playsinline": 1,
-                "cc_lang_pref": "en",
                 "cc_load_policy": 1
             ]
         )
