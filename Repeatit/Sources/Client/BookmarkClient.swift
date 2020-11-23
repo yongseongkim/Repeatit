@@ -9,8 +9,6 @@ import Combine
 import ComposableArchitecture
 
 struct BookmarkClient {
-    typealias Millis = Int
-
     let load: (Document) -> Effect<Action, Failure>
     let add: (URL, Millis) -> Void
     let update: (URL, Millis, String) -> Void

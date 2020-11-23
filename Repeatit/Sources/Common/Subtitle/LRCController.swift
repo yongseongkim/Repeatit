@@ -36,9 +36,6 @@ class LRCController {
             metadata = LRCMetadata()
             _lines = []
         }
-        for line in lines {
-            print(line)
-        }
     }
 
     deinit {

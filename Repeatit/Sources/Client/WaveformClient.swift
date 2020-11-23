@@ -28,7 +28,7 @@ struct WaveformBarOption: Equatable, CustomStringConvertible {
 }
 
 struct WaveformClient {
-    let loadWaveform: (URL, WaveformBarOption) -> Effect<UIImage, Failure>
+    let load: (URL, WaveformBarOption) -> Effect<UIImage, Failure>
 
     enum Failure: Error, Equatable {
         case couldntLoadWaveform
@@ -39,7 +39,7 @@ extension WaveformClient {
     struct WaveformDependencyID: Hashable {}
 
     static let production = WaveformClient(
-        loadWaveform: { url, option in
+        load: { url, option in
             return .future { callback in
                 let dependency = dependencies[WaveformDependencyID()] ?? WaveformClientDependencies()
                 dependency.loadWaveform(url: url, option: option) { image, error in

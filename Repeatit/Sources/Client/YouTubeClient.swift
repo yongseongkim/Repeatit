@@ -14,7 +14,8 @@ struct YouTubeClient {
     let resume: (AnyHashable) -> Void
     let pause: (AnyHashable) -> Void
     let move: (AnyHashable, Seconds) -> Void
-    let playTimeMillis: (AnyHashable) -> Millis
+    let moveForward: (AnyHashable, Seconds) -> Void
+    let moveBackward: (AnyHashable, Seconds) -> Void
 
     enum Action: Equatable {
         case layerDidLoad(YTPlayerView)
@@ -27,10 +28,6 @@ struct YouTubeClient {
     }
 }
 
-extension YouTubeClient: PlayerControlClient { }
-
-extension YouTubeClient: BookmarkPlayer { }
-
 extension YouTubeClient {
     static let production = YouTubeClient(
         load: { id, videoID in
@@ -39,32 +36,36 @@ extension YouTubeClient {
                     dependencies[id]?.pause()
                     dependencies[id] = nil
                 }
-                let client = YouTubeClientDependencies(
+                let youtubeDependencies = YouTubeClientDependencies(
                     videoID: videoID,
                     durationDidLoad: { subscriber.send(.durationDidChange($0)) },
                     playTimeDidChange: { subscriber.send(.playTimeDidChange($0)) },
                     playingDidChange: { subscriber.send(.playingDidChange($0)) }
                 )
-                dependencies[id] = client
-                subscriber.send(.layerDidLoad(client.view))
+                dependencies[id] = youtubeDependencies
+                subscriber.send(.layerDidLoad(youtubeDependencies.view))
                 return cancellable
             }
         },
         resume: { id in
-            guard let client = dependencies[id] else { return }
-            client.resume()
+            guard let youtubeDependencies = dependencies[id] else { return }
+            youtubeDependencies.resume()
         },
         pause: { id in
-            guard let client = dependencies[id] else { return }
-            client.pause()
+            guard let youtubeDependencies = dependencies[id] else { return }
+            youtubeDependencies.pause()
         },
         move: { id, seconds in
-            guard let client = dependencies[id] else { return }
-            client.move(to: seconds)
+            guard let youtubeDependencies = dependencies[id] else { return }
+            youtubeDependencies.move(to: seconds)
         },
-        playTimeMillis: { id in
-            guard let player = dependencies[id] else { return 0 }
-            return Int(player.playTime * 1000)
+        moveForward: { id, seconds in
+            guard let youtubeDependencies = dependencies[id] else { return }
+            youtubeDependencies.move(to: youtubeDependencies.playTime + seconds)
+        },
+        moveBackward: { id, seconds in
+            guard let youtubeDependencies = dependencies[id] else { return }
+            youtubeDependencies.move(to: youtubeDependencies.playTime - seconds)
         }
     )
 }
@@ -97,6 +98,7 @@ private class YouTubeClientDependencies: NSObject {
             playerVars: [
                 "controls": 1,
                 "playsinline": 1,
+                "cc_lang_pref": "en",
                 "cc_load_policy": 1
             ]
         )

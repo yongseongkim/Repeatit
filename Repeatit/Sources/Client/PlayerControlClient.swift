@@ -8,15 +8,7 @@
 import Foundation
 
 protocol PlayerControlClient {
-    var resume: (AnyHashable) -> Void { get }
-    var pause: (AnyHashable) -> Void { get }
-    var move: (AnyHashable, Seconds) -> Void { get }
-    var playTimeMillis: (AnyHashable) -> Millis { get }
-}
-
-struct MockPlayerControlClient: PlayerControlClient {
-    let resume: (AnyHashable) -> Void = { _ in }
-    let pause: (AnyHashable) -> Void = { _ in }
-    let move: (AnyHashable, Seconds) -> Void = { _, _ in }
-    var playTimeMillis: (AnyHashable) -> Millis = { _ in 0 }
+    var resume: (URL) -> Void { get }
+    var pause: (URL) -> Void { get }
+    var move: (URL, Seconds) -> Void { get }
 }

@@ -1,5 +1,5 @@
 //
-//  VideoClient.swift
+//  AudioClient.swift
 //  Repeatit
 //
 //  Created by YongSeong Kim on 2020/11/14.
@@ -9,12 +9,13 @@ import AVFoundation
 import Combine
 import ComposableArchitecture
 
-struct VideoClient {
-    let play: (AnyHashable, URL) -> Effect<Action, Failure>
+struct LocalMediaClient {
+    let open: (AnyHashable, URL) -> Effect<Action, Never>
     let resume: (AnyHashable) -> Void
     let pause: (AnyHashable) -> Void
     let move: (AnyHashable, Seconds) -> Void
-    let playTimeMillis: (AnyHashable) -> Millis
+    let moveForward: (AnyHashable, Seconds) -> Void
+    let moveBackward: (AnyHashable, Seconds) -> Void
 
     enum Action: Equatable {
         case layerDidLoad(AVPlayerLayer)
@@ -22,79 +23,74 @@ struct VideoClient {
         case playingDidChange(Bool)
         case playTimeDidChange(Seconds)
     }
-
-    enum Failure: Error, Equatable {
-    }
 }
 
-extension VideoClient: PlayerControlClient { }
-
-extension VideoClient: BookmarkPlayer { }
-
-extension VideoClient {
-    static let production = VideoClient(
-        play: { id, url in
+extension LocalMediaClient {
+    static let production = LocalMediaClient(
+        open: { id, url in
             Effect.run { subscriber in
                 let cancellable = AnyCancellable {
                     dependencies[id]?.pause()
                     dependencies[id] = nil
                 }
-                let videoPlayer = VideoClientDependencies(
+                let mediaDependencies = Dependencies(
                     url: url,
-                    playTimeDidChange: { subscriber.send(.playTimeDidChange($0)) },
-                    playingDidChange: { subscriber.send(.playingDidChange($0)) }
+                    playingDidChange: { subscriber.send(.playingDidChange($0)) },
+                    playTimeDidChange: { subscriber.send(.playTimeDidChange($0)) }
                 )
-                dependencies[id] = videoPlayer
-                subscriber.send(.layerDidLoad(videoPlayer.layer))
-                subscriber.send(.durationDidChange(videoPlayer.duration))
-                videoPlayer.resume()
+                subscriber.send(.durationDidChange(mediaDependencies.duration))
+                subscriber.send(.layerDidLoad(mediaDependencies.layer))
+                mediaDependencies.resume()
+                dependencies[id] = mediaDependencies
                 return cancellable
             }
         },
         resume: { id in
-            guard let player = dependencies[id] else { return }
-            player.resume()
+            guard let mediaDependencies = dependencies[id] else { return }
+            mediaDependencies.resume()
         },
         pause: { id in
-            guard let player = dependencies[id] else { return }
-            player.pause()
+            guard let mediaDependencies = dependencies[id] else { return }
+            mediaDependencies.pause()
         },
         move: { id, seconds in
-            guard let player = dependencies[id] else { return }
-            player.move(to: seconds)
+            guard let mediaDependencies = dependencies[id] else { return }
+            mediaDependencies.move(to: seconds)
         },
-        playTimeMillis: { id in
-            guard let player = dependencies[id] else { return 0 }
-            return Int(player.playTime * 1000)
+        moveForward: { id, seconds in
+            guard let mediaDependencies = dependencies[id] else { return }
+            mediaDependencies.move(to: mediaDependencies.playTime + seconds)
+        },
+        moveBackward: { id, seconds in
+            guard let mediaDependencies = dependencies[id] else { return }
+            mediaDependencies.move(to: mediaDependencies.playTime - seconds)
         }
     )
 }
 
-private var dependencies: [AnyHashable: VideoClientDependencies] = [:]
+private var dependencies: [AnyHashable: Dependencies] = [:]
 
-private class VideoClientDependencies: NSObject {
+private class Dependencies: NSObject {
     // MARK: - Injected properties
     private let player: AVPlayer
-    private let playTimeDidChange: (Seconds) -> Void
     private let playingDidChange: (Bool) -> Void
+    private let playTimeDidChange: (Seconds) -> Void
     // MARK: -
 
     private var playTimeObserverToken: Any?
     private var movedTime: Double?
+    lazy var layer: AVPlayerLayer = { AVPlayerLayer(player: player) }()
     var duration: Seconds { player.durationSeconds }
     var playTime: Seconds { player.currentSeconds.roundTo(place: 2) }
-    lazy var layer: AVPlayerLayer = {
-        return AVPlayerLayer(player: player)
-    }()
 
     init(
         url: URL,
-        playTimeDidChange: @escaping (Seconds) -> Void,
-        playingDidChange: @escaping (Bool) -> Void
+        playingDidChange: @escaping (Bool) -> Void,
+        playTimeDidChange: @escaping (Seconds) -> Void
     ) {
         self.player = AVPlayer(url: url)
-        self.playTimeDidChange = playTimeDidChange
         self.playingDidChange = playingDidChange
+        self.playTimeDidChange = playTimeDidChange
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: nil)
     }
@@ -121,7 +117,7 @@ private class VideoClientDependencies: NSObject {
     }
 
     func move(to: Seconds) {
-        // 모든 move는 이 method를 call해야 한다. movedTime 관리를 위해
+        // Do not access avplayer for move to manage moved time.
         var time = to
         if time < 0 {
             time = 0
@@ -136,13 +132,13 @@ private class VideoClientDependencies: NSObject {
 
     private func addPeriodicTimeObserver() {
         playTimeObserverToken = player.addPeriodicTimeObserver(
-            forInterval: CMTime(seconds: 1/60, preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
+            forInterval: CMTime(seconds: 1/30, preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
             queue: .main,
             using: { [weak self] time in
-                // TODO: play 시간을 변경했지만 변경하기 전 시간이 emit 되면서 이상하게 동작한다.
-                // 임시방편으로 변경하기 전 시간을 무시하는 코드를 넣는다.
+                // Ignore times emitted before calling move function.
+                // TODO: To find better ways
                 if let movedTime = self?.movedTime {
-                    if abs(movedTime - time.seconds) < 1/60 {
+                    if abs(movedTime - time.seconds) < 1/30 {
                         self?.movedTime = nil
                     } else {
                         return

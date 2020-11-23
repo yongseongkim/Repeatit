@@ -11,35 +11,34 @@ import ComposableArchitecture
 import UIKit
 
 struct AudioClientID: Hashable {}
-struct WaveformClientID: Hashable {}
 
 // MARK: - Composable Architecture Components
 enum AudioPlayerAction: Equatable {
-    case play
-    case loadWaveform(WaveformBarOption)
-    case resume
-    case pause
-    case move(to: Seconds)
+    case open
 
-    case player(Result<AudioClient.Action, AudioClient.Failure>)
-    case waveform(Result<UIImage, WaveformClient.Failure>)
+    // Subreducer
+    case waveform(WaveformAction)
+    // Environment
+    case player(Result<LocalMediaClient.Action, Never>)
+    // Reusable reducers
     case playerControl(PlayerControlAction)
     case bookmark(BookmarkAction)
 }
 
 struct AudioPlayerState: Equatable {
     let current: Document
-    var waveformImage: UIImage? = nil
-    var isPlaying: Bool = false
-    var playTime: Seconds = 0
-    var duration: Seconds = 0
-
+    var waveform: WaveformState
     var playerControl: PlayerControlState
     var bookmark: BookmarkState
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs.current == rhs.current
+            && lhs.bookmark == rhs.bookmark
+    }
 }
 
 struct AudioPlayerEnvironment {
-    let audioClient: AudioClient
+    let audioClient: LocalMediaClient
     let waveformClient: WaveformClient
     let bookmarkClient: BookmarkClient
 }
@@ -49,46 +48,26 @@ let audioPlayerReducer = Reducer<AudioPlayerState, AudioPlayerAction, AudioPlaye
     state, action, environment in
     let url = state.current.url
     switch action {
-    case .play:
-        return environment.audioClient.play(AudioClientID(), state.current.url)
+    case .open:
+        return environment.audioClient.open(AudioClientID(), state.current.url)
             .receive(on: DispatchQueue.main)
             .catchToEffect()
             .map(AudioPlayerAction.player)
             .eraseToEffect()
             .cancellable(id: AudioClientID())
-    case .loadWaveform(let option):
-        let url = state.current.url
-        return environment.waveformClient.loadWaveform(url, option)
-            .receive(on: DispatchQueue.main)
-            .catchToEffect()
-            .map(AudioPlayerAction.waveform)
-            .cancellable(id: WaveformClientID())
-    case .resume:
-        environment.audioClient.resume(url)
-        return .none
-    case .pause:
-        environment.audioClient.pause(url)
-        return .none
-    case .move(let seconds):
-        environment.audioClient.move(url, seconds)
+    case .player(.success(.layerDidLoad)):
         return .none
     case .player(.success(.durationDidChange(let seconds))):
-        state.duration = seconds
+        state.waveform = state.waveform.updated(duration: seconds)
         return .none
     case .player(.success(.playingDidChange(let isPlaying))):
-        state.isPlaying = isPlaying
-        state.playerControl = state
-            .playerControl
-            .updated(isPlaying: isPlaying)
+        state.waveform = state.waveform.updated(isPlaying: isPlaying)
+        state.playerControl = PlayerControlState(isPlaying: isPlaying)
         return .none
     case .player(.success(.playTimeDidChange(let seconds))):
-        state.playTime = seconds
+        state.waveform = state.waveform.updated(playTime: seconds)
         return .none
-    case .waveform(.success(let waveformImage)):
-        state.waveformImage = waveformImage
-        return .none
-    case .waveform(.failure(.couldntLoadWaveform)):
-        state.waveformImage = nil
+    case .waveform:
         return .none
     case .playerControl:
         return .none
@@ -96,22 +75,41 @@ let audioPlayerReducer = Reducer<AudioPlayerState, AudioPlayerAction, AudioPlaye
         return .none
     }
 }
+.waveform(
+    state: \.waveform,
+    action: /AudioPlayerAction.waveform,
+    environment: { environment in
+        WaveformEnvironment(
+            resume: { environment.audioClient.resume(AudioClientID()) },
+            pause: { environment.audioClient.pause(AudioClientID()) },
+            move: { environment.audioClient.move(AudioClientID(), $0) },
+            waveformClient: environment.waveformClient
+        )
+    }
+)
 .playerControl(
     state: \.playerControl,
     action: /AudioPlayerAction.playerControl,
-    environment: { PlayerControlEnvironment(client: $0.audioClient) }
+    environment: { environment in
+        PlayerControlEnvironment(
+            resume: { environment.audioClient.resume(AudioClientID()) },
+            pause: { environment.audioClient.pause(AudioClientID()) },
+            moveForward: { environment.audioClient.moveForward(AudioClientID(), $0) },
+            moveBackward: { environment.audioClient.moveBackward(AudioClientID(), $0) }
+        )
+    }
 )
 .bookmark(
     state: \.bookmark,
     action: /AudioPlayerAction.bookmark,
-    environment: {
+    environment: { environment in
         BookmarkEnvironment(
-            bookmarkClient: $0.bookmarkClient,
-            player: $0.audioClient
+            move: { environment.audioClient.move(AudioClientID(), $0) },
+            bookmarkClient: environment.bookmarkClient
         )
     }
 )
 .lifecycle(
-    onAppear: { _ in Effect(value: .play) },
+    onAppear: { _ in Effect(value: .open) },
     onDisappear: { _ in .cancel(id: AudioClientID()) }
 )

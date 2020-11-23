@@ -51,27 +51,3 @@ struct PlayerControlView: View {
         .background(Color.systemGray6)
     }
 }
-
-struct PlayerControlView_Previews: PreviewProvider {
-    struct PlayerControlPreviewID: Hashable {}
-    static var previews: some View {
-        Group {
-            PlayerControlView(
-                store: .init(
-                    initialState: .init(playerID: PlayerControlPreviewID()),
-                    reducer: .empty,
-                    environment: PlayerControlEnvironment(client: MockPlayerControlClient()))
-            )
-            .environment(\.colorScheme, .light)
-            .previewLayout(.sizeThatFits)
-            PlayerControlView(
-                store: .init(
-                    initialState: .init(playerID: PlayerControlPreviewID()),
-                    reducer: .empty,
-                    environment: PlayerControlEnvironment(client: MockPlayerControlClient()))
-            )
-            .environment(\.colorScheme, .dark)
-            .previewLayout(.sizeThatFits)
-        }
-    }
-}

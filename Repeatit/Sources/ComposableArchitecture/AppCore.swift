@@ -85,36 +85,22 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
                 if document.isAudioFile {
                     state.audioPlayer = .init(
                         current: document,
-                        playerControl: .init(
-                            playerID: AudioClientID()
-                        ),
-                        bookmark: .init(
-                            playerID: AudioClientID(),
-                            current: document
-                        )
+                        waveform: .init(current: document),
+                        playerControl: .init(),
+                        bookmark: .init(current: document)
                     )
                 } else if document.isVideoFile {
                     state.videoPlayer = .init(
                         current: document,
-                        playerControl: .init(
-                            playerID: VideoClientID()
-                        ),
-                        bookmark: .init(
-                            playerID: VideoClientID(),
-                            current: document
-                        )
+                        playerControl: .init(),
+                        bookmark: .init(current: document)
                     )
                 } else if document.isYouTubeFile {
                     state.youtubePlayer = .init(
                         current: document,
                         playerView: nil,
-                        playerControl: .init(
-                            playerID: YouTubeClientID()
-                        ),
-                        bookmark: .init(
-                            playerID: YouTubeClientID(),
-                            current: document
-                        )
+                        playerControl: .init(),
+                        bookmark: .init(current: document)
                     )
                 } else {
                     state.textContents = TextContents.from(document: document)
@@ -123,13 +109,18 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
                 break
             }
             return .none
-        case .setPlayerSheet(false):
+        case .audioPlayer:
+            return .none
+        case .videoPlayer:
+            return .none
+        case .youtubePlayer:
+            return .none
+        case .setPlayerSheet(let isPresented):
+            guard !isPresented else { return .none }
             state.audioPlayer = nil
             state.videoPlayer = nil
             state.youtubePlayer = nil
             state.textContents = nil
-            return .none
-        default:
             return .none
         }
     }

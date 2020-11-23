@@ -12,7 +12,7 @@ struct BookmarkListView: View {
     let store: Store<BookmarkState, BookmarkAction>
 
     var body: some View {
-        WithViewStore(self.store) { viewStore in
+        WithViewStore(store) { viewStore in
             GeometryReader { geometry in
                 List {
                     ForEach(

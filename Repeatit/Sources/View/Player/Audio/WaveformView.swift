@@ -36,10 +36,10 @@ class WaveformView: UIView {
     private let isDraggingSubject = CurrentValueSubject<Bool, Never>(false)
     private var cancellables: [AnyCancellable] = []
 
-    let viewStore: ViewStore<AudioPlayerState, AudioPlayerAction>
+    let viewStore: ViewStore<WaveformState, WaveformAction>
     let waveformOption: WaveformBarOption
 
-    init(store: Store<AudioPlayerState, AudioPlayerAction>, waveformOption: WaveformBarOption) {
+    init(store: Store<WaveformState, WaveformAction>, waveformOption: WaveformBarOption) {
         self.viewStore = ViewStore(store)
         self.waveformOption = waveformOption
         super.init(frame: .zero)
@@ -52,7 +52,7 @@ class WaveformView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        viewStore.send(.loadWaveform(waveformOption))
+        viewStore.send(.load(waveformOption))
         layout()
     }
 }
@@ -110,6 +110,7 @@ extension WaveformView {
                     .eraseToAnyPublisher()
             }
             .sink { [weak self] wasPlayingBeforeDragging in
+                // Playtime moves after dragging.
                 guard let self = self else { return }
                 let contentOffsetX = self.scrollView.contentOffset.x
                 let contentWidth = self.waveformImageView.image?.size.width ?? 0
@@ -162,7 +163,7 @@ extension WaveformView: UIScrollViewDelegate {
 }
 
 struct WaveformViewUI: UIViewRepresentable {
-    let store: Store<AudioPlayerState, AudioPlayerAction>
+    let store: Store<WaveformState, WaveformAction>
     let waveformOption: WaveformBarOption
 
     func makeUIView(context: Context) -> WaveformView {

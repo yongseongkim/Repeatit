@@ -21,7 +21,10 @@ struct AudioPlayerView: View {
                         model: .init(metadata: viewStore.current.metadata)
                     )
                     AudioPlayerWaveformView(
-                        store: store.scope(state: { $0 }, action: { LifecycleAction.action($0) }),
+                        store: store.scope(
+                            state: { $0.waveform },
+                            action: { LifecycleAction.action(AudioPlayerAction.waveform($0)) }
+                        ),
                         waveformOption: .init(width: 2, interval: 1, maxHeight: 100, style: .up)
                     )
                     .frame(height: 100)
@@ -30,7 +33,10 @@ struct AudioPlayerView: View {
                         model: .init(metadata: viewStore.current.metadata)
                     )
                     AudioPlayerWaveformView(
-                        store: store.scope(state: { $0 }, action: { LifecycleAction.action($0) }),
+                        store: store.scope(
+                            state: { $0.waveform },
+                            action: { LifecycleAction.action(AudioPlayerAction.waveform($0)) }
+                        ),
                         waveformOption: .init(width: 2, interval: 1, maxHeight: 140, style: .upDown)
                     )
                     .frame(height: 140)

@@ -10,7 +10,7 @@ import ComposableArchitecture
 import SwiftUI
 
 struct AudioPlayerWaveformView: View {
-    let store: Store<AudioPlayerState, AudioPlayerAction>
+    let store: Store<WaveformState, WaveformAction>
     let waveformOption: WaveformBarOption
 
     var body: some View {

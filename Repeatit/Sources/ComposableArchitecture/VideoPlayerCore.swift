@@ -14,10 +14,11 @@ struct VideoClientID: Hashable {}
 
 // MARK: - Composable Architecture Components
 enum VideoPlayerAction: Equatable {
-    case play
-    case move(to: Seconds)
+    case open
 
-    case player(Result<VideoClient.Action, VideoClient.Failure>)
+    // Environment
+    case player(Result<LocalMediaClient.Action, Never>)
+    // Reusable reducers
     case playerControl(PlayerControlAction)
     case bookmark(BookmarkAction)
 }
@@ -25,16 +26,12 @@ enum VideoPlayerAction: Equatable {
 struct VideoPlayerState: Equatable {
     let current: Document
     var videoLayer: AVPlayerLayer? = nil
-    var isPlaying: Bool = false
-    var playTime: Seconds = 0
-    var duration: Seconds = 0
-
     var playerControl: PlayerControlState
     var bookmark: BookmarkState
 }
 
 struct VideoPlayerEnvironment {
-    let videoClient: VideoClient
+    let videoClient: LocalMediaClient
     let bookmarkClient: BookmarkClient
 }
 // MARK: -
@@ -42,31 +39,22 @@ struct VideoPlayerEnvironment {
 let videoPlayerReducer = Reducer<VideoPlayerState, VideoPlayerAction, VideoPlayerEnvironment> {
     state, action, environment in
     switch action {
-    case .play:
-        let url = state.current.url
-        return environment.videoClient.play(VideoClientID(), state.current.url)
+    case .open:
+        return environment.videoClient.open(VideoClientID(), state.current.url)
             .receive(on: DispatchQueue.main)
             .catchToEffect()
             .map(VideoPlayerAction.player)
             .eraseToEffect()
             .cancellable(id: VideoClientID())
-    case .move(let seconds):
-        environment.videoClient.move(VideoClientID(), seconds)
-        return .none
     case .player(.success(.layerDidLoad(let layer))):
         state.videoLayer = layer
         return .none
     case .player(.success(.durationDidChange(let seconds))):
-        state.duration = seconds
         return .none
     case .player(.success(.playingDidChange(let isPlaying))):
-        state.isPlaying = isPlaying
-        state.playerControl = state
-            .playerControl
-            .updated(isPlaying: isPlaying)
+        state.playerControl = PlayerControlState(isPlaying: isPlaying)
         return .none
     case .player(.success(.playTimeDidChange(let seconds))):
-        state.playTime = seconds
         return .none
     case .playerControl:
         return .none
@@ -77,19 +65,26 @@ let videoPlayerReducer = Reducer<VideoPlayerState, VideoPlayerAction, VideoPlaye
 .playerControl(
     state: \.playerControl,
     action: /VideoPlayerAction.playerControl,
-    environment: { PlayerControlEnvironment(client: $0.videoClient) }
+    environment: { environment in
+        PlayerControlEnvironment(
+            resume: { environment.videoClient.resume(VideoClientID()) },
+            pause: { environment.videoClient.pause(VideoClientID()) },
+            moveForward: { environment.videoClient.moveForward(VideoClientID(), $0) },
+            moveBackward: { environment.videoClient.moveBackward(VideoClientID(), $0) }
+        )
+    }
 )
 .bookmark(
     state: \.bookmark,
     action: /VideoPlayerAction.bookmark,
     environment: {
         BookmarkEnvironment(
-            bookmarkClient: $0.bookmarkClient,
-            player: $0.videoClient
+            move: { _ in },
+            bookmarkClient: $0.bookmarkClient
         )
     }
 )
 .lifecycle(
-    onAppear: { _ in Effect(value: .play) },
+    onAppear: { _ in Effect(value: .open) },
     onDisappear: { _ in .cancel(id: VideoClientID()) }
 )

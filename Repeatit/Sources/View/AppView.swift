@@ -36,7 +36,12 @@ struct AppView: View {
                         send: AppAction.setPlayerSheet(isPresented:)
                     ),
                     content: {
-                        IfLetStore(store.scope(state: { $0.audioPlayer }, action: AppAction.audioPlayer)) {
+                        IfLetStore(
+                            store.scope(
+                                state: { $0.audioPlayer },
+                                action: AppAction.audioPlayer
+                            )
+                        ) {
                             AudioPlayerView(store: $0)
                         }
                     }
@@ -67,7 +72,11 @@ struct AppView: View {
                         send: AppAction.setPlayerSheet(isPresented:)
                     ),
                     content: {
-                        IfLetStore(store.scope(state: { $0.youtubePlayer }, action: AppAction.youtubePlayer)) {
+                        IfLetStore(
+                            store.scope(
+                                state: { $0.youtubePlayer },
+                                action: AppAction.youtubePlayer)
+                        ) {
                             YouTubePlayerView(store: $0)
                         }
                     }
@@ -76,21 +85,3 @@ struct AppView: View {
         }
     }
 }
-
-//struct AppView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        AppView(
-//            store: Store(
-//                initialState: AppState(
-//                    documentExplorer: DocumentExplorerState(
-//                        currentURL: URL.homeDirectory,
-//                        documents: [:],
-//                        selectedDocuments: []
-//                    )
-//                ),
-//                reducer: appReducer,
-//                environment: AppEnvironment()
-//            )
-//        )
-//    }
-//}

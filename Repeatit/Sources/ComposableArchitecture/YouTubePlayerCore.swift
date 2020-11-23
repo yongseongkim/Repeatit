@@ -22,7 +22,6 @@ enum YouTubePlayerAction: Equatable {
 struct YouTubePlayerState: Equatable {
     let current: Document
     var playerView: YTPlayerView?
-
     var playerControl: PlayerControlState
     var bookmark: BookmarkState
 }
@@ -49,9 +48,7 @@ let youtubePlayerReducer = Reducer<YouTubePlayerState, YouTubePlayerAction, YouT
     case .player(.success(.durationDidChange(let seconds))):
         return .none
     case .player(.success(.playingDidChange(let isPlaying))):
-        state.playerControl = state
-            .playerControl
-            .updated(isPlaying: isPlaying)
+        state.playerControl = PlayerControlState(isPlaying: isPlaying)
         return .none
     case .player(.success(.playTimeDidChange)):
         return .none
@@ -64,15 +61,22 @@ let youtubePlayerReducer = Reducer<YouTubePlayerState, YouTubePlayerAction, YouT
 .playerControl(
     state: \.playerControl,
     action: /YouTubePlayerAction.playerControl,
-    environment: { PlayerControlEnvironment(client: $0.youtubeClient) }
+    environment: { environment in
+        PlayerControlEnvironment(
+            resume: { environment.youtubeClient.resume(YouTubeClientID()) },
+            pause: { environment.youtubeClient.pause(YouTubeClientID()) },
+            moveForward: { environment.youtubeClient.moveForward(YouTubeClientID(), $0) },
+            moveBackward: { environment.youtubeClient.moveBackward(YouTubeClientID(), $0) }
+        )
+    }
 )
 .bookmark(
     state: \.bookmark,
     action: /YouTubePlayerAction.bookmark,
     environment: {
         BookmarkEnvironment(
-            bookmarkClient: $0.bookmarkClient,
-            player: $0.youtubeClient
+            move: { _ in },
+            bookmarkClient: $0.bookmarkClient
         )
     }
 )

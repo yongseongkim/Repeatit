@@ -18,9 +18,9 @@ struct MediaMetadata {
     init(url: URL) {
         let playerItem = AVPlayerItem(url: url)
         let metadataList = playerItem.asset.metadata
-        title = metadataList.first { $0.commonKey?.rawValue == "title"}?.stringValue ?? url.lastPathComponent
-        artist = metadataList.first { $0.commonKey?.rawValue == "artist"}?.stringValue ?? "Unknown Artist"
-        albumTitle = metadataList.first { $0.commonKey?.rawValue == "albumName"}?.stringValue ?? "Unknown Artist"
+        title = metadataList.first { $0.commonKey?.rawValue == "title" }?.stringValue ?? url.lastPathComponent
+        artist = metadataList.first { $0.commonKey?.rawValue == "artist" }?.stringValue ?? "Unknown Artist"
+        albumTitle = metadataList.first { $0.commonKey?.rawValue == "albumName" }?.stringValue ?? "Unknown Artist"
         let artworkData = metadataList.first { $0.commonKey?.rawValue == "artwork" }?.dataValue
         if let artworkData = artworkData, let artworkImg = UIImage(data: artworkData) {
             artwork = artworkImg

@@ -10,7 +10,7 @@ import ComposableArchitecture
 import SwiftUI
 
 struct WaveformTimeView: View {
-    let store: Store<AudioPlayerState, AudioPlayerAction>
+    let store: Store<WaveformState, WaveformAction>
 
     var body: some View {
         WithViewStore(store) { viewStore in
