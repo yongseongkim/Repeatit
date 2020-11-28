@@ -11,7 +11,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct DocumentExplorerFloatingActionButtons: View {
-    let store: Store<DocumentExplorerState, DocumentExplorerAction>
+    let store: Store<DocumentExplorerFloatingActionButtonsState, DocumentExplorerFloatingActionButtonsAction>
     let documentTypes = [
         UTType.image,
         UTType.mp3,
@@ -39,57 +39,57 @@ struct DocumentExplorerFloatingActionButtons: View {
                             DocumentPickerView(
                                 documentTypes: documentTypes,
                                 listener: .init(
-                                    onPickDocuments: { viewStore.send(.confirmImportURLs($0)) },
+                                    onPickDocuments: { _ in /* viewStore.send(.confirmImportURLs($0)) */ },
                                     onCancel: { self.isDocumentPickerViewShowing = false }
                                 )
                             )
                         }
                     )
-                    .opacity(viewStore.isFloatingActionButtonsFolding ? 0 : 1)
-                    .offset(x: 0, y: viewStore.isFloatingActionButtonsFolding ? (46 + 14) * 3 + 5 : 0)
+                    .opacity(viewStore.isCollapsed ? 0 : 1)
+                    .offset(x: 0, y: viewStore.isCollapsed ? (46 + 14) * 3 + 5 : 0)
                     DocumentExplorerFloatingActionButton(
                         imageSystemName: "play.rectangle",
                         onTapGesture: {
-                            self.showPopup {
-                                SingleTextFieldPopup(
-                                    title: "YouTube",
-                                    message: "Please Enter a YouTube link.\nex) https://youtu.be/929plYk1lDc",
-                                    positiveButton: ("Confirm", {
-                                        if let id = $0.parseYouTubeID() {
-                                            viewStore.send(.confirmCreatingYoutube(id))
-                                        }
-                                        hidePopup()
-                                    }),
-                                    negativeButton: ("Cancel", { hidePopup() })
-                                )
-                            }
+//                            self.showPopup {
+//                                SingleTextFieldPopup(
+//                                    title: "YouTube",
+//                                    message: "Please Enter a YouTube link.\nex) https://youtu.be/929plYk1lDc",
+//                                    positiveButton: ("Confirm", {
+//                                        if let id = $0.parseYouTubeID() {
+//                                            viewStore.send(.confirmCreatingYoutube(id))
+//                                        }
+//                                        hidePopup()
+//                                    }),
+//                                    negativeButton: ("Cancel", { hidePopup() })
+//                                )
+//                            }
                         }
                     )
-                    .opacity(viewStore.isFloatingActionButtonsFolding ? 0 : 1)
-                    .offset(x: 0, y: viewStore.isFloatingActionButtonsFolding ? (46 + 14) * 2 + 5 : 0)
+                    .opacity(viewStore.isCollapsed ? 0 : 1)
+                    .offset(x: 0, y: viewStore.isCollapsed ? (46 + 14) * 2 + 5 : 0)
                     DocumentExplorerFloatingActionButton(
                         imageSystemName: "folder",
                         onTapGesture: {
-                            self.showPopup {
-                                SingleTextFieldPopup(
-                                    title: "Directory",
-                                    message: "Please Enter a new directory name.",
-                                    positiveButton: ("Confirm", {
-                                        viewStore.send(.confirmCreatingNewFolder($0))
-                                        hidePopup()
-                                    }),
-                                    negativeButton: ("Cancel", { hidePopup() })
-                                )
-                            }
+//                            self.showPopup {
+//                                SingleTextFieldPopup(
+//                                    title: "Directory",
+//                                    message: "Please Enter a new directory name.",
+//                                    positiveButton: ("Confirm", {
+//                                        viewStore.send(.confirmCreatingNewFolder($0))
+//                                        hidePopup()
+//                                    }),
+//                                    negativeButton: ("Cancel", { hidePopup() })
+//                                )
+//                            }
                         }
                     )
-                    .opacity(viewStore.isFloatingActionButtonsFolding ? 0 : 1)
-                    .offset(x: 0, y: viewStore.isFloatingActionButtonsFolding ? 46 + 14 + 5 : 0)
+                    .opacity(viewStore.isCollapsed ? 0 : 1)
+                    .offset(x: 0, y: viewStore.isCollapsed ? 46 + 14 + 5 : 0)
                     // width: 56, height: 56
                     Button(
                         action: {
                             withAnimation(.easeIn(duration: 0.15)) {
-                                viewStore.send(.floatingButtonTapped)
+                                viewStore.send(.toggleCollapsed)
                             }
                         },
                         label: {
@@ -102,7 +102,7 @@ struct DocumentExplorerFloatingActionButtons: View {
                                 .background(Color.systemGray5)
                                 .cornerRadius(28)
                                 .shadow(color: Color.black.opacity(0.35), radius: 5)
-                                .rotationEffect(viewStore.isFloatingActionButtonsFolding ? Angle(degrees: 0) : Angle(degrees: 135))
+                                .rotationEffect(viewStore.isCollapsed ? Angle(degrees: 0) : Angle(degrees: 135))
                         }
                     )
                 }
@@ -136,38 +136,5 @@ struct DocumentExplorerFloatingActionButtons: View {
 
     private func hidePopup() {
         SwiftEntryKit.dismiss(.specific(entryName: "EntryForFloatingActionButtons"))
-    }
-}
-
-struct DocumentExplorerFloatingActionButton_Preview: PreviewProvider {
-    static var previews: some View {
-        Group {
-            DocumentExplorerFloatingActionButtons(
-                store: .init(
-                    initialState: .init(
-                        currentURL: URL.homeDirectory,
-                        documents: [.homeDirectory: FileManager.default.getDocuments(in: .homeDirectory)],
-                        selectedDocuments: []
-                    ),
-                    reducer: documentExplorerReducer,
-                    environment: DocumentExplorerEnvironment(fileManager: .default)
-                )
-            )
-            .environment(\.colorScheme, .light)
-            .previewLayout(.fixed(width: 250, height: 320))
-            DocumentExplorerFloatingActionButtons(
-                store: .init(
-                    initialState: .init(
-                        currentURL: URL.homeDirectory,
-                        documents: [.homeDirectory: FileManager.default.getDocuments(in: .homeDirectory)],
-                        selectedDocuments: []
-                    ),
-                    reducer: documentExplorerReducer,
-                    environment: DocumentExplorerEnvironment(fileManager: .default)
-                )
-            )
-            .environment(\.colorScheme, .dark)
-            .previewLayout(.fixed(width: 250, height: 320))
-        }
     }
 }

@@ -81,7 +81,7 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
         switch action {
         case .documentExplorer(let action):
             switch action {
-            case .documentTapped(let document):
+            case .didTap(let document):
                 if document.isAudioFile {
                     state.audioPlayer = .init(
                         current: document,
@@ -105,10 +105,10 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
                 } else {
                     state.textContents = TextContents.from(document: document)
                 }
+                return .none
             default:
-                break
+                return .none
             }
-            return .none
         case .audioPlayer:
             return .none
         case .videoPlayer:

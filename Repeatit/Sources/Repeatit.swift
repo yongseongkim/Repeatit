@@ -15,18 +15,13 @@ struct Repeatit: App {
     var body: some Scene {
         WindowGroup {
             AppView(
-                store: Store(
-                    initialState: AppState(
+                store: .init(
+                    initialState: .init(
                         documentExplorer: .init(
-                            currentURL: URL.homeDirectory,
+                            visibleURL: URL.homeDirectory,
+                            isEditing: false,
                             documents: [:],
-                            selectedDocuments: [],
-                            selectedDocumentsDestinationNavigator: .init(
-                                mode: .move,
-                                currentURL: URL.homeDirectory,
-                                documents: [:],
-                                selectedDocuments: []
-                            )
+                            selectedDocuments: []
                         )
                     ),
                     reducer: appReducer,
@@ -36,4 +31,3 @@ struct Repeatit: App {
         }
     }
 }
-

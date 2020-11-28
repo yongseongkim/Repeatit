@@ -12,21 +12,28 @@ struct AppView: View {
     let store: Store<AppState, AppAction>
 
     var body: some View {
-        WithViewStore(store) { viewStore in
-            IfLetStore(store.scope(state: { $0.documentExplorer }, action: AppAction.documentExplorer)) { store in
-                DocumentExplorer(store: store)
+        WithViewStore(
+            store,
+            removeDuplicates: {
+                $0.textContents == $1.textContents
+                    && $0.audioPlayer == $1.audioPlayer
+                    && $0.videoPlayer == $1.videoPlayer
+                    && $0.youtubePlayer == $1.youtubePlayer
             }
+        ) { viewStore in
+            DocumentExplorerView(
+                store: store.scope(
+                    state: { $0.documentExplorer },
+                    action: AppAction.documentExplorer
+                )
+            )
             .background(
                 EmptyView().sheet(
                     isPresented: viewStore.binding(
                         get: { $0.textContents != nil },
                         send: AppAction.setPlayerSheet(isPresented:)
                     ),
-                    content: {
-                        TextContentsView(
-                            value: viewStore.textContents ?? .empty
-                        )
-                    }
+                    content: { TextContentsView(value: viewStore.textContents ?? .empty) }
                 )
             )
             .background(
@@ -41,9 +48,7 @@ struct AppView: View {
                                 state: { $0.audioPlayer },
                                 action: AppAction.audioPlayer
                             )
-                        ) {
-                            AudioPlayerView(store: $0)
-                        }
+                        ) { AudioPlayerView(store: $0) }
                     }
                 )
             )
@@ -59,9 +64,7 @@ struct AppView: View {
                                 state: { $0.videoPlayer },
                                 action: AppAction.videoPlayer
                             )
-                        ) {
-                            VideoPlayerView(store: $0)
-                        }
+                        ) { VideoPlayerView(store: $0) }
                     }
                 )
             )
@@ -76,9 +79,7 @@ struct AppView: View {
                             store.scope(
                                 state: { $0.youtubePlayer },
                                 action: AppAction.youtubePlayer)
-                        ) {
-                            YouTubePlayerView(store: $0)
-                        }
+                        ) { YouTubePlayerView(store: $0) }
                     }
                 )
             )
