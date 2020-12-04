@@ -45,3 +45,42 @@ struct BookmarkListView: View {
         }
     }
 }
+
+struct BookmarkListView_Previews: PreviewProvider {
+    static var previews: some View {
+        Group {
+            BookmarkListView(
+                store: .init(
+                    initialState: .init(
+                        current: Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3")),
+                        playTime: 0,
+                        bookmarks: [
+                            Bookmark(millis: 10000, text: "bookmark text 1"),
+                            Bookmark(millis: 20000, text: "bookmark text 2")
+                        ]),
+                    reducer: Reducer<BookmarkState, BookmarkAction, BookmarkEnvironment> { _, _, _ in return .none },
+                    environment: .mock
+                )
+            )
+            .environment(\.colorScheme, .light)
+            .previewLayout(.fixed(width: 320, height: 500))
+            BookmarkListView(
+                store: .init(
+                    initialState: .init(
+                        current: Document(url: URL.homeDirectory.appendingPathComponent("sample.mp3")),
+                        playTime: 0,
+                        bookmarks: [
+                            Bookmark(millis: 10000, text: "bookmark text 1"),
+                            Bookmark(millis: 20000, text: "bookmark text 2"),
+                            Bookmark(millis: 40000, text: "bookmark text 3"),
+                            Bookmark(millis: 80000, text: "bookmark text 4")
+                        ]),
+                    reducer: Reducer<BookmarkState, BookmarkAction, BookmarkEnvironment> { _, _, _ in return .none },
+                    environment: .mock
+                )
+            )
+            .environment(\.colorScheme, .dark)
+            .previewLayout(.fixed(width: 320, height: 500))
+        }
+    }
+}

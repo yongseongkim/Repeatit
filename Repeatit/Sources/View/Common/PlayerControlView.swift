@@ -9,6 +9,8 @@ import ComposableArchitecture
 import SwiftUI
 
 struct PlayerControlViewAboveKeyboard: View {
+    static let height: CGFloat = 56
+
     let store: Store<PlayerControlState, PlayerControlAction>
 
     var body: some View {
@@ -45,10 +47,36 @@ struct PlayerControlViewAboveKeyboard: View {
                 Spacer()
             }
         }
-        .padding([.top, .bottom], 4)
+        .frame(height: PlayerControlViewAboveKeyboard.height)
         .background(Color.systemWhite)
     }
 }
+
+struct PlayerControlViewAboveKeyboard_Previews: PreviewProvider {
+    static var previews: some View {
+        Group {
+            PlayerControlViewAboveKeyboard(
+                store: .init(
+                    initialState: .init(isPlaying: true),
+                    reducer: Reducer<PlayerControlState, PlayerControlAction, PlayerControlEnvironment> { _, _, _ in return .none },
+                    environment: .mock
+                )
+            )
+            .environment(\.colorScheme, .light)
+            .previewLayout(.sizeThatFits)
+            PlayerControlViewAboveKeyboard(
+                store: .init(
+                    initialState: .init(isPlaying: false),
+                    reducer: Reducer<PlayerControlState, PlayerControlAction, PlayerControlEnvironment> { _, _, _ in return .none },
+                    environment: .mock
+                )
+            )
+            .environment(\.colorScheme, .dark)
+            .previewLayout(.sizeThatFits)
+        }
+    }
+}
+
 struct PlayerControlView: View {
     let store: Store<PlayerControlState, PlayerControlAction>
 
@@ -58,10 +86,10 @@ struct PlayerControlView: View {
                 Spacer()
                 HStack(spacing: 0) {
                     Spacer()
-                    TimeControlButton(direction: .backward, seconds: 5)
+                    TimeControlLargeButton(direction: .backward, seconds: 5)
                         .onTapGesture { viewStore.send(.moveBackward(by: 5)) }
                     Spacer()
-                    TimeControlButton(direction: .backward, seconds: 1)
+                    TimeControlLargeButton(direction: .backward, seconds: 1)
                         .onTapGesture { viewStore.send(.moveBackward(by: 1)) }
                     Spacer()
                 }
@@ -71,14 +99,15 @@ struct PlayerControlView: View {
                     .foregroundColor(.systemBlack)
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 36, height: 36)
+                    .padding(10)
                     .onTapGesture { viewStore.send(.togglePlay) }
                 Spacer()
                 HStack(spacing: 0) {
                     Spacer()
-                    TimeControlButton(direction: .forward, seconds: 1)
+                    TimeControlLargeButton(direction: .forward, seconds: 1)
                         .onTapGesture { viewStore.send(.moveForward(by: 1)) }
                     Spacer()
-                    TimeControlButton(direction: .forward, seconds: 5)
+                    TimeControlLargeButton(direction: .forward, seconds: 5)
                         .onTapGesture { viewStore.send(.moveForward(by: 5)) }
                     Spacer()
                 }
@@ -90,5 +119,30 @@ struct PlayerControlView: View {
         .cornerRadius(8)
         .padding(10)
         .background(Color.systemGray6)
+    }
+}
+
+struct PlayerControlView_Previews: PreviewProvider {
+    static var previews: some View {
+        Group {
+            PlayerControlView(
+                store: .init(
+                    initialState: .init(isPlaying: true),
+                    reducer: Reducer<PlayerControlState, PlayerControlAction, PlayerControlEnvironment> { _, _, _ in return .none },
+                    environment: .mock
+                )
+            )
+            .environment(\.colorScheme, .light)
+            .previewLayout(.sizeThatFits)
+            PlayerControlView(
+                store: .init(
+                    initialState: .init(isPlaying: false),
+                    reducer: Reducer<PlayerControlState, PlayerControlAction, PlayerControlEnvironment> { _, _, _ in return .none },
+                    environment: .mock
+                )
+            )
+            .environment(\.colorScheme, .dark)
+            .previewLayout(.sizeThatFits)
+        }
     }
 }
