@@ -26,18 +26,22 @@ struct KeyboardHeightDetector: ViewModifier {
             .onAppear(perform: subscribeToKeyboardEvents)
     }
 
-    private let keyboardWillOpen = NotificationCenter.default
+    private func subscribeToKeyboardEvents() {
+        _ = KeyboardHeightDetector.visibleHeight
+            .subscribe(on: RunLoop.main)
+            .assign(to: \.height, on: self)
+    }
+}
+
+extension KeyboardHeightDetector {
+    static let visibleHeight = keyboardWillOpen.merge(with: keyboardWillHide)
+
+    static let keyboardWillOpen = NotificationCenter.default
         .publisher(for: UIResponder.keyboardWillShowNotification)
         .compactMap { $0.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as? CGRect }
         .map { $0.height }
 
-    private let keyboardWillHide =  NotificationCenter.default
+    static let keyboardWillHide =  NotificationCenter.default
         .publisher(for: UIResponder.keyboardWillHideNotification)
         .map { _ in CGFloat(0) }
-
-    private func subscribeToKeyboardEvents() {
-        _ = keyboardWillOpen.merge(with: keyboardWillHide)
-            .subscribe(on: RunLoop.main)
-            .assign(to: \.height, on: self)
-    }
 }

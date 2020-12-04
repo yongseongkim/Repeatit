@@ -35,6 +35,7 @@ PODS:
     - GoogleUtilities/Environment (~> 6.7)
     - GoogleUtilities/UserDefaults (~> 6.7)
     - PromisesObjC (~> 1.2)
+  - FlexLayout (1.3.20)
   - GoogleAppMeasurement (6.7.2):
     - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
     - GoogleUtilities/MethodSwizzler (~> 6.7)
@@ -69,7 +70,6 @@ PODS:
   - nanopb/encode (1.30905.0)
   - PinLayout (1.9.2)
   - PromisesObjC (1.2.10)
-  - QuickLayout (3.0.0)
   - RxCocoa (5.1.1):
     - RxRelay (~> 5)
     - RxSwift (~> 5)
@@ -77,18 +77,16 @@ PODS:
     - RxSwift (~> 5)
   - RxSwift (5.1.1)
   - SnapKit (5.0.1)
-  - SwiftEntryKit (1.2.6):
-    - QuickLayout (= 3.0.0)
   - youtube-ios-player-helper (1.0.2)
 
 DEPENDENCIES:
   - Firebase/Analytics
   - FirebaseCrashlytics
+  - FlexLayout (~> 1.3.20)
   - PinLayout (~> 1.9.2)
   - RxCocoa (~> 5)
   - RxSwift (~> 5)
   - SnapKit (~> 5.0.0)
-  - SwiftEntryKit (~> 1.2.6)
   - youtube-ios-player-helper (~> 1.0.2)
 
 SPEC REPOS:
@@ -99,18 +97,17 @@ SPEC REPOS:
     - FirebaseCoreDiagnostics
     - FirebaseCrashlytics
     - FirebaseInstallations
+    - FlexLayout
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleUtilities
     - nanopb
     - PinLayout
     - PromisesObjC
-    - QuickLayout
     - RxCocoa
     - RxRelay
     - RxSwift
     - SnapKit
-    - SwiftEntryKit
     - youtube-ios-player-helper
 
 SPEC CHECKSUMS:
@@ -120,20 +117,19 @@ SPEC CHECKSUMS:
   FirebaseCoreDiagnostics: 7535fe695737f8c5b350584292a70b7f8ff0357b
   FirebaseCrashlytics: 859918905322e8816d2b5ab7fe54bf5a0c84d21c
   FirebaseInstallations: 45f9d44d3a8d6f780fa337ee8987dad87210fcbc
+  FlexLayout: 025dd153bd5618dcc9f93ef914106d7dc2a86fdc
   GoogleAppMeasurement: 3def7652b1f5b5a576178dc332e2a36a260fbef6
   GoogleDataTransport: 672fb0ce96fe7f7f31d43672fca62ad2c9c86f7b
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
   PinLayout: 0d96022e46e8b80468d819f182a393b97ca038da
   PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
-  QuickLayout: 07b45a72b10083fee3f095990cfed1c1e7b27f0a
   RxCocoa: 32065309a38d29b5b0db858819b5bf9ef038b601
   RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
-  SwiftEntryKit: 96a2fa90b2631bbbfac50d18449e9ca3d0635f13
   youtube-ios-player-helper: 40b96e52c22445f0fdc43731cefa32c67075ff81
 
-PODFILE CHECKSUM: 1011d3d44cb8af7d4f662218dc763d5768167256
+PODFILE CHECKSUM: c1190451af465892e3501f1ab5775071f5d51ea3
 
 COCOAPODS: 1.9.1

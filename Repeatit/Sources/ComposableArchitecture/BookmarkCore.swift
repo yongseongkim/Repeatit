@@ -38,6 +38,18 @@ struct BookmarkEnvironment {
     let bookmarkClient: BookmarkClient
 }
 
+extension BookmarkEnvironment {
+    static let mock = BookmarkEnvironment(
+        move: { _ in },
+        bookmarkClient: .init(
+            load: { _ in return .none },
+            add: { _, _ in },
+            update: { _, _, _ in },
+            remove: { _, _ in }
+        )
+    )
+}
+
 let bookmarkReducer = Reducer<BookmarkState, BookmarkAction, BookmarkEnvironment> { state, action, environment in
     switch action {
     case .load:

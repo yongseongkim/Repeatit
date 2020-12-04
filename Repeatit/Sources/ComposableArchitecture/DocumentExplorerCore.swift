@@ -6,21 +6,36 @@
 //
 
 import ComposableArchitecture
+import SwiftUI
 
 enum DocumentExplorerAction: Equatable {
+    enum AlertAction {
+        case confirmTapped
+        case cancelTapped
+    }
+
     case setEditing(Bool)
+    case refresh
     case didAppear(URL)
     case didTap(Document)
-    case toggleDocumentSelection(Document)
     case toggleEditing
+    case toggleDocumentSelection(Document)
+    case moveButtonTapped
+    case copyButtonTapped
+    case deleteButtonTapped
 
-    // Integrate subreducers.
-    case actionSheet(DocumentExplorerActionSheetAction)
-    case floatingActionButtons(DocumentExplorerFloatingActionButtonsAction)
-    case selectedDocumentsNavigator(SelectedDocumentsDestinationNavigatorAction)
+    case confirmImportURLs([URL])
+    case deleteAlert(AlertAction)
+    // Popup events
+    case newFolderConfirmed(String)
+    case youtubeConfirmed(String)
+    case renameConfirmed(String)
 
     // Set presntation of sheets
     case setSelectedDocumentsNavigator(isPresented: Bool)
+
+    // Integrate subreducers.
+    case selectedDocumentsNavigator(SelectedDocumentsDestinationNavigatorAction)
 }
 
 struct DocumentExplorerState: Equatable {
@@ -29,9 +44,11 @@ struct DocumentExplorerState: Equatable {
     var documents: [URL: [Document]]
     var selectedDocuments: [Document]
 
+    var isActionSheetVisible: Bool = false
+    var isFloatingButtonsVisible: Bool = true
+    var deleteAlert: AlertState<DocumentExplorerAction.AlertAction>?
+
     // Subreducers
-    var actionSheet: DocumentExplorerActionSheetState?
-    var floatingActionButtons: DocumentExplorerFloatingActionButtonsState? = .init(isCollapsed: true)
     var selectedDocumentsNavigator: SelectedDocumentsDestinationNavigatiorState?
 }
 
@@ -40,20 +57,6 @@ struct DocumentExplorerEnvironment {
 }
 
 let documentExplorerReducer = Reducer<DocumentExplorerState, DocumentExplorerAction, DocumentExplorerEnvironment>.combine(
-    documentExplorerActionSheetReducer
-        .optional()
-        .pullback(
-            state: \.actionSheet,
-            action: /DocumentExplorerAction.actionSheet,
-            environment: { _ in DocumentExplorerActionSheetEnvironment() }
-        ),
-    documentExplorerFloatingActionButtonsReducer
-        .optional()
-        .pullback(
-            state: \.floatingActionButtons,
-            action: /DocumentExplorerAction.floatingActionButtons,
-            environment: { _ in DocumentExplorerFloatingActionButtonsEnvironment() }
-        ),
     selectedDocumentsDestinationNavigatorReducer
         .optional(breakpointOnNil: false)
         .pullback(
@@ -66,13 +69,16 @@ let documentExplorerReducer = Reducer<DocumentExplorerState, DocumentExplorerAct
         case .setEditing(let isEditing):
             state.isEditing = isEditing
             state.selectedDocuments = []
-            state.actionSheet = state.isEditing ? .init() : nil
-            state.floatingActionButtons = state.isEditing ? nil : .init()
+            state.isActionSheetVisible = isEditing
+            state.isFloatingButtonsVisible = !isEditing
+            return .none
+        case .refresh:
+            let url = state.visibleURL
+            state.documents[url] = environment.fileManager.getDocuments(in: url)
             return .none
         case .didAppear(let url):
             state.visibleURL = url
-            state.documents[url] = environment.fileManager.getDocuments(in: url)
-            return .none
+            return .init(value: .refresh)
         case .didTap:
             return .none
         case .toggleEditing:
@@ -83,61 +89,92 @@ let documentExplorerReducer = Reducer<DocumentExplorerState, DocumentExplorerAct
             } else {
                 state.selectedDocuments.append(document)
             }
-            state.actionSheet = .init(isRenameButtonEnabled: state.selectedDocuments.count == 1)
             return .none
-        case .actionSheet(let action):
+        case .moveButtonTapped:
+            state.selectedDocumentsNavigator = .init(
+                mode: .move,
+                currentURL: .homeDirectory,
+                documents: state.documents,
+                selectedDocuments: state.selectedDocuments
+            )
+            return .none
+        case .copyButtonTapped:
+            state.selectedDocumentsNavigator = .init(
+                mode: .move,
+                currentURL: .homeDirectory,
+                documents: state.documents,
+                selectedDocuments: state.selectedDocuments
+            )
+            return .none
+        case .deleteButtonTapped:
+            state.deleteAlert = .init(
+                title: "Delete",
+                message: "Are you sure to delete the documents?",
+                primaryButton: .default("Confirm", send: .confirmTapped),
+                secondaryButton: .cancel()
+            )
+            return .none
+        case .confirmImportURLs(let urls):
+            return .none
+        case .deleteAlert(let action):
             switch action {
-            case .alert(let action):
-                switch action {
-                case .confirmTapped:
-                    state.selectedDocuments.forEach {
-                        try? environment.fileManager.removeItem(at: $0.url)
-                    }
-                    return .concatenate(
-                        .init(value: .setEditing(false)),
-                        .init(value: .didAppear(state.visibleURL))
-                    )
+            case .confirmTapped:
+                state.selectedDocuments.forEach {
+                    try? environment.fileManager.removeItem(at: $0.url)
                 }
-            case .renameButtonTapped:
-                return .none
-            case .moveButtonTapped:
-                state.selectedDocumentsNavigator = .init(
-                    mode: .move,
-                    currentURL: .homeDirectory,
-                    documents: state.documents,
-                    selectedDocuments: state.selectedDocuments
+                return .concatenate(
+                    .init(value: .setEditing(false)),
+                    .init(value: .refresh)
                 )
-                return .none
-            case .copyButtonTapped:
-                state.selectedDocumentsNavigator = .init(
-                    mode: .move,
-                    currentURL: .homeDirectory,
-                    documents: state.documents,
-                    selectedDocuments: state.selectedDocuments
-                )
-                return .none
-            case .deleteButtonTapped:
+            case .cancelTapped:
+                state.deleteAlert = nil
                 return .none
             }
-        case .floatingActionButtons:
+        case .newFolderConfirmed(let newName):
+            try? environment.fileManager.createDirectory(at: state.visibleURL.appendingPathComponent(newName), withIntermediateDirectories: true, attributes: nil)
+            return .init(value: .refresh)
+        case .youtubeConfirmed(let link):
+            if let youtubeID = link.parseYouTubeID() {
+                let file = YouTubeItem(id: youtubeID)
+                do {
+                    let data = try JSONEncoder().encode(file)
+                    try data.write(to: state.visibleURL.appendingPathComponent("\(youtubeID).youtube"))
+                } catch let exception {
+                    print(exception)
+                }
+            }
+            return .init(value: .refresh)
+        case .renameConfirmed(let newName):
+            guard let from = state.selectedDocuments.first?.url else { return .none }
+            let ext = from.pathExtension
+            let to = from
+                .deletingLastPathComponent()
+                .appendingPathComponent(newName)
+                .appendingPathExtension(ext)
+            try? environment.fileManager.moveItem(at: from, to: to)
+            return .concatenate(
+                .init(value: .setEditing(false)),
+                .init(value: .refresh)
+            )
+        case .setSelectedDocumentsNavigator(let isPresented):
+            guard !isPresented else { return .none }
+            state.selectedDocumentsNavigator = nil
             return .none
         case .selectedDocumentsNavigator(let action):
             switch action {
+            case .destinationViewAppeared:
+                return .none
+            case .confirmButtonTapped:
+                return .none
+            case .cancelButtonTapped:
+                return .init(value: .setSelectedDocumentsNavigator(isPresented: false))
             case .actionCompleted:
                 return .concatenate(
                     .init(value: .setSelectedDocumentsNavigator(isPresented: false)),
                     .init(value: .setEditing(false)),
                     .init(value: .didAppear(state.visibleURL))
                 )
-            case .cancelButtonTapped:
-                return .init(value: .setSelectedDocumentsNavigator(isPresented: false))
-            default:
-                return .none
             }
-        case .setSelectedDocumentsNavigator(let isPresented):
-            guard !isPresented else { return .none }
-            state.selectedDocumentsNavigator = nil
-            return .none
         }
     }
 )

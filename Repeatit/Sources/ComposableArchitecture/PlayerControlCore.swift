@@ -24,6 +24,15 @@ struct PlayerControlEnvironment {
     let moveBackward: (Seconds) -> Void
 }
 
+extension PlayerControlEnvironment {
+    static let mock = PlayerControlEnvironment(
+        resume: {},
+        pause: {},
+        moveForward: { _ in },
+        moveBackward: { _ in }
+    )
+}
+
 extension Reducer {
     func playerControl(
         state: WritableKeyPath<State, PlayerControlState>,

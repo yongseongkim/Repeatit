@@ -17,9 +17,9 @@ struct BookmarkInputAccessaryView: View {
         HStack(alignment: .center, spacing: 0) {
             HStack(alignment: .center, spacing: 0) {
                 Spacer()
-                InputAccessaryTimeControlButton(direction: .backward, seconds: 5)
+                TimeControlSmallButton(direction: .backward, seconds: 5)
                     .onTapGesture { /* move backward by 5 seconds */ }
-                InputAccessaryTimeControlButton(direction: .backward, seconds: 1)
+                TimeControlSmallButton(direction: .backward, seconds: 1)
                     .onTapGesture { /* move backward by 1 seconds */ }
                 Spacer()
                 Button(
@@ -28,9 +28,9 @@ struct BookmarkInputAccessaryView: View {
                 )
                     .frame(width: 44, height: 44)
                 Spacer()
-                InputAccessaryTimeControlButton(direction: .forward, seconds: 1)
+                TimeControlSmallButton(direction: .forward, seconds: 1)
                     .onTapGesture { /* move forward by 5 seconds */ }
-                InputAccessaryTimeControlButton(direction: .forward, seconds: 5)
+                TimeControlSmallButton(direction: .forward, seconds: 5)
                     .onTapGesture { /* move forward by 1 seconds */ }
                 Spacer()
             }

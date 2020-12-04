@@ -8,6 +8,47 @@
 import ComposableArchitecture
 import SwiftUI
 
+struct PlayerControlViewAboveKeyboard: View {
+    let store: Store<PlayerControlState, PlayerControlAction>
+
+    var body: some View {
+        WithViewStore(store) { viewStore in
+            HStack(spacing: 0) {
+                Spacer()
+                HStack(spacing: 0) {
+                    Spacer()
+                    TimeControlSmallButton(direction: .backward, seconds: 5)
+                        .onTapGesture { viewStore.send(.moveBackward(by: 5)) }
+                    Spacer()
+                    TimeControlSmallButton(direction: .backward, seconds: 1)
+                        .onTapGesture { viewStore.send(.moveBackward(by: 1)) }
+                    Spacer()
+                }
+                Spacer()
+                Image(systemName: viewStore.isPlaying ? "pause.fill" : "play.fill")
+                    .resizable()
+                    .foregroundColor(.systemBlack)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 28, height: 28)
+                    .padding(10)
+                    .onTapGesture { viewStore.send(.togglePlay) }
+                Spacer()
+                HStack(spacing: 0) {
+                    Spacer()
+                    TimeControlSmallButton(direction: .forward, seconds: 1)
+                        .onTapGesture { viewStore.send(.moveForward(by: 1)) }
+                    Spacer()
+                    TimeControlSmallButton(direction: .forward, seconds: 5)
+                        .onTapGesture { viewStore.send(.moveForward(by: 5)) }
+                    Spacer()
+                }
+                Spacer()
+            }
+        }
+        .padding([.top, .bottom], 4)
+        .background(Color.systemWhite)
+    }
+}
 struct PlayerControlView: View {
     let store: Store<PlayerControlState, PlayerControlAction>
 

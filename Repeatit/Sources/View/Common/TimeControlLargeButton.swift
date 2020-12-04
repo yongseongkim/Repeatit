@@ -12,7 +12,7 @@ enum TimeControlDirection {
     case backward
 }
 
-struct TimeControlButton: View {
+struct TimeControlLargeButton: View {
     let direction: TimeControlDirection
     let seconds: Int
 
@@ -34,7 +34,7 @@ struct TimeControlButton: View {
     }
 }
 
-struct InputAccessaryTimeControlButton: View {
+struct TimeControlSmallButton: View {
     let direction: TimeControlDirection
     let seconds: Int
 
@@ -59,13 +59,13 @@ struct InputAccessaryTimeControlButton: View {
 struct InputAccessaryTimeControlButton_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            InputAccessaryTimeControlButton(direction: .forward, seconds: 5)
+            TimeControlSmallButton(direction: .forward, seconds: 5)
                 .previewLayout(.sizeThatFits)
-            InputAccessaryTimeControlButton(direction: .forward, seconds: 1)
+            TimeControlSmallButton(direction: .forward, seconds: 1)
                 .previewLayout(.sizeThatFits)
-            InputAccessaryTimeControlButton(direction: .backward, seconds: 1)
+            TimeControlSmallButton(direction: .backward, seconds: 1)
                 .previewLayout(.sizeThatFits)
-            InputAccessaryTimeControlButton(direction: .backward, seconds: 5)
+            TimeControlSmallButton(direction: .backward, seconds: 5)
                 .previewLayout(.sizeThatFits)
         }
     }
@@ -74,13 +74,13 @@ struct InputAccessaryTimeControlButton_Previews: PreviewProvider {
 struct TimeControlButton_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            TimeControlButton(direction: .forward, seconds: 5)
+            TimeControlLargeButton(direction: .forward, seconds: 5)
                 .previewLayout(.sizeThatFits)
-            TimeControlButton(direction: .forward, seconds: 1)
+            TimeControlLargeButton(direction: .forward, seconds: 1)
                 .previewLayout(.sizeThatFits)
-            TimeControlButton(direction: .backward, seconds: 1)
+            TimeControlLargeButton(direction: .backward, seconds: 1)
                 .previewLayout(.sizeThatFits)
-            TimeControlButton(direction: .backward, seconds: 5)
+            TimeControlLargeButton(direction: .backward, seconds: 5)
                 .previewLayout(.sizeThatFits)
         }
     }

@@ -60,16 +60,16 @@ struct AudioPlayerSimpleHeaderView_Previews: PreviewProvider {
                     artist: "Kygo, Whitney Houston"
                 )
             )
-                .environment(\.colorScheme, .light)
-                .previewLayout(.fixed(width: 1000, height: 100))
+            .environment(\.colorScheme, .light)
+            .previewLayout(.sizeThatFits)
             AudioPlayerSimpleHeaderView(
                 model: .init(
                     title: "Second Emotion(Feat. Travis Scott)",
                     artist: "Kygo, Whitney Houston"
                 )
             )
-                .environment(\.colorScheme, .dark)
-                .previewLayout(.sizeThatFits)
+            .environment(\.colorScheme, .dark)
+            .previewLayout(.sizeThatFits)
         }
     }
 }
