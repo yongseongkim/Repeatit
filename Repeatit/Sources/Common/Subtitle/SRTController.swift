@@ -10,7 +10,9 @@ import Foundation
 
 class SRTController {
     var components: [SRTComponent] { _components }
-    var changesPublisher: AnyPublisher<Void, Never> { changesSubject.eraseToAnyPublisher() }
+    var changesPublisher: AnyPublisher<[SRTComponent], Never> {
+        changesSubject.eraseToAnyPublisher()
+    }
 
     private let parser = SRTParser()
     private let writer = SRTWriter()
@@ -21,7 +23,7 @@ class SRTController {
     private let duration: Int
 
     private var _components: [SRTComponent]
-    private let changesSubject = PassthroughSubject<Void, Never>()
+    private let changesSubject = PassthroughSubject<[SRTComponent], Never>()
 
     init(url: URL, duration: Int) {
         self.url = url
@@ -57,14 +59,14 @@ class SRTController {
                 _components[idx - 1] = prev.update(endMillis: new.startMillis)
             }
         }
-        changesSubject.send(())
+        changesSubject.send(_components)
         sync()
     }
 
     func removeComponent(at millis: Int) {
         guard let idx = _components.firstIndex(where: { $0.startMillis == millis }) else { return }
         _components.remove(at: idx)
-        changesSubject.send(())
+        changesSubject.send(_components)
         sync()
     }
 
@@ -77,7 +79,7 @@ class SRTController {
                     return
                 }
                 _components[idx] = _components[idx].update(caption: caption)
-                changesSubject.send(())
+                changesSubject.send(_components)
                 break
             }
         }
@@ -102,23 +104,12 @@ class SRTController {
             do {
                 let result = self.writer.convert(components: self.components)
                 try result.write(toFile: self.url.path, atomically: true, encoding: .utf8)
-                print("sync success: \(result)")
+                if BuildConfig.isDebug {
+                    print("SRTController saved the result: \n\(result)")
+                }
             } catch let exception {
                 print(exception)
             }
         })
-    }
-}
-
-extension Array where Element == SRTComponent {
-    mutating func insertionSort(with component: SRTComponent) {
-        var idx = 0
-        while idx < count {
-            if self[idx].startMillis > component.startMillis {
-                break
-            }
-            idx += 1
-        }
-        self.insert(component, at: idx)
     }
 }

@@ -9,7 +9,6 @@
 import UIKit
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         if !FileManager.default.fileExists(atPath: URL.homeDirectory.path) {
             try? FileManager.default.createDirectory(at: URL.homeDirectory, withIntermediateDirectories: true)
@@ -25,21 +24,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         try FileManager.default.copyItem(atPath: path, toPath: URL.homeDirectory.appendingPathComponent("sample.mp3").path)
                     }
                     let sampleYouTubeURL = URL.homeDirectory.appendingPathComponent("sample.youtube")
-                    let data = try JSONEncoder().encode(YouTubeItem(videoId: "VuavFEzN6oA"))
+                    let data = try JSONEncoder().encode(YouTubeItem(id: "VuavFEzN6oA"))
                     try data.write(to: sampleYouTubeURL)
                 } catch let exception {
+                    // TODO: Report
                     print(exception)
                 }
             }
         } catch let error {
+            // TODO: Report
             print(error)
         }
-
-        // Report
 
         // View
         UITableViewCell.appearance().backgroundColor = .clear
         UITableView.appearance().backgroundColor = .clear
+        UITextView.appearance().backgroundColor = .clear
         return true
     }
 

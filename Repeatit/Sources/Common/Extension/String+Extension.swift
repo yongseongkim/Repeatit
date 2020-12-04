@@ -23,7 +23,7 @@ extension String {
         return (0...matches.count).map {String(self[ranges[$0].upperBound..<ranges[$0+1].lowerBound])}
     }
 
-    func getYouTubeId() -> String? {
+    func parseYouTubeID() -> String? {
         if URL(string: self) == nil {
             return nil
         }

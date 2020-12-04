@@ -11,6 +11,7 @@ import SwiftUI
 extension Color {
     static let lushLava = Color(UIColor.lushLava)
     static let aquaMenthe = Color(UIColor.aquaMenthe)
+    // TODO: The class blue color looks like disabled state.
     static let classicBlue = Color(UIColor.classicBlue)
     static let provence = Color(UIColor.provence)
     static let babyBlue = Color(UIColor.babyBlue)

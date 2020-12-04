@@ -6,15 +6,28 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 @main
 struct Repeatit: App {
-
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var body: some Scene {
         WindowGroup {
-            RootView()
+            AppView(
+                store: .init(
+                    initialState: .init(
+                        documentExplorer: .init(
+                            visibleURL: URL.homeDirectory,
+                            isEditing: false,
+                            documents: [:],
+                            selectedDocuments: []
+                        )
+                    ),
+                    reducer: appReducer,
+                    environment: .production
+                )
+            )
         }
     }
 }

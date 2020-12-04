@@ -67,26 +67,16 @@ PODS:
     - nanopb/encode (= 1.30905.0)
   - nanopb/decode (1.30905.0)
   - nanopb/encode (1.30905.0)
+  - PinLayout (1.9.2)
   - PromisesObjC (1.2.10)
-  - QuickLayout (3.0.0)
-  - RxCocoa (5.1.1):
-    - RxRelay (~> 5)
-    - RxSwift (~> 5)
-  - RxRelay (5.1.1):
-    - RxSwift (~> 5)
-  - RxSwift (5.1.1)
   - SnapKit (5.0.1)
-  - SwiftEntryKit (1.2.6):
-    - QuickLayout (= 3.0.0)
   - youtube-ios-player-helper (1.0.2)
 
 DEPENDENCIES:
   - Firebase/Analytics
   - FirebaseCrashlytics
-  - RxCocoa (~> 5)
-  - RxSwift (~> 5)
+  - PinLayout (~> 1.9.2)
   - SnapKit (~> 5.0.0)
-  - SwiftEntryKit (~> 1.2.6)
   - youtube-ios-player-helper (~> 1.0.2)
 
 SPEC REPOS:
@@ -101,13 +91,9 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleUtilities
     - nanopb
+    - PinLayout
     - PromisesObjC
-    - QuickLayout
-    - RxCocoa
-    - RxRelay
-    - RxSwift
     - SnapKit
-    - SwiftEntryKit
     - youtube-ios-player-helper
 
 SPEC CHECKSUMS:
@@ -121,15 +107,11 @@ SPEC CHECKSUMS:
   GoogleDataTransport: 672fb0ce96fe7f7f31d43672fca62ad2c9c86f7b
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
+  PinLayout: 0d96022e46e8b80468d819f182a393b97ca038da
   PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
-  QuickLayout: 07b45a72b10083fee3f095990cfed1c1e7b27f0a
-  RxCocoa: 32065309a38d29b5b0db858819b5bf9ef038b601
-  RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
-  RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
-  SwiftEntryKit: 96a2fa90b2631bbbfac50d18449e9ca3d0635f13
   youtube-ios-player-helper: 40b96e52c22445f0fdc43731cefa32c67075ff81
 
-PODFILE CHECKSUM: 767c94d064ecee06be50d00cb2e5b0963c1d0549
+PODFILE CHECKSUM: c55239193e56a9a601e7666a39e92e5d1d4cd466
 
 COCOAPODS: 1.9.1
