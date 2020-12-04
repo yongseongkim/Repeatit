@@ -127,6 +127,7 @@ private class Dependencies: NSObject {
         }
         time = time.roundTo(place: 2)
         player.seek(to: time)
+        playTimeDidChange(time)
         movedTime = time
     }
 

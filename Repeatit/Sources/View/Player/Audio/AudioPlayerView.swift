@@ -12,12 +12,13 @@ struct AudioPlayerView: View {
     let store: Store<AudioPlayerState, LifecycleAction<AudioPlayerAction>>
 
     @State var keyboardHeight: CGFloat = 0
+    var isBookmarkEditing: Bool { keyboardHeight > 0 }
 
     var body: some View {
         WithViewStore(store) { viewStore in
             ZStack {
                 VStack(spacing: 0) {
-                    if keyboardHeight > 0 {
+                    if isBookmarkEditing {
                         AudioPlayerSimpleHeaderView(
                             model: .init(metadata: viewStore.current.metadata)
                         )
@@ -55,7 +56,7 @@ struct AudioPlayerView: View {
                         )
                     )
                 }
-                .padding(.bottom, keyboardHeight > 0 ? PlayerControlViewAboveKeyboard.height : 0)
+                .padding(.bottom, isBookmarkEditing ? PlayerControlViewAboveKeyboard.height : 0)
                 VStack {
                     Spacer()
                     PlayerControlViewAboveKeyboard(
@@ -65,7 +66,7 @@ struct AudioPlayerView: View {
                         )
                     )
                 }
-                .visibleOrInvisible(keyboardHeight > 0)
+                .visibleOrInvisible(isBookmarkEditing)
             }
             .onAppear { viewStore.send(.onAppear) }
             .onDisappear { viewStore.send(.onDisappear) }
