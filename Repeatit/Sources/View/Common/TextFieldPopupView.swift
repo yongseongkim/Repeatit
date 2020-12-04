@@ -15,7 +15,15 @@ struct TextFieldPopupView: View {
     @State var textFieldInput: String = ""
     @State var keyboardHeight: CGFloat = 0
 
-    @State private var angle: Double = 0
+    init(
+        model: ViewModel,
+        listener: Listener,
+        isPresented: Binding<Bool>
+    ) {
+        self.model = model
+        self.listener = listener
+        self._isPresented = isPresented
+    }
 
     var body: some View {
         ZStack {
@@ -71,14 +79,10 @@ struct TextFieldPopupView: View {
             .cornerRadius(10)
             .visibleOrGone(isPresented)
             .transition(.customTransition)
+            .onAppear { textFieldInput = model.initialTextFieldText ?? "" }
         }
         .modifier(KeyboardHeightDetector(self.$keyboardHeight))
         .edgesIgnoringSafeArea(.all)
-        .onAppear {
-            if let initialTextFieldText = model.initialTextFieldText {
-                textFieldInput = initialTextFieldText
-            }
-        }
     }
 }
 

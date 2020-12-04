@@ -14,9 +14,7 @@ struct DocumentPickerView: UIViewControllerRepresentable {
     let listener: Listener?
 
     func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
-        let pickerView = UIDocumentPickerViewController(
-            forOpeningContentTypes: documentTypes
-        )
+        let pickerView = UIDocumentPickerViewController(forOpeningContentTypes: documentTypes, asCopy: true)
         pickerView.delegate = context.coordinator
         return pickerView
     }
@@ -49,14 +47,5 @@ extension DocumentPickerView {
     struct Listener {
         let onPickDocuments: (([URL]) -> Void)?
         let onCancel: (() -> Void)?
-    }
-}
-
-struct DocumentsPickerView_Previews: PreviewProvider {
-    static var previews: some View {
-        DocumentPickerView(
-            documentTypes: [],
-            listener: nil
-        )
     }
 }

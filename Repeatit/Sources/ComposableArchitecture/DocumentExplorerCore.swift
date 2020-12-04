@@ -115,7 +115,14 @@ let documentExplorerReducer = Reducer<DocumentExplorerState, DocumentExplorerAct
             )
             return .none
         case .confirmImportURLs(let urls):
-            return .none
+            urls.forEach { url in
+                do {
+                    try environment.fileManager.copyItem(at: url, to: state.visibleURL.appendingPathComponent(url.lastPathComponent))
+                } catch let exception {
+                    print(exception)
+                }
+            }
+            return .init(value: .refresh)
         case .deleteAlert(let action):
             switch action {
             case .confirmTapped:
