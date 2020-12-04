@@ -8,12 +8,7 @@ target 'Repeatit' do
     # UI
     pod 'SnapKit', '~> 5.0.0'
     pod 'PinLayout', '~> 1.9.2'
-    pod 'FlexLayout', '~> 1.3.20'
     pod 'youtube-ios-player-helper', '~> 1.0.2'
-
-    # Rx
-    pod 'RxSwift', '~> 5'
-    pod 'RxCocoa', '~> 5'
 
     # Report
     pod 'Firebase/Analytics'
