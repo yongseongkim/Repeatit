@@ -16,9 +16,7 @@ class SRTController {
 
     private let parser = SRTParser()
     private let writer = SRTWriter()
-
     private let syncQueue = DispatchQueue(label: "srtSyncQueue")
-    private var syncQueueItems = [DispatchWorkItem]()
     private let url: URL
     private let duration: Int
 
@@ -35,10 +33,6 @@ class SRTController {
             FileManager.default.createFile(atPath: url.path, contents: Data(), attributes: nil)
             _components = []
         }
-    }
-
-    deinit {
-        syncQueueItems.forEach { $0.cancel() }
     }
 
     func addComponent(at millis: Int) {

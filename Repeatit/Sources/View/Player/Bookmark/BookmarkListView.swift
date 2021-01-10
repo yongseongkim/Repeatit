@@ -21,12 +21,8 @@ struct BookmarkListView: View {
                             BookmarkEditItemView(
                                 millis: bookmark.millis,
                                 listener: .init(
-                                    onTapGesture: { _ in
-                                        viewStore.send(.play(at: bookmark.millis))
-                                    },
-                                    onTextChange: {
-                                        viewStore.send(.update($0, $1))
-                                    }
+                                    onTapGesture: { _ in viewStore.send(.move(to: bookmark.millis)) },
+                                    onTextChange: { viewStore.send(.update($0, $1)) }
                                 ),
                                 text: bookmark.text
                             )
@@ -41,7 +37,6 @@ struct BookmarkListView: View {
                 .listStyle(PlainListStyle())
             }
             .background(Color.systemGray6)
-            .onAppear { viewStore.send(.load) }
         }
     }
 }

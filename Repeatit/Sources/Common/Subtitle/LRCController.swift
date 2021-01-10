@@ -18,7 +18,6 @@ class LRCController {
     private let writer = LRCWriter()
 
     private let syncQueue = DispatchQueue(label: "lrcSyncQueue")
-    private var syncQueueItems = [DispatchWorkItem]()
     private let url: URL
     private let metadata: LRCMetadata
 
@@ -36,10 +35,6 @@ class LRCController {
             metadata = LRCMetadata()
             _lines = []
         }
-    }
-
-    deinit {
-        syncQueueItems.forEach { $0.cancel() }
     }
 
     func addLine(at millis: Int) {

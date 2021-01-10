@@ -17,6 +17,7 @@ enum YouTubePlayerAction: Equatable {
     case player(Result<YouTubeClient.Action, YouTubeClient.Failure>)
     case playerControl(PlayerControlAction)
     case bookmark(BookmarkAction)
+    case bookmarkControl(Result<BookmarkClient.Action, BookmarkClient.Failure>)
 }
 
 struct YouTubePlayerState: Equatable {
@@ -41,20 +42,32 @@ let youtubePlayerReducer = Reducer<YouTubePlayerState, YouTubePlayerAction, YouT
             .catchToEffect()
             .map(YouTubePlayerAction.player)
             .eraseToEffect()
-            .cancellable(id: AudioClientID())
+            .cancellable(id: YouTubeClientID())
     case .player(.success(.layerDidLoad(let view))):
         state.playerView = view
         return .none
     case .player(.success(.durationDidChange(let seconds))):
-        return .none
+        return environment.bookmarkClient.load(state.current, Int(seconds * 1000))
+            .first()
+            .receive(on: DispatchQueue.main)
+            .catchToEffect()
+            .map(YouTubePlayerAction.bookmarkControl)
+            .eraseToEffect()
+            .cancellable(id: BookmarkClientID())
     case .player(.success(.playingDidChange(let isPlaying))):
         state.playerControl = PlayerControlState(isPlaying: isPlaying)
         return .none
-    case .player(.success(.playTimeDidChange)):
+    case .player(.success(.playTimeDidChange(let playTime))):
+        state.bookmark.playTime = playTime
         return .none
     case .playerControl:
         return .none
     case .bookmark:
+        return .none
+    case .bookmarkControl(.success(.bookmarksDidChange(let bookmarks))):
+        state.bookmark = .init(current: state.current, bookmarks: bookmarks)
+        return .none
+    case .bookmarkControl(.failure):
         return .none
     }
 }

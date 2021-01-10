@@ -23,6 +23,7 @@ enum AudioPlayerAction: Equatable {
     // Reusable reducers
     case playerControl(PlayerControlAction)
     case bookmark(BookmarkAction)
+    case bookmarkControl(Result<BookmarkClient.Action, BookmarkClient.Failure>)
 }
 
 struct AudioPlayerState: Equatable {
@@ -30,11 +31,6 @@ struct AudioPlayerState: Equatable {
     var waveform: WaveformState
     var playerControl: PlayerControlState
     var bookmark: BookmarkState
-
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        return lhs.current == rhs.current
-            && lhs.bookmark == rhs.bookmark
-    }
 }
 
 struct AudioPlayerEnvironment {
@@ -59,19 +55,32 @@ let audioPlayerReducer = Reducer<AudioPlayerState, AudioPlayerAction, AudioPlaye
         return .none
     case .player(.success(.durationDidChange(let seconds))):
         state.waveform = state.waveform.updated(duration: seconds)
-        return .none
+        return environment.bookmarkClient.load(state.current, Int(seconds * 1000))
+            .first()
+            .receive(on: DispatchQueue.main)
+            .catchToEffect()
+            .map(AudioPlayerAction.bookmarkControl)
+            .eraseToEffect()
+            .cancellable(id: BookmarkClientID())
     case .player(.success(.playingDidChange(let isPlaying))):
         state.waveform = state.waveform.updated(isPlaying: isPlaying)
         state.playerControl = PlayerControlState(isPlaying: isPlaying)
         return .none
     case .player(.success(.playTimeDidChange(let seconds))):
-        state.waveform = state.waveform.updated(playTime: seconds)
+        // TODO: fix the performance issue.
+        state.waveform.playTime = seconds
+        state.bookmark.playTime = seconds
         return .none
     case .waveform:
         return .none
     case .playerControl:
         return .none
     case .bookmark:
+        return .none
+    case .bookmarkControl(.success(.bookmarksDidChange(let bookmarks))):
+        state.bookmark = .init(current: state.current, bookmarks: bookmarks)
+        return .none
+    case .bookmarkControl(.failure):
         return .none
     }
 }

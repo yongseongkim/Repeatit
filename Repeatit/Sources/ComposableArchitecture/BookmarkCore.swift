@@ -14,23 +14,25 @@ struct BookmarkState: Equatable {
     var playTime: Seconds = 0
     var bookmarks: [Bookmark] = []
 
-    func updated() -> BookmarkState {
+    func updated(
+        playTime: Double? = nil,
+        bookmarks: [Bookmark]? = nil
+    ) -> BookmarkState {
         return .init(
             current: self.current,
-            playTime: self.playTime,
-            bookmarks: self.bookmarks
+            playTime: playTime ?? self.playTime,
+            bookmarks: bookmarks ?? self.bookmarks
         )
     }
 }
 
 enum BookmarkAction: Equatable {
-    case load
     case add
     case update(Millis, String)
     case remove(Millis)
-    case play(at: Millis)
-    
-    case bookmarkControl(Result<BookmarkClient.Action, BookmarkClient.Failure>)
+    case move(to: Millis)
+
+    case bookmark(Result<BookmarkClient.Action, BookmarkClient.Failure>)
 }
 
 struct BookmarkEnvironment {
@@ -42,43 +44,46 @@ extension BookmarkEnvironment {
     static let mock = BookmarkEnvironment(
         move: { _ in },
         bookmarkClient: .init(
-            load: { _ in return .none },
-            add: { _, _ in },
-            update: { _, _, _ in },
-            remove: { _, _ in }
+            load: { _, _ in return .none },
+            add: { _, _ in return .none },
+            update: { _, _, _ in return .none },
+            remove: { _, _ in return .none }
         )
     )
 }
 
 let bookmarkReducer = Reducer<BookmarkState, BookmarkAction, BookmarkEnvironment> { state, action, environment in
     switch action {
-    case .load:
-        return environment.bookmarkClient.load(state.current)
-            .receive(on: DispatchQueue.main)
-            .catchToEffect()
-            .map(BookmarkAction.bookmarkControl)
-            .eraseToEffect()
-            .cancellable(id: BookmarkClientID())
     case .add:
         let millis = Int(state.playTime * 1000)
-        environment.bookmarkClient.add(state.current.url, millis)
-        return .none
+        return environment.bookmarkClient.add(state.current.url, millis)
+            .map(BookmarkClient.Action.bookmarksDidChange)
+            .receive(on: DispatchQueue.main)
+            .catchToEffect()
+            .map(BookmarkAction.bookmark)
+            .eraseToEffect()
     case .update(let millis, let text):
-        environment.bookmarkClient.update(state.current.url, millis, text)
-        return .none
+        return environment.bookmarkClient.update(state.current.url, millis, text)
+            .map(BookmarkClient.Action.bookmarksDidChange)
+            .receive(on: DispatchQueue.main)
+            .catchToEffect()
+            .map(BookmarkAction.bookmark)
+            .eraseToEffect()
     case .remove(let millis):
-        environment.bookmarkClient.remove(state.current.url, millis)
-        return .none
-    case .play(let millis):
+        let millis = Int(state.playTime * 1000)
+        return environment.bookmarkClient.remove(state.current.url, millis)
+            .map(BookmarkClient.Action.bookmarksDidChange)
+            .receive(on: DispatchQueue.main)
+            .catchToEffect()
+            .map(BookmarkAction.bookmark)
+            .eraseToEffect()
+    case .move(let millis):
         environment.move(Double(millis) / 1000)
         return .none
-    case .bookmarkControl(.success(.bookmarkDidChange)):
-        return .none
-    case .bookmarkControl(.success(.bookmarksDidChange(let bookmarks))):
-        print("bookmarksDidChange \(bookmarks)")
+    case .bookmark(.success(.bookmarksDidChange(let bookmarks))):
         state.bookmarks = bookmarks
         return .none
-    case .bookmarkControl(.failure):
+    case .bookmark(.failure):
         return .none
     }
 }

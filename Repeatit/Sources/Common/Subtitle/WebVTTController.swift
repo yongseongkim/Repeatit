@@ -24,9 +24,7 @@ class WebVTTController {
 
     private let parser = SimpleWebVTTParser()
     private let writer = SimpleWebVTTWriter()
-
     private let syncQueue = DispatchQueue(label: "vttSyncQueue")
-    private var syncQueueItems = [DispatchWorkItem]()
     private let url: URL
     private let title: String
     private let duration: Int
@@ -54,10 +52,6 @@ class WebVTTController {
             FileManager.default.createFile(atPath: url.path, contents: Data(), attributes: nil)
             title  = url.lastPathComponent
         }
-    }
-
-    deinit {
-        syncQueueItems.forEach { $0.cancel() }
     }
 
     func addCue(at millis: Int) {
