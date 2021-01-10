@@ -18,7 +18,7 @@ Pods/
 .build/
 
 # Fastlane
-fastlane/.env.secret
+fastlane/.env
 fastlane/report.xml
 
 # Others
