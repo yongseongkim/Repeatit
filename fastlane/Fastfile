@@ -15,15 +15,14 @@ default_platform(:ios)
 platform :ios do
   desc "Description of what the lane does"
   # Build
-  lane :itc do
+  lane :itc do |options|
     match(
       type: "appstore", 
       api_key_path: "./key.json",
       app_identifier: "kr.co.yongseongkim.Repeatit",
       force_for_new_devices: true
     )
-    # increment_build_number(build_number: options[:build_number])
-    increment_build_number(build_number: 20)
+    increment_build_number(build_number: options[:build_number])
     build_app(
       scheme: "Repeatit",
       configuration: "Release",
