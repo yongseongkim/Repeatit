@@ -18,8 +18,9 @@ platform :ios do
   lane :itc do
     match(
       type: "appstore", 
+      api_key_path: "./key.json",
       app_identifier: "kr.co.yongseongkim.Repeatit",
-      readonly: true
+      force_for_new_devices: true
     )
     increment_build_number()
     build_app(
@@ -29,8 +30,8 @@ platform :ios do
       output_directory: "./build/"
     )
     upload_to_testflight(
+      api_key_path: "./key.json",
       app_identifier: "kr.co.yongseongkim.Repeatit",
-      username: "yongseongkimm@gmail.com",
       ipa: "./build/Repeatit.ipa",
       beta_app_description: "Repeatit for iOS",
       skip_waiting_for_build_processing: true

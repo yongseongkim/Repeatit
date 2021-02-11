@@ -1,4 +1,4 @@
-git_url("https://github.com/yongseongkim/build-certificates")
+git_url("git@github.com:yongseongkim/build-certificates.git")
 
 app_identifier(["kr.co.yongseongkim.Repeatit"])
 username("yongseongkimm@gmail.com")
