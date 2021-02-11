@@ -28,7 +28,6 @@ jobs:
       - name: Build & Deploy
         env:
           APPSTORE_CONNECT_API_KEY_JSON: ${{ secrets.APP_STORE_CONNECT_KEY_JSON }}
-          FASTLANE_PASSWORD: ${{ secrets.IOS_FASTLANE_PASSWORD }}
           GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
         run: |
           echo $APPSTORE_CONNECT_API_KEY_JSON > key.json
