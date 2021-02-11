@@ -29,6 +29,7 @@ jobs:
         env:
           APPSTORE_CONNECT_API_KEY_JSON: ${{ secrets.APP_STORE_CONNECT_KEY_JSON }}
           GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         run: |
           echo $APPSTORE_CONNECT_API_KEY_JSON > key.json
           echo $GOOGLE_SERVICE_INFO_PLIST > Repeatit/Resources/GoogleService-Info.plist
