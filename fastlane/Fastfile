@@ -22,7 +22,7 @@ platform :ios do
       app_identifier: "kr.co.yongseongkim.Repeatit",
       force_for_new_devices: true
     )
-    increment_build_number(options[:build_number])
+    increment_build_number(build_number: options[:build_number])
     build_app(
       scheme: "Repeatit",
       configuration: "Release",
