@@ -1,0 +1,35 @@
+name: Build and Upload to TestFlight
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - '**'
+jobs:
+  build-release-apps:
+    runs-on: [self-hosted, ios]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set Environments
+        run: |
+          echo "RUN_NUMBER=${{ github.run_number }}" >> $GITHUB_ENV
+      - name: Initialize
+        run: |
+          rm -rf build/
+          rm -rfv ~/Library/Developer/Xcode/Archives/*
+          bundle install
+          xcodegen generate
+      - name: Lint
+        run: swiftlint
+      - name: Build & Deploy
+        env:
+          APPSTORE_CONNECT_API_KEY_JSON: ${{ secrets.APP_STORE_CONNECT_KEY_JSON }}
+          GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
+        run: |
+          echo $APPSTORE_CONNECT_API_KEY_JSON > key.json
+          echo $GOOGLE_SERVICE_INFO_PLIST > Repeatit/Resources/GoogleService-Info.plist
+          bundle exec fastlane ios itc build_number:${RUN_NUMBER}
