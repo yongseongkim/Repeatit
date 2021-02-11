@@ -33,4 +33,4 @@ jobs:
         run: |
           echo $APPSTORE_CONNECT_API_KEY_JSON > key.json
           echo $GOOGLE_SERVICE_INFO_PLIST > Repeatit/Resources/GoogleService-Info.plist
-          bundle exec fastlane ios itc build_number:${RUN_NUMBER}
+          bundle exec fastlane ios itc
