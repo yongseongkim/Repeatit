@@ -15,13 +15,14 @@ default_platform(:ios)
 platform :ios do
   desc "Description of what the lane does"
   # Build
-  lane :itc do
+  lane :itc do |options|
     match(
       type: "appstore", 
+      api_key_path: "./key.json",
       app_identifier: "kr.co.yongseongkim.Repeatit",
-      readonly: true
+      force_for_new_devices: true
     )
-    increment_build_number()
+    increment_build_number(build_number: options[:build_number])
     build_app(
       scheme: "Repeatit",
       configuration: "Release",
@@ -29,8 +30,8 @@ platform :ios do
       output_directory: "./build/"
     )
     upload_to_testflight(
+      api_key_path: "./key.json",
       app_identifier: "kr.co.yongseongkim.Repeatit",
-      username: "yongseongkimm@gmail.com",
       ipa: "./build/Repeatit.ipa",
       beta_app_description: "Repeatit for iOS",
       skip_waiting_for_build_processing: true
